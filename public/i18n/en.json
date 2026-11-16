@@ -1,0 +1,4 @@
+{
+  "app": { "name": "Laptop ERP" },
+  "common": { "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark" }
+}
