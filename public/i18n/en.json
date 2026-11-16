@@ -5,6 +5,7 @@
     "comingSoon": "Coming in a later step.", "home": "Home"
   },
   "errors": { "network": "Cannot reach the server. Check your connection.", "unauthorized": "Please sign in again.", "forbidden": "You do not have permission.", "validation": "Please check the form.", "server": "Server error. Try again.", "generic": "Something went wrong." },
+  "state": { "empty": "Nothing here yet", "emptyHint": "Items will appear here once they are added.", "error": "Something went wrong", "errorHint": "Please try again.", "retry": "Try again", "loading": "Loading" },
   "nav": { "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
   "menu": {
     "dashboard": "Dashboard",
