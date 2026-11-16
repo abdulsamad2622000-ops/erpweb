@@ -1,4 +1,22 @@
 {
   "app": { "name": "لیپ ٹاپ ای آر پی" },
-  "common": { "language": "زبان", "theme": "تھیم", "light": "لائٹ", "dark": "ڈارک" }
+  "common": {
+    "language": "زبان", "theme": "تھیم", "light": "لائٹ", "dark": "ڈارک",
+    "comingSoon": "یہ صفحہ اگلے مرحلے میں آئے گا۔", "home": "ہوم"
+  },
+  "nav": { "openMenu": "مینو کھولیں", "closeMenu": "مینو بند کریں", "main": "مرکزی نیویگیشن", "breadcrumb": "راستہ" },
+  "menu": {
+    "dashboard": "ڈیش بورڈ",
+    "inventory": "انوینٹری", "stock": "اسٹاک", "serials": "سیریل نمبرز", "locations": "مقامات",
+    "ledger": "اسٹاک لیجر", "transfers": "منتقلی", "counts": "اسٹاک گنتی",
+    "adjustments": "ایڈجسٹمنٹس", "reservations": "ریزرویشنز",
+    "products": "مصنوعات", "productList": "مصنوعات کی فہرست", "brands": "برانڈز",
+    "categories": "زمرے", "barcodes": "بار کوڈ اور لیبلز",
+    "purchase": "خریداری", "suppliers": "سپلائرز", "orders": "خریداری آرڈرز", "grn": "مال کی وصولی (GRN)",
+    "purchaseReturns": "خریداری واپسی", "supplierPayments": "سپلائر ادائیگیاں",
+    "sales": "فروخت", "quotations": "کوٹیشنز", "salesOrders": "سیلز آرڈرز", "invoices": "انوائسز",
+    "challans": "ڈیلیوری چالان", "pos": "ریٹیل پوائنٹ آف سیل", "salesReturns": "فروخت واپسی",
+    "customers": "گاہک اور لیجرز", "warranty": "وارنٹی اور سروس", "reports": "رپورٹس",
+    "email": "ای میل", "website": "ویب سائٹ", "usersRoles": "صارفین اور کردار", "settings": "ترتیبات"
+  }
 }

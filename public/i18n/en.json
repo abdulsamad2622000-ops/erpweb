@@ -1,4 +1,22 @@
 {
   "app": { "name": "Laptop ERP" },
-  "common": { "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark" }
+  "common": {
+    "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark",
+    "comingSoon": "Coming in a later step.", "home": "Home"
+  },
+  "nav": { "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
+  "menu": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory", "stock": "Stock", "serials": "Serials", "locations": "Locations",
+    "ledger": "Stock ledger", "transfers": "Transfers", "counts": "Stock counts",
+    "adjustments": "Adjustments", "reservations": "Reservations",
+    "products": "Products", "productList": "Product list", "brands": "Brands",
+    "categories": "Categories", "barcodes": "Barcodes & labels",
+    "purchase": "Purchase", "suppliers": "Suppliers", "orders": "Purchase orders", "grn": "Receive stock (GRN)",
+    "purchaseReturns": "Purchase returns", "supplierPayments": "Supplier payments",
+    "sales": "Sales", "quotations": "Quotations", "salesOrders": "Sales orders", "invoices": "Invoices",
+    "challans": "Delivery challans", "pos": "Retail POS", "salesReturns": "Sales returns",
+    "customers": "Customers & ledgers", "warranty": "Warranty & service", "reports": "Reports",
+    "email": "Email", "website": "Website", "usersRoles": "Users & roles", "settings": "Settings"
+  }
 }
