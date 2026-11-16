@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Toast } from 'primeng/toast';
 import { SidebarComponent } from './sidebar.component';
 import { TopbarComponent } from './topbar.component';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, SidebarComponent, TopbarComponent],
+  imports: [RouterOutlet, SidebarComponent, TopbarComponent, Toast],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown.escape)': 'close()' },
   template: `
+    <p-toast position="top-center" />
     <div class="min-h-screen lg:flex">
       @if (drawerOpen()) {
         <div class="fixed inset-0 z-30 bg-black/50 lg:hidden" aria-hidden="true" (click)="close()"></div>
