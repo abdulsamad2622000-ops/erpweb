@@ -7,3 +7,6 @@ export * from './data-table/data-table.component';
 export * from './data-table/data-table.models';
 export * from './crud-dialog/crud-dialog.component';
 export * from './list-page/list-page.component';
+export * from './money-input/money-input.component';
+export * from './number-input/number-input.component';
+export * from './date-input/date-input.component';

@@ -36,7 +36,13 @@
       "minlength": "Value is too short",
       "maxlength": "Value is too long",
       "pattern": "Value format is invalid",
-      "invalid": "Value is invalid"
+      "invalid": "Value is invalid",
+      "min": "Value is too small.",
+      "max": "Value is too large.",
+      "money": "Enter a valid amount, for example 1250.50."
+    },
+    "currency": {
+      "pkr": "PKR"
     }
   },
   "errors": {
