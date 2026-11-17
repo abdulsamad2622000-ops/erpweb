@@ -22,6 +22,7 @@ return [
     'products.category.delete',
     'products.category.edit',
     'products.category.view',
+    'products.cost.view',
     'products.product.create',
     'products.product.delete',
     'products.product.edit',

@@ -10,26 +10,25 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        $all = config('permission_keys', []);
+        $this->call(RoleSeeder::class);
+
         $karachi = Branch::firstOrCreate(['name' => 'Karachi Main']);
         $lahore = Branch::firstOrCreate(['name' => 'Lahore']);
 
         $this->user('super@demo.test', 'Demo Super Admin', 'super_admin', 'super_admin', true,
-            $all, [$karachi, $lahore], null);
+            [$karachi, $lahore], null);
 
         $this->user('admin@demo.test', 'Demo Admin', 'admin', 'admin', true,
-            array_values(array_diff($all, ['settings.manage'])), [$karachi, $lahore],
+            [$karachi, $lahore],
             ['discount_percent' => 5, 'adjustment_units' => 10, 'max_sale_without_approval' => 500000]);
 
-        $this->user('keeper@demo.test', 'Demo Store Keeper', 'store_keeper', 'staff', false, [
-            'dashboard.view.view', 'inventory.stock.view', 'inventory.serial.view',
-            'inventory.location.view', 'inventory.transfer.view', 'inventory.count.view',
-        ], [$karachi],
+        $this->user('keeper@demo.test', 'Demo Store Keeper', 'store_keeper', 'staff', false,
+            [$karachi],
             ['discount_percent' => 2, 'adjustment_units' => 3, 'max_sale_without_approval' => 100000]);
     }
 
     private function user(string $email, string $name, string $role, string $type, bool $twoFactor,
-        array $keys, array $branches, ?array $limits): void
+        array $branches, ?array $limits): void
     {
         // Demo password sab ka: password
         $user = User::updateOrCreate(['email' => $email], [
@@ -38,9 +37,6 @@ class DemoSeeder extends Seeder
         ] + ($limits ?? ['discount_percent' => null, 'adjustment_units' => null, 'max_sale_without_approval' => null]));
 
         $user->branches()->sync(collect($branches)->pluck('id'));
-        $user->permissions()->delete();
-        foreach ($keys as $key) {
-            $user->permissions()->create(['permission_key' => $key]);
-        }
+        $user->permissions()->delete(); // purane demo overrides saaf
     }
 }
