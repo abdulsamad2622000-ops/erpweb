@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, output } from '@angular/cor
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { AuthStore } from '../core/auth/auth.store';
-import { LanguageService } from '../core/i18n/language.service';
 import { ThemeService } from '../core/theme/theme.service';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 
@@ -28,10 +27,6 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
         </select>
       }
 
-      <button type="button" class="inline-flex h-11 min-w-11 items-center justify-center rounded-[10px] px-3 text-sm font-medium hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
-        [attr.aria-label]="'common.language' | transloco" (click)="toggleLang()">
-        {{ lang.lang() === 'en' ? 'اردو' : 'English' }}
-      </button>
       <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
         [attr.aria-label]="'common.theme' | transloco" (click)="theme.toggle()">
         <i [class]="theme.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"></i>
@@ -47,15 +42,10 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
   `,
 })
 export class TopbarComponent {
-  readonly lang = inject(LanguageService);
   readonly theme = inject(ThemeService);
   readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
   readonly menuToggle = output<void>();
-
-  toggleLang(): void {
-    this.lang.set(this.lang.lang() === 'en' ? 'ur' : 'en');
-  }
 
   onBranch(e: Event): void {
     this.auth.setActiveBranch(Number((e.target as HTMLSelectElement).value));

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { LanguageService } from '../../core/i18n/language.service';
 import { ThemeService } from '../../core/theme/theme.service';
 
 @Component({
@@ -10,10 +9,6 @@ import { ThemeService } from '../../core/theme/theme.service';
   template: `
     <div class="relative flex min-h-screen items-center justify-center bg-page p-4">
       <div class="absolute end-4 top-4 flex gap-2">
-        <button type="button" class="inline-flex h-11 min-w-11 items-center justify-center rounded-[10px] px-3 text-sm font-medium text-text hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
-          [attr.aria-label]="'common.language' | transloco" (click)="toggleLang()">
-          {{ lang.lang() === 'en' ? 'اردو' : 'English' }}
-        </button>
         <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] text-text hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
           [attr.aria-label]="'common.theme' | transloco" (click)="theme.toggle()">
           <i [class]="theme.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"></i>
@@ -36,10 +31,5 @@ import { ThemeService } from '../../core/theme/theme.service';
 export class AuthCardComponent {
   readonly heading = input.required<string>();
   readonly subtitle = input<string>('');
-  readonly lang = inject(LanguageService);
   readonly theme = inject(ThemeService);
-
-  toggleLang(): void {
-    this.lang.set(this.lang.lang() === 'en' ? 'ur' : 'en');
-  }
 }

@@ -15,7 +15,7 @@ import { TopbarComponent } from './topbar.component';
       }
       <aside
         class="fixed inset-y-0 start-0 z-40 w-64 transition-transform lg:sticky lg:top-0 lg:h-screen lg:shrink-0"
-        [class]="drawerOpen() ? '' : 'max-lg:ltr:-translate-x-full max-lg:rtl:translate-x-full'">
+        [class]="drawerOpen() ? '' : 'max-lg:-translate-x-full'">
         <app-sidebar (navigate)="close()" />
       </aside>
       <div class="flex min-w-0 flex-1 flex-col">

@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     provideTransloco({
       config: {
-        availableLangs: ['en', 'ur'],
+        availableLangs: ['en'],
         defaultLang: 'en',
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),

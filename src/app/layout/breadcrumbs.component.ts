@@ -31,7 +31,7 @@ interface Crumb {
         </li>
         @for (c of crumbs(); track c.url; let last = $last) {
           <li class="flex items-center gap-1">
-            <i class="pi pi-angle-right text-xs rtl:rotate-180" aria-hidden="true"></i>
+            <i class="pi pi-angle-right text-xs" aria-hidden="true"></i>
             @if (c.link && !last) {
               <a [routerLink]="c.url" class="rounded px-1 hover:text-text focus-visible:outline-2 focus-visible:outline-accent">{{ c.key ? ('menu.' + c.key | transloco) : c.label }}</a>
             } @else {
