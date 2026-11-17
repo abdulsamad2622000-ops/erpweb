@@ -21,7 +21,12 @@ class EnsurePermission
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
-        if (! $user->is_active || ! $this->resolver->has($user, $key)) {
+        if (! $user->is_active) {
+            return response()->json(['message' => 'This action is unauthorized.'], 403);
+        }
+
+        // Super Admin ke paas hamesha har permission hoti hai (naya key config mein na bhi ho)
+        if ($user->type !== 'super_admin' && ! $this->resolver->has($user, $key)) {
             return response()->json(['message' => 'This action is unauthorized.'], 403);
         }
 
