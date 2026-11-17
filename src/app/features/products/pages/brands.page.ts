@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthStore } from '../../../core/auth/auth.store';
-import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
 import { ConfirmDialogService } from '../../../shared/ui/confirm-dialog/confirm-dialog.service';
-import { DataTableComponent } from '../../../shared/ui/data-table/data-table.component';
+import { CrudDialogComponent } from '../../../shared/ui/crud-dialog/crud-dialog.component';
 import { RowAction, RowActionEvent, TableColumn, TableQuery } from '../../../shared/ui/data-table/data-table.models';
 import { FormFieldComponent } from '../../../shared/ui/form-field/form-field.component';
-import { PageToolbarComponent } from '../../../shared/ui/page-toolbar/page-toolbar.component';
+import { ListPageComponent } from '../../../shared/ui/list-page/list-page.component';
 import { Brand } from '../models';
 import { BrandsStore } from '../stores/products.stores';
 
@@ -16,51 +15,37 @@ import { BrandsStore } from '../stores/products.stores';
   imports: [
     ReactiveFormsModule,
     TranslocoPipe,
-    HasPermissionDirective,
-    DataTableComponent,
-    PageToolbarComponent,
+    ListPageComponent,
+    CrudDialogComponent,
     FormFieldComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-page-toolbar [title]="'brands.title' | transloco">
-      <button
-        *hasPermission="'products.brand.create'"
-        type="button"
-        class="min-h-12 rounded-lg bg-[#2563EB] px-5 font-medium text-white"
-        (click)="openForm(null)"
-      >
-        {{ 'brands.add' | transloco }}
-      </button>
-    </app-page-toolbar>
-
-    @if (actionError(); as msg) {
-      <p role="alert" class="mb-3 rounded-lg border border-red-600 p-3 text-sm text-red-600">{{ msg }}</p>
-    }
-
-    <app-data-table
+    <app-list-page
+      [title]="'brands.title' | transloco"
+      [addLabel]="'brands.add' | transloco"
+      addPermission="products.brand.create"
       [rows]="store.rows()"
       [columns]="columns"
       [total]="store.total()"
       [query]="store.query()"
       [loading]="store.loading()"
-      [error]="loadError()"
+      [loadError]="loadError()"
+      [actionError]="actionError()"
       [actions]="actions"
+      (add)="openForm(null)"
       (queryChange)="onQuery($event)"
       (action)="onAction($event)"
       (retry)="reload()"
     />
 
-    <dialog
-      #dlg
-      class="m-auto rounded-xl border border-slate-300 bg-white p-0 text-slate-900 backdrop:bg-black/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-      (close)="saving.set(false)"
+    <app-crud-dialog
+      [title]="(editingId() === null ? 'brands.add' : 'brands.edit') | transloco"
+      [saving]="saving()"
+      (save)="submit()"
+      (closed)="saving.set(false)"
     >
-      <form [formGroup]="form" (ngSubmit)="submit()" class="w-[min(92vw,26rem)] space-y-4 p-5">
-        <h2 class="text-lg font-semibold">
-          {{ (editingId() === null ? 'brands.add' : 'brands.edit') | transloco }}
-        </h2>
-
+      <div [formGroup]="form" class="space-y-4">
         <app-form-field
           [label]="'brands.name' | transloco"
           inputId="brand-name"
@@ -78,25 +63,8 @@ import { BrandsStore } from '../stores/products.stores';
           <input type="checkbox" formControlName="isActive" class="size-5" />
           {{ 'brands.active' | transloco }}
         </label>
-
-        <div class="flex justify-end gap-2">
-          <button
-            type="button"
-            class="min-h-12 rounded-lg border border-slate-400 px-5"
-            (click)="closeForm()"
-          >
-            {{ 'common.cancel' | transloco }}
-          </button>
-          <button
-            type="submit"
-            class="min-h-12 rounded-lg bg-[#2563EB] px-5 font-medium text-white disabled:opacity-50"
-            [disabled]="saving()"
-          >
-            {{ 'common.save' | transloco }}
-          </button>
-        </div>
-      </form>
-    </dialog>
+      </div>
+    </app-crud-dialog>
   `,
 })
 export class BrandsPage implements OnInit {
@@ -106,7 +74,7 @@ export class BrandsPage implements OnInit {
   private readonly confirm = inject(ConfirmDialogService);
   private readonly fb = inject(FormBuilder);
 
-  private readonly dlg = viewChild.required<ElementRef<HTMLDialogElement>>('dlg');
+  private readonly dlg = viewChild.required(CrudDialogComponent);
 
   protected readonly loadError = signal<string | null>(null);
   protected readonly actionError = signal<string | null>(null);
@@ -174,11 +142,11 @@ export class BrandsPage implements OnInit {
     this.actionError.set(null);
     this.editingId.set(row?.id ?? null);
     this.form.reset({ name: row?.name ?? '', isActive: row?.isActive ?? true });
-    this.dlg().nativeElement.showModal();
+    this.dlg().open();
   }
 
   protected closeForm(): void {
-    this.dlg().nativeElement.close();
+    this.dlg().close();
   }
 
   protected async submit(): Promise<void> {

@@ -5,3 +5,5 @@ export * from './confirm-dialog/confirm-dialog.component';
 export * from './confirm-dialog/confirm-dialog.service';
 export * from './data-table/data-table.component';
 export * from './data-table/data-table.models';
+export * from './crud-dialog/crud-dialog.component';
+export * from './list-page/list-page.component';
