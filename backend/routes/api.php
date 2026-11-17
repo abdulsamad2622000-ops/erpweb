@@ -26,6 +26,8 @@ Route::prefix('v1')->group(function () {
 
     Route::get('me', MeController::class)->middleware('auth:sanctum');
 
+    require __DIR__.'/catalog.php';
+
     Route::middleware('auth:sanctum')->group(function () {
         // Super Admin aur Admin: users, overrides, roles (dekhna), registry, audit log
         Route::middleware(EnsureUserType::class.':super_admin,admin')->group(function () {
