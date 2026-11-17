@@ -64,6 +64,11 @@ function write(key: string, value: string | null): void {
   }
 }
 
+function maskEmail(email: string): string {
+  const [name, domain] = email.split('@');
+  return `${name.slice(0, 2)}***@${domain}`;
+}
+
 const find = (email: string | null): MockUser | undefined => USERS.find((u) => u.email === email);
 const grant = (key: string) => ({ key, scope: 'all', expiresAt: null, limit: null });
 
@@ -86,7 +91,7 @@ export const AUTH_FIXTURES: Record<string, FixtureHandler> = {
     if (!user || !b?.password) return fail(422, 'These credentials do not match our records.');
     if (user.twoFactor) {
       write(PENDING_KEY, user.email);
-      return ok({ twoFactorRequired: true });
+      return ok({ twoFactorRequired: true, method: 'email', maskedEmail: maskEmail(user.email), resendAfterSeconds: 60 });
     }
     write(SESSION_KEY, user.email);
     return ok({ twoFactorRequired: false });
@@ -100,6 +105,8 @@ export const AUTH_FIXTURES: Record<string, FixtureHandler> = {
     write(SESSION_KEY, pending);
     return ok();
   },
+  'POST /auth/two-factor/resend': () =>
+    read(PENDING_KEY) ? ok({ resendAfterSeconds: 60 }) : fail(401, 'Login expired.'),
   'POST /auth/logout': () => {
     write(SESSION_KEY, null);
     write(PENDING_KEY, null);

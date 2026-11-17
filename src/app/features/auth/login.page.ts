@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { AuthStore, LoginOutcome } from '../../core/auth/auth.store';
@@ -15,7 +15,7 @@ type Step = 'credentials' | 'code';
   template: `
     <app-auth-card
       [heading]="(step() === 'code' ? 'auth.codeTitle' : 'auth.title') | transloco"
-      [subtitle]="(step() === 'code' ? 'auth.codeHelp' : 'auth.subtitle') | transloco">
+      [subtitle]="step() === 'code' ? ('auth.codeSentTo' | transloco: { email: masked() }) : ('auth.subtitle' | transloco)">
 
       @if (errorKey(); as k) {
         <p role="alert" class="mb-4 rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
@@ -82,6 +82,10 @@ type Step = 'credentials' | 'code';
             class="h-12 w-full rounded-[10px] bg-accent font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60">
             {{ (loading() ? 'auth.verifying' : 'auth.verify') | transloco }}
           </button>
+          <button type="button" (click)="resend()" [disabled]="resendIn() > 0 || resending()"
+            class="h-11 w-full rounded-[10px] border border-border text-sm font-medium text-text focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-60">
+            {{ (resendIn() > 0 ? 'auth.resendIn' : 'auth.resend') | transloco: { seconds: resendIn() } }}
+          </button>
           <button type="button" (click)="backToCredentials()"
             class="text-sm text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent">
             {{ 'auth.backToCredentials' | transloco }}
@@ -105,6 +109,51 @@ export class LoginPage {
   readonly loading = signal(false);
   readonly errorKey = signal<string | null>(null);
 
+  readonly masked = computed(() => this.store.challenge()?.maskedEmail ?? '');
+  readonly resendIn = signal(0);
+  readonly resending = signal(false);
+  private timer: ReturnType<typeof setInterval> | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.stopTimer());
+  }
+
+  private startCountdown(seconds: number): void {
+    this.stopTimer();
+    this.resendIn.set(seconds);
+    this.timer = setInterval(() => {
+      const next = Math.max(this.resendIn() - 1, 0);
+      this.resendIn.set(next);
+      if (next === 0) this.stopTimer();
+    }, 1000);
+  }
+
+  private stopTimer(): void {
+    if (this.timer !== null) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
+  async resend(): Promise<void> {
+    if (this.resendIn() > 0 || this.resending()) return;
+    this.resending.set(true);
+    this.errorKey.set(null);
+    try {
+      this.startCountdown(await this.store.resendTwoFactor());
+    } catch (err) {
+      const status = err instanceof HttpErrorResponse ? err.status : -1;
+      if (status === 401) {
+        this.backToCredentials();
+        this.errorKey.set('errors.csrf');
+      } else {
+        this.errorKey.set(this.mapError(err, 'errors.generic'));
+      }
+    } finally {
+      this.resending.set(false);
+    }
+  }
+
   readonly emailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email().trim()));
   readonly passwordValid = computed(() => this.password().length > 0);
   readonly codeValid = computed(() => /^\d{6}$/.test(this.code()));
@@ -118,6 +167,7 @@ export class LoginPage {
   }
 
   backToCredentials(): void {
+    this.stopTimer();
     this.step.set('credentials');
     this.code.set('');
     this.submitted.set(false);
@@ -172,6 +222,7 @@ export class LoginPage {
     } else if (res === 'two_factor') {
       this.submitted.set(false);
       this.step.set('code');
+      this.startCountdown(this.store.challenge()?.resendAfterSeconds ?? 60);
     } else {
       this.errorKey.set(fromCredentials ? 'auth.invalid' : 'auth.codeInvalid');
     }

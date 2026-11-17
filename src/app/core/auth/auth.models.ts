@@ -40,8 +40,22 @@ export interface LoginRequest {
   password: string;
 }
 
+/** Email OTP ka challenge. maskedEmail backend se masked aata hai (su***@domain.com). */
+export interface TwoFactorChallenge {
+  method: 'email';
+  maskedEmail: string;
+  resendAfterSeconds: number;
+}
+
 export interface LoginResponse {
   twoFactorRequired: boolean;
+  method?: 'email';
+  maskedEmail?: string;
+  resendAfterSeconds?: number;
+}
+
+export interface ResendResponse {
+  resendAfterSeconds: number;
 }
 
 export interface ResetPasswordRequest {

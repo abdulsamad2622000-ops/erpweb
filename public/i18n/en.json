@@ -25,7 +25,7 @@
     "passwordShort": "Use at least 10 characters.", "passwordMismatch": "Passwords do not match.",
     "resetSave": "Save password", "resetDone": "Your password has been changed. You can sign in now.",
     "resetInvalidLink": "This reset link is invalid or has expired.",
-    "backToLogin": "Back to sign in", "logout": "Sign out"
+    "codeSentTo": "We sent a 6-digit code to {{ email }}. Enter it below.", "resend": "Resend code", "resendIn": "Resend code in {{ seconds }}s", "backToLogin": "Back to sign in", "logout": "Sign out"
   },
   "nav": { "branch": "Branch", "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
   "menu": {

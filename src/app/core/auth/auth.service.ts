@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { APP_CONFIG } from '../config/app-config';
-import { LoginRequest, LoginResponse, MeResponse, ResetPasswordRequest } from './auth.models';
+import { LoginRequest, LoginResponse, MeResponse, ResendResponse, ResetPasswordRequest } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,6 +21,10 @@ export class AuthService {
 
   twoFactor(code: string): Observable<void> {
     return this.http.post<void>(`${this.base}/auth/two-factor`, { code });
+  }
+
+  resendTwoFactor(): Observable<ResendResponse> {
+    return this.http.post<ResendResponse>(`${this.base}/auth/two-factor/resend`, {});
   }
 
   logout(): Observable<void> {
