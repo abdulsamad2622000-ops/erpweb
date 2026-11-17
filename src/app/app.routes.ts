@@ -40,6 +40,27 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'products/brands',
+        canActivate: [permissionGuard],
+        data: { title: 'brands', permission: 'products.brand.view' },
+        loadComponent: () =>
+          import('./features/products/pages/brands.page').then((m) => m.BrandsPage),
+      },
+      {
+        path: 'products/categories',
+        canActivate: [permissionGuard],
+        data: { title: 'categories', permission: 'products.category.view' },
+        loadComponent: () =>
+          import('./features/products/pages/categories.page').then((m) => m.CategoriesPage),
+      },
+      {
+        path: 'products/list',
+        canActivate: [permissionGuard],
+        data: { title: 'productList', permission: 'products.product.view' },
+        loadComponent: () =>
+          import('./features/products/pages/products.page').then((m) => m.ProductsPage),
+      },
       ...placeholderRoutes,
       {
         path: '403',
@@ -52,4 +73,4 @@ export const routes: Routes = [
       { path: '**', redirectTo: '404' },
     ],
   },
-];
+];  

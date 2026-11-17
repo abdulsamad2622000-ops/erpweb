@@ -56,3 +56,27 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
 }
+/* Native dropdown (select) ki options list ka theme */
+select { color-scheme: light; }
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+select option:checked {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+.dark select,
+[data-theme="dark"] select {
+  color-scheme: dark;
+}
+.dark select option,
+[data-theme="dark"] select option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+.dark select option:checked,
+[data-theme="dark"] select option:checked {
+  background-color: #2563eb;
+  color: #ffffff;
+}
