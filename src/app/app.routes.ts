@@ -40,6 +40,13 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'products/brands',
+        canActivate: [permissionGuard],
+        data: { title: 'brands', permission: 'products.brand.view' },
+        loadComponent: () =>
+          import('./features/products/pages/brands.page').then((m) => m.BrandsPage),
+      },
       ...placeholderRoutes,
       {
         path: '403',
@@ -52,4 +59,4 @@ export const routes: Routes = [
       { path: '**', redirectTo: '404' },
     ],
   },
-];
+];  

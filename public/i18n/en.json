@@ -1,4 +1,3 @@
-
 {
   "app": {
     "name": "Laptop ERP"
@@ -18,6 +17,9 @@
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
+    "add": "Add",
+    "edit": "Edit",
+    "name": "Name",
     "actions": "Actions",
     "required": "required",
     "rowsPerPage": "Rows per page",
@@ -108,6 +110,15 @@
     "closeMenu": "Close menu",
     "main": "Main navigation",
     "breadcrumb": "Breadcrumb"
+  },
+  "brands": {
+    "title": "Brands",
+    "add": "Add brand",
+    "edit": "Edit brand",
+    "name": "Brand name",
+    "active": "Active",
+    "deleteTitle": "Delete brand",
+    "deleteMessage": "Delete this brand? This cannot be undone."
   },
   "menu": {
     "dashboard": "Dashboard",
