@@ -3,7 +3,7 @@
 Frontend for the inventory-centric laptop/computer ERP (Novastack Hub).
 
 ## Stack
-Angular 22 (standalone, Signals), PrimeNG, Tailwind v4, NgRx Signals, Transloco (EN/UR, RTL), Vitest.
+Angular 22 (standalone, Signals), PrimeNG, Tailwind v4, NgRx Signals, Transloco (English only; Urdu and RTL were removed), Vitest.
 
 ## Commands
 - `npm start` : dev server
