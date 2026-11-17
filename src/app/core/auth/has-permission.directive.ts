@@ -6,6 +6,7 @@ import { AuthStore } from './auth.store';
  * <div *hasPermission="['a.b.view','c.d.view']">  (koi bhi ek kafi hai)
  * Sirf UI hide/show. Backend enforcement alag hai.
  */
+// eslint-disable-next-line @angular-eslint/directive-selector -- handover mein naam *hasPermission fix hai (bina prefix)
 @Directive({ selector: '[hasPermission]' })
 export class HasPermissionDirective {
   readonly hasPermission = input.required<string | string[]>();
