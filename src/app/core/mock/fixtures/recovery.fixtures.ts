@@ -4,4 +4,5 @@ import { FixtureHandler, ok } from './fixture.types';
 export const RECOVERY_FIXTURES: Record<string, FixtureHandler> = {
   'POST /auth/forgot-password': () => ok(),
   'POST /auth/recover-email': () => ok(),
+  'POST /auth/reset-password': () => ok(),
 };

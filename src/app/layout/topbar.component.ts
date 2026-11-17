@@ -17,6 +17,17 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
         <i class="pi pi-bars"></i>
       </button>
       <div class="min-w-0 flex-1 overflow-x-auto"><app-breadcrumbs /></div>
+
+      @if (auth.branches().length > 1) {
+        <label for="branch" class="sr-only">{{ 'nav.branch' | transloco }}</label>
+        <select id="branch" (change)="onBranch($event)"
+          class="h-11 max-w-36 rounded-[10px] border border-border bg-card px-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-accent sm:max-w-48">
+          @for (b of auth.branches(); track b.id) {
+            <option [value]="b.id" [selected]="b.id === auth.activeBranchId()">{{ b.name }}</option>
+          }
+        </select>
+      }
+
       <button type="button" class="inline-flex h-11 min-w-11 items-center justify-center rounded-[10px] px-3 text-sm font-medium hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
         [attr.aria-label]="'common.language' | transloco" (click)="toggleLang()">
         {{ lang.lang() === 'en' ? 'اردو' : 'English' }}
@@ -26,7 +37,7 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
         <i [class]="theme.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"></i>
       </button>
       @if (auth.user(); as u) {
-        <span class="hidden max-w-40 truncate text-sm text-text sm:inline">{{ u.name }}</span>
+        <span class="hidden max-w-40 truncate text-sm text-text md:inline">{{ u.name }}</span>
       }
       <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
         [attr.aria-label]="'auth.logout' | transloco" (click)="logout()">
@@ -44,6 +55,10 @@ export class TopbarComponent {
 
   toggleLang(): void {
     this.lang.set(this.lang.lang() === 'en' ? 'ur' : 'en');
+  }
+
+  onBranch(e: Event): void {
+    this.auth.setActiveBranch(Number((e.target as HTMLSelectElement).value));
   }
 
   async logout(): Promise<void> {

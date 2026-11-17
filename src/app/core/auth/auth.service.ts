@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { APP_CONFIG } from '../config/app-config';
-import { LoginRequest, MeResponse } from './auth.models';
+import { LoginRequest, LoginResponse, MeResponse, ResetPasswordRequest } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,8 +13,14 @@ export class AuthService {
     return this.http.get<void>('/sanctum/csrf-cookie');
   }
 
-  login(body: LoginRequest): Observable<void> {
-    return this.csrf().pipe(switchMap(() => this.http.post<void>(`${this.base}/auth/login`, body)));
+  login(body: LoginRequest): Observable<LoginResponse | null> {
+    return this.csrf().pipe(
+      switchMap(() => this.http.post<LoginResponse | null>(`${this.base}/auth/login`, body)),
+    );
+  }
+
+  twoFactor(code: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/auth/two-factor`, { code });
   }
 
   logout(): Observable<void> {
@@ -29,6 +35,12 @@ export class AuthService {
   forgotPassword(email: string): Observable<void> {
     return this.csrf().pipe(
       switchMap(() => this.http.post<void>(`${this.base}/auth/forgot-password`, { email })),
+    );
+  }
+
+  resetPassword(body: ResetPasswordRequest): Observable<void> {
+    return this.csrf().pipe(
+      switchMap(() => this.http.post<void>(`${this.base}/auth/reset-password`, body)),
     );
   }
 

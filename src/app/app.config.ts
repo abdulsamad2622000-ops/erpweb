@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { mockInterceptor } from './core/http/mock.interceptor';
 import { apiBaseInterceptor } from './core/http/api-base.interceptor';
 import { errorInterceptor } from './core/http/error.interceptor';
+import { branchInterceptor } from './core/http/branch.interceptor';
 import { provideTransloco } from '@jsverse/transloco';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([mockInterceptor, apiBaseInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([mockInterceptor, apiBaseInterceptor, branchInterceptor, errorInterceptor])),
     MessageService,
     provideTransloco({
       config: {

@@ -17,9 +17,17 @@
     "recoverTitle": "Find your email", "recoverHelp": "Enter your registered phone number. If it is registered, we will send an SMS with a masked email.",
     "phone": "Phone number", "phoneInvalid": "Enter a valid phone number with country code, e.g. +92300...",
     "sendSms": "Send SMS", "recoverDone": "If this number is registered, an SMS has been sent.",
+    "codeTitle": "Two-factor verification", "codeHelp": "Enter the 6-digit code from your authenticator app.",
+    "code": "6-digit code", "codeInvalid": "The code is incorrect.", "codeFormat": "Enter exactly 6 digits.",
+    "verify": "Verify", "verifying": "Verifying...", "backToCredentials": "Use a different account",
+    "resetTitle": "Set a new password", "resetHelp": "Choose a new password for your account.",
+    "newPassword": "New password", "confirmPassword": "Confirm password",
+    "passwordShort": "Use at least 10 characters.", "passwordMismatch": "Passwords do not match.",
+    "resetSave": "Save password", "resetDone": "Your password has been changed. You can sign in now.",
+    "resetInvalidLink": "This reset link is invalid or has expired.",
     "backToLogin": "Back to sign in", "logout": "Sign out"
   },
-  "nav": { "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
+  "nav": { "branch": "Branch", "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
   "menu": {
     "dashboard": "Dashboard",
     "inventory": "Inventory", "stock": "Stock", "serials": "Serials", "locations": "Locations",

@@ -11,15 +11,19 @@ const me: MeResponse = {
     { key: 'inventory.stock.view', scope: 'all', expiresAt: null, limit: null },
     { key: 'old.thing.view', scope: 'all', expiresAt: '2000-01-01T00:00:00Z', limit: null },
   ],
+  branches: [
+    { id: 1, name: 'A' },
+    { id: 2, name: 'B' },
+  ],
+  activeBranchId: 1,
 };
 
 describe('AuthStore', () => {
-  const authMock = { me: vi.fn(), login: vi.fn(), logout: vi.fn() };
+  const authMock = { me: vi.fn(), login: vi.fn(), logout: vi.fn(), twoFactor: vi.fn() };
 
   beforeEach(() => {
-    authMock.me.mockReset();
-    authMock.login.mockReset();
-    authMock.logout.mockReset();
+    Object.values(authMock).forEach((m) => m.mockReset());
+    localStorage.clear();
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({ providers: [{ provide: AuthService, useValue: authMock }] });
   });
@@ -42,12 +46,26 @@ describe('AuthStore', () => {
     expect(store.can('inventory.stock.view')).toBe(false);
   });
 
-  it('login: kamyab login ke baad true', async () => {
-    authMock.login.mockReturnValue(of(undefined));
+  it('login: 2FA ke baghair seedha authenticated', async () => {
+    authMock.login.mockReturnValue(of({ twoFactorRequired: false }));
     authMock.me.mockReturnValue(of(me));
     const store = TestBed.inject(AuthStore);
-    const okLogin = await store.login({ email: 'a@b.c', password: 'secret' });
-    expect(okLogin).toBe(true);
+    expect(await store.login({ email: 'a@b.c', password: 'secret' })).toBe('authenticated');
+  });
+
+  it('login: 2FA zaroori ho to two_factor aur /me abhi nahi', async () => {
+    authMock.login.mockReturnValue(of({ twoFactorRequired: true }));
+    const store = TestBed.inject(AuthStore);
+    expect(await store.login({ email: 'a@b.c', password: 'secret' })).toBe('two_factor');
+    expect(authMock.me).not.toHaveBeenCalled();
+    expect(store.isAuthenticated()).toBe(false);
+  });
+
+  it('verifyTwoFactor: code ke baad authenticated', async () => {
+    authMock.twoFactor.mockReturnValue(of(undefined));
+    authMock.me.mockReturnValue(of(me));
+    const store = TestBed.inject(AuthStore);
+    expect(await store.verifyTwoFactor('123456')).toBe('authenticated');
   });
 
   it('logout: state saaf ho jati hai', async () => {
@@ -58,5 +76,33 @@ describe('AuthStore', () => {
     await store.logout();
     expect(store.status()).toBe('anonymous');
     expect(store.user()).toBeNull();
+    expect(store.branches()).toEqual([]);
+  });
+
+  it('branch: /me ki active branch, phir switch aur save', async () => {
+    authMock.me.mockReturnValue(of(me));
+    const store = TestBed.inject(AuthStore);
+    await store.load();
+    expect(store.activeBranchId()).toBe(1);
+    store.setActiveBranch(2);
+    expect(store.activeBranchId()).toBe(2);
+    expect(store.activeBranch()?.name).toBe('B');
+    expect(localStorage.getItem('erp.branch')).toBe('2');
+  });
+
+  it('branch: ghalat id ignore hoti hai', async () => {
+    authMock.me.mockReturnValue(of(me));
+    const store = TestBed.inject(AuthStore);
+    await store.load();
+    store.setActiveBranch(99);
+    expect(store.activeBranchId()).toBe(1);
+  });
+
+  it('branch: pichli saved choice restore hoti hai', async () => {
+    localStorage.setItem('erp.branch', '2');
+    authMock.me.mockReturnValue(of(me));
+    const store = TestBed.inject(AuthStore);
+    await store.load();
+    expect(store.activeBranchId()).toBe(2);
   });
 });
