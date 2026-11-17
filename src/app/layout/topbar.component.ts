@@ -21,7 +21,7 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
       @if (auth.branches().length > 1) {
         <label for="branch" class="sr-only">{{ 'nav.branch' | transloco }}</label>
         <select id="branch" (change)="onBranch($event)"
-          class="h-11 max-w-36 rounded-[10px] border border-border bg-card px-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-accent sm:max-w-48">
+          class="h-11 max-w-36 rounded-[10px] border border-input bg-card px-2 text-sm text-text focus-visible:outline-2 focus-visible:outline-accent sm:max-w-48">
           @for (b of auth.branches(); track b.id) {
             <option [value]="b.id" [selected]="b.id === auth.activeBranchId()">{{ b.name }}</option>
           }

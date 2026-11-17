@@ -11,6 +11,7 @@
   --bg: #F6F7F9;
   --card: #FFFFFF;
   --border: #E2E8F0;
+  --input-border: #94A3B8;
   --text: #0F172A;
   --muted: #5B6679;
   --success: #16A34A;
@@ -27,6 +28,7 @@
   --bg: #0B1120;
   --card: #111827;
   --border: #1F2937;
+  --input-border: #475569;
   --text: #E5E7EB;
   --muted: #94A3B8;
 }
@@ -38,6 +40,7 @@
   --color-page: var(--bg);
   --color-card: var(--card);
   --color-border: var(--border);
+  --color-input: var(--input-border);
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-success: var(--success);

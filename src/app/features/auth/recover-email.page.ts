@@ -24,7 +24,7 @@ import { AuthCardComponent } from './auth-card.component';
           <div>
             <label for="phone" class="mb-1 block text-sm font-medium text-text">{{ 'auth.phone' | transloco }}</label>
             <input id="phone" type="tel" dir="ltr" autocomplete="tel" inputmode="tel" placeholder="+92300..."
-              class="h-11 w-full rounded-[10px] border border-border bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="phone()" (input)="phone.set(value($event))"
               [attr.aria-invalid]="submitted() && !phoneValid()" aria-describedby="phone-err" />
             @if (submitted() && !phoneValid()) {

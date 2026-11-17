@@ -28,7 +28,7 @@ import { AuthCardComponent } from './auth-card.component';
           <div>
             <label for="password" class="mb-1 block text-sm font-medium text-text">{{ 'auth.newPassword' | transloco }}</label>
             <input id="password" type="password" dir="ltr" autocomplete="new-password"
-              class="h-11 w-full rounded-[10px] border border-border bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="password()" (input)="password.set(value($event))"
               [attr.aria-invalid]="submitted() && !passwordValid()" aria-describedby="password-err" />
             @if (submitted() && !passwordValid()) {
@@ -38,7 +38,7 @@ import { AuthCardComponent } from './auth-card.component';
           <div>
             <label for="confirm" class="mb-1 block text-sm font-medium text-text">{{ 'auth.confirmPassword' | transloco }}</label>
             <input id="confirm" type="password" dir="ltr" autocomplete="new-password"
-              class="h-11 w-full rounded-[10px] border border-border bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="confirm()" (input)="confirm.set(value($event))"
               [attr.aria-invalid]="submitted() && !matches()" aria-describedby="confirm-err" />
             @if (submitted() && !matches()) {

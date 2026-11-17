@@ -28,7 +28,7 @@ type Step = 'credentials' | 'code';
           <div>
             <label for="email" class="mb-1 block text-sm font-medium text-text">{{ 'auth.email' | transloco }}</label>
             <input id="email" type="email" dir="ltr" autocomplete="username" inputmode="email"
-              class="h-11 w-full rounded-[10px] border border-border bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="email()" (input)="email.set(value($event))"
               [attr.aria-invalid]="submitted() && !emailValid()" aria-describedby="email-err" />
             @if (submitted() && !emailValid()) {
@@ -41,7 +41,7 @@ type Step = 'credentials' | 'code';
             <div class="relative">
               <input id="password" dir="ltr" autocomplete="current-password"
                 [type]="showPassword() ? 'text' : 'password'"
-                class="h-11 w-full rounded-[10px] border border-border bg-card ps-3 pe-12 text-text focus-visible:outline-2 focus-visible:outline-accent"
+                class="h-11 w-full rounded-[10px] border border-input bg-card ps-3 pe-12 text-text focus-visible:outline-2 focus-visible:outline-accent"
                 [value]="password()" (input)="password.set(value($event))"
                 [attr.aria-invalid]="submitted() && !passwordValid()" aria-describedby="password-err" />
               <button type="button"
@@ -71,7 +71,7 @@ type Step = 'credentials' | 'code';
           <div>
             <label for="code" class="mb-1 block text-sm font-medium text-text">{{ 'auth.code' | transloco }}</label>
             <input id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
-              class="h-12 w-full rounded-[10px] border border-border bg-card px-3 text-center text-xl tracking-[0.5em] text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-12 w-full rounded-[10px] border border-input bg-card px-3 text-center text-xl tracking-[0.5em] text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="code()" (input)="code.set(digits($event))"
               [attr.aria-invalid]="submitted() && !codeValid()" aria-describedby="code-err" />
             @if (submitted() && !codeValid()) {
@@ -83,7 +83,7 @@ type Step = 'credentials' | 'code';
             {{ (loading() ? 'auth.verifying' : 'auth.verify') | transloco }}
           </button>
           <button type="button" (click)="resend()" [disabled]="resendIn() > 0 || resending()"
-            class="h-11 w-full rounded-[10px] border border-border text-sm font-medium text-text focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-60">
+            class="h-11 w-full rounded-[10px] border border-input text-sm font-medium text-text focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-60">
             {{ (resendIn() > 0 ? 'auth.resendIn' : 'auth.resend') | transloco: { seconds: resendIn() } }}
           </button>
           <button type="button" (click)="backToCredentials()"
@@ -210,6 +210,9 @@ export class LoginPage {
         this.errorKey.set('errors.csrf');
       } else {
         this.errorKey.set(this.mapError(err, 'auth.codeInvalid'));
+        this.code.set('');
+        this.submitted.set(false);
+        document.getElementById('code')?.focus();
       }
     } finally {
       this.loading.set(false);

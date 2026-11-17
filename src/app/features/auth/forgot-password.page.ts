@@ -24,7 +24,7 @@ import { AuthCardComponent } from './auth-card.component';
           <div>
             <label for="email" class="mb-1 block text-sm font-medium text-text">{{ 'auth.email' | transloco }}</label>
             <input id="email" type="email" dir="ltr" autocomplete="email" inputmode="email"
-              class="h-11 w-full rounded-[10px] border border-border bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="email()" (input)="email.set(value($event))"
               [attr.aria-invalid]="submitted() && !emailValid()" aria-describedby="email-err" />
             @if (submitted() && !emailValid()) {
