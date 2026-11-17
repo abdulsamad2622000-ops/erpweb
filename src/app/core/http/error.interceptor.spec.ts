@@ -5,6 +5,7 @@ describe('errorKey', () => {
     expect(errorKey(0)).toBe('errors.network');
     expect(errorKey(401)).toBe('errors.unauthorized');
     expect(errorKey(403)).toBe('errors.forbidden');
+    expect(errorKey(419)).toBe('errors.csrf');
     expect(errorKey(422)).toBe('errors.validation');
     expect(errorKey(500)).toBe('errors.server');
     expect(errorKey(418)).toBe('errors.generic');

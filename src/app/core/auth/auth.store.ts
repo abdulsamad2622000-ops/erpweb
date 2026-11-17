@@ -27,6 +27,8 @@ export const AuthStore = signalStore(
     grantedKeys: computed(() => new Set(permissions().filter(isActive).map((p) => p.key))),
   })),
   withMethods((store, auth = inject(AuthService)) => {
+    let pending: Promise<void> | null = null;
+
     const load = async (): Promise<void> => {
       patchState(store, { status: 'loading' });
       try {
@@ -39,6 +41,19 @@ export const AuthStore = signalStore(
 
     return {
       load,
+      /** Ek hi /me request, chahe kitne guards ek saath poochein */
+      ensureLoaded(): Promise<void> {
+        if (store.status() === 'authenticated' || store.status() === 'anonymous') {
+          return Promise.resolve();
+        }
+        pending ??= load().finally(() => {
+          pending = null;
+        });
+        return pending;
+      },
+      reset(): void {
+        patchState(store, { ...initialState, status: 'anonymous' });
+      },
       can(key: string): boolean {
         return store.grantedKeys().has(key);
       },
