@@ -1,12 +1,17 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { LanguageService } from './core/i18n/language.service';
+import { ThemeService } from './core/theme/theme.service';
+import { ShellComponent } from './layout/shell.component';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.css',
-  templateUrl: './app.html',
+  imports: [ShellComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<app-shell />',
 })
 export class App {
-  protected readonly title = signal('erp-web');
+  constructor() {
+    inject(ThemeService);     // saved theme apply karo
+    inject(LanguageService);  // saved language + dir apply karo
+  }
 }

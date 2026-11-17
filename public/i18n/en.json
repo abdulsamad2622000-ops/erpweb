@@ -1,0 +1,24 @@
+{
+  "app": { "name": "Laptop ERP" },
+  "common": {
+    "language": "Language", "theme": "Theme", "light": "Light", "dark": "Dark",
+    "comingSoon": "Coming in a later step.", "home": "Home"
+  },
+  "errors": { "network": "Cannot reach the server. Check your connection.", "unauthorized": "Please sign in again.", "forbidden": "You do not have permission.", "validation": "Please check the form.", "server": "Server error. Try again.", "generic": "Something went wrong." },
+  "state": { "empty": "Nothing here yet", "emptyHint": "Items will appear here once they are added.", "error": "Something went wrong", "errorHint": "Please try again.", "retry": "Try again", "loading": "Loading" },
+  "nav": { "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
+  "menu": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory", "stock": "Stock", "serials": "Serials", "locations": "Locations",
+    "ledger": "Stock ledger", "transfers": "Transfers", "counts": "Stock counts",
+    "adjustments": "Adjustments", "reservations": "Reservations",
+    "products": "Products", "productList": "Product list", "brands": "Brands",
+    "categories": "Categories", "barcodes": "Barcodes & labels",
+    "purchase": "Purchase", "suppliers": "Suppliers", "orders": "Purchase orders", "grn": "Receive stock (GRN)",
+    "purchaseReturns": "Purchase returns", "supplierPayments": "Supplier payments",
+    "sales": "Sales", "quotations": "Quotations", "salesOrders": "Sales orders", "invoices": "Invoices",
+    "challans": "Delivery challans", "pos": "Retail POS", "salesReturns": "Sales returns",
+    "customers": "Customers & ledgers", "warranty": "Warranty & service", "reports": "Reports",
+    "email": "Email", "website": "Website", "usersRoles": "Users & roles", "settings": "Settings"
+  }
+}
