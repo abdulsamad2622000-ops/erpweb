@@ -9,10 +9,12 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly base = APP_CONFIG.apiBase;
 
+  private csrf(): Observable<void> {
+    return this.http.get<void>('/sanctum/csrf-cookie');
+  }
+
   login(body: LoginRequest): Observable<void> {
-    return this.http
-      .get<void>('/sanctum/csrf-cookie')
-      .pipe(switchMap(() => this.http.post<void>(`${this.base}/auth/login`, body)));
+    return this.csrf().pipe(switchMap(() => this.http.post<void>(`${this.base}/auth/login`, body)));
   }
 
   logout(): Observable<void> {
@@ -21,5 +23,19 @@ export class AuthService {
 
   me(): Observable<MeResponse> {
     return this.http.get<MeResponse>(`${this.base}/me`);
+  }
+
+  /** Backend ka jawab hamesha generic hona chahiye (email registered ho ya nahi). */
+  forgotPassword(email: string): Observable<void> {
+    return this.csrf().pipe(
+      switchMap(() => this.http.post<void>(`${this.base}/auth/forgot-password`, { email })),
+    );
+  }
+
+  /** SMS registered phone par jata hai (masked email ke saath). Jawab hamesha generic. */
+  recoverEmail(phone: string): Observable<void> {
+    return this.csrf().pipe(
+      switchMap(() => this.http.post<void>(`${this.base}/auth/recover-email`, { phone })),
+    );
   }
 }

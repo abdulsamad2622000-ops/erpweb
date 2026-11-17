@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { AuthStore } from '../core/auth/auth.store';
 import { LanguageService } from '../core/i18n/language.service';
 import { ThemeService } from '../core/theme/theme.service';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
@@ -23,15 +25,29 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
         [attr.aria-label]="'common.theme' | transloco" (click)="theme.toggle()">
         <i [class]="theme.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"></i>
       </button>
+      @if (auth.user(); as u) {
+        <span class="hidden max-w-40 truncate text-sm text-text sm:inline">{{ u.name }}</span>
+      }
+      <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
+        [attr.aria-label]="'auth.logout' | transloco" (click)="logout()">
+        <i class="pi pi-sign-out"></i>
+      </button>
     </div>
   `,
 })
 export class TopbarComponent {
   readonly lang = inject(LanguageService);
   readonly theme = inject(ThemeService);
+  readonly auth = inject(AuthStore);
+  private readonly router = inject(Router);
   readonly menuToggle = output<void>();
 
   toggleLang(): void {
     this.lang.set(this.lang.lang() === 'en' ? 'ur' : 'en');
+  }
+
+  async logout(): Promise<void> {
+    await this.auth.logout();
+    await this.router.navigateByUrl('/login');
   }
 }

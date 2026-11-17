@@ -1,23 +1,21 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Toast } from 'primeng/toast';
 import { SidebarComponent } from './sidebar.component';
 import { TopbarComponent } from './topbar.component';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, SidebarComponent, TopbarComponent, Toast],
+  imports: [RouterOutlet, SidebarComponent, TopbarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown.escape)': 'close()' },
   template: `
-    <p-toast position="top-center" />
     <div class="min-h-screen lg:flex">
       @if (drawerOpen()) {
         <div class="fixed inset-0 z-30 bg-black/50 lg:hidden" aria-hidden="true" (click)="close()"></div>
       }
       <aside
         class="fixed inset-y-0 start-0 z-40 w-64 transition-transform lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0"
-        [class]="drawerOpen() ? 'translate-x-0' : 'max-lg:ltr:-translate-x-full max-lg:rtl:translate-x-full'">
+        [class]="drawerOpen() ? '' : 'ltr:-translate-x-full rtl:translate-x-full'">
         <app-sidebar (navigate)="close()" />
       </aside>
       <div class="flex min-w-0 flex-1 flex-col">

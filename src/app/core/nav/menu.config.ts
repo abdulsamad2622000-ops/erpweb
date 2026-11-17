@@ -1,3 +1,4 @@
+import { FEATURE_FLAGS } from '../config/feature-flags';
 export interface MenuItem {
   key: string;            // translation key suffix + route id
   path: string;           // full route path
@@ -64,4 +65,10 @@ export const MENU: MenuItem[] = [
 /** Sirf leaf items (jin ke liye route banega) */
 export function flattenMenu(items: MenuItem[] = MENU): MenuItem[] {
   return items.flatMap((i) => (i.children ? flattenMenu(i.children) : [i]));
+}
+/** Sirf wohi items jin ki permission ho. Khali group chhup jata hai. Website flag off to chhupa. */
+export function visibleMenu(can: (key: string) => boolean): MenuItem[] {
+  return MENU.filter((i) => i.flag !== 'website' || FEATURE_FLAGS.website)
+    .map((i) => (i.children ? { ...i, children: i.children.filter((c) => can(c.permission)) } : i))
+    .filter((i) => (i.children ? i.children.length > 0 : can(i.permission)));
 }

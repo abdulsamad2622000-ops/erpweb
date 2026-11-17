@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Toast } from 'primeng/toast';
 import { LanguageService } from './core/i18n/language.service';
 import { ThemeService } from './core/theme/theme.service';
-import { ShellComponent } from './layout/shell.component';
 
 @Component({
   selector: 'app-root',
-  imports: [ShellComponent],
+  imports: [RouterOutlet, Toast],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<app-shell />',
+  template: '<p-toast position="top-center" /><router-outlet />',
 })
 export class App {
   constructor() {

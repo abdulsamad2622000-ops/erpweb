@@ -25,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       const isMe = req.url.endsWith('/me');
-      const isLogin = req.url.includes('/auth/login');
+      const isLogin = req.url.includes('/auth/');
 
       // /me par 401 = abhi login nahi, normal baat. Login ka error login page inline dikhayega.
       if (isMe || isLogin) return throwError(() => err);

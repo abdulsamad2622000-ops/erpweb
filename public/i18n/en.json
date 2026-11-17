@@ -6,6 +6,19 @@
   },
   "errors": { "network": "Cannot reach the server. Check your connection.", "csrf": "Session expired. Please sign in again.", "unauthorized": "Please sign in again.", "forbidden": "You do not have permission.", "validation": "Please check the form.", "server": "Server error. Try again.", "generic": "Something went wrong." },
   "state": { "empty": "Nothing here yet", "emptyHint": "Items will appear here once they are added.", "error": "Something went wrong", "errorHint": "Please try again.", "retry": "Try again", "loading": "Loading" },
+  "auth": {
+    "title": "Sign in", "subtitle": "Use your work email and password.",
+    "email": "Email", "password": "Password", "showPassword": "Show password", "hidePassword": "Hide password",
+    "signIn": "Sign in", "signingIn": "Signing in...", "forgot": "Forgot password?", "forgotEmail": "Forgot your email?",
+    "invalid": "Incorrect email or password.", "throttled": "Too many attempts. Try again later.",
+    "emailInvalid": "Enter a valid email address.", "passwordRequired": "Enter your password.",
+    "forgotTitle": "Reset your password", "forgotHelp": "Enter your email. If it is registered, we will send a reset link.",
+    "sendLink": "Send reset link", "forgotDone": "If this email is registered, a reset link has been sent.",
+    "recoverTitle": "Find your email", "recoverHelp": "Enter your registered phone number. If it is registered, we will send an SMS with a masked email.",
+    "phone": "Phone number", "phoneInvalid": "Enter a valid phone number with country code, e.g. +92300...",
+    "sendSms": "Send SMS", "recoverDone": "If this number is registered, an SMS has been sent.",
+    "backToLogin": "Back to sign in", "logout": "Sign out"
+  },
   "nav": { "openMenu": "Open menu", "closeMenu": "Close menu", "main": "Main navigation", "breadcrumb": "Breadcrumb" },
   "menu": {
     "dashboard": "Dashboard",

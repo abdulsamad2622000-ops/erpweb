@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { FEATURE_FLAGS } from '../core/config/feature-flags';
-import { MENU, MenuItem } from '../core/nav/menu.config';
+import { AuthStore } from '../core/auth/auth.store';
+import { MenuItem, visibleMenu } from '../core/nav/menu.config';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +15,7 @@ import { MENU, MenuItem } from '../core/nav/menu.config';
         <span>{{ 'app.name' | transloco }}</span>
       </div>
       <ul class="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
-        @for (item of items; track item.key) {
+        @for (item of items(); track item.key) {
           <li>
             @if (item.children) {
               <button type="button"
@@ -52,8 +52,10 @@ import { MENU, MenuItem } from '../core/nav/menu.config';
   `,
 })
 export class SidebarComponent {
+  private readonly auth = inject(AuthStore);
+
   readonly navigate = output<void>();
-  readonly items: MenuItem[] = MENU.filter((i) => i.flag !== 'website' || FEATURE_FLAGS.website);
+  readonly items = computed<MenuItem[]>(() => visibleMenu((k) => this.auth.can(k)));
   private readonly open = signal<ReadonlySet<string>>(new Set<string>());
 
   isOpen(key: string): boolean {
