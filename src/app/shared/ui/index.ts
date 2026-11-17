@@ -5,3 +5,6 @@ export * from './confirm-dialog/confirm-dialog.component';
 export * from './confirm-dialog/confirm-dialog.service';
 export * from './data-table/data-table.component';
 export * from './data-table/data-table.models';
+export * from './number-input/number-input.component';
+export * from './number-input/number-utils';
+export * from './date-input/date-input.component';

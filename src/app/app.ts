@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { ThemeService } from './core/theme/theme.service';
-import { ConfirmDialogComponent } from './shared/ui';
+import { ConfirmDialogComponent } from './shared/ui/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-root',
