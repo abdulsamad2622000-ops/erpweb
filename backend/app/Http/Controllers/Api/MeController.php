@@ -11,7 +11,9 @@ class MeController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $user = $request->user();
-        $branches = $user->branches()->orderBy('branches.id')->get(['branches.id', 'branches.name']);
+        $branches = $user->branches()->orderBy('branches.id')->get(['branches.id', 'branches.name'])
+            ->map(fn ($b) => ['id' => $b->id, 'name' => $b->name])
+            ->values();
 
         $permissions = $user->permissions()
             ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
@@ -37,7 +39,7 @@ class MeController extends Controller
             ],
             'permissions' => $permissions,
             'branches' => $branches,
-            'activeBranchId' => $branches->first()?->id,
+            'activeBranchId' => $branches->first()['id'] ?? null,
             'limits' => $hasLimits ? [
                 'discountPercent' => $user->discount_percent !== null ? (float) $user->discount_percent : null,
                 'adjustmentUnits' => $user->adjustment_units,
