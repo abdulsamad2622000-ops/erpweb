@@ -47,6 +47,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/products/pages/brands.page').then((m) => m.BrandsPage),
       },
+      {
+        path: 'products/categories',
+        canActivate: [permissionGuard],
+        data: { title: 'categories', permission: 'products.category.view' },
+        loadComponent: () =>
+          import('./features/products/pages/categories.page').then((m) => m.CategoriesPage),
+      },
+      {
+        path: 'products/list',
+        canActivate: [permissionGuard],
+        data: { title: 'productList', permission: 'products.product.view' },
+        loadComponent: () =>
+          import('./features/products/pages/products.page').then((m) => m.ProductsPage),
+      },
       ...placeholderRoutes,
       {
         path: '403',

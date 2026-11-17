@@ -10,13 +10,12 @@ const brands: Brand[] = [
 const categories: Category[] = [
   { id: 1, name: 'Laptops', isActive: true },
   { id: 2, name: 'Desktops', isActive: true },
-  { id: 3, name: 'Accessories', isActive: true },
 ];
 
 const products: Product[] = [
   { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 1, trackBatch: false, isActive: true },
   { id: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', barcode: null, brandId: 2, categoryId: 1, trackBatch: false, isActive: true },
-  { id: 3, sku: 'ACC-LEN-001', name: 'Lenovo Wireless Mouse', barcode: '8901000000033', brandId: 3, categoryId: 3, trackBatch: true, isActive: true },
+  { id: 3, sku: 'DSK-LEN-001', name: 'Lenovo ThinkCentre M70s', barcode: '8901000000033', brandId: 3, categoryId: 2, trackBatch: false, isActive: true },
 ];
 
 const idOf = (url: string): number => Number(url.split('?')[0].split('/').pop());

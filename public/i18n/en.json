@@ -120,6 +120,32 @@
     "deleteTitle": "Delete brand",
     "deleteMessage": "Delete this brand? This cannot be undone."
   },
+  "categories": {
+    "title": "Categories",
+    "add": "Add category",
+    "edit": "Edit category",
+    "name": "Category name",
+    "active": "Active",
+    "deleteTitle": "Delete category",
+    "deleteMessage": "Delete this category? This cannot be undone."
+  },
+  "products": {
+    "title": "Products",
+    "add": "Add product",
+    "edit": "Edit product",
+    "sku": "SKU",
+    "name": "Product name",
+    "barcode": "Barcode (optional)",
+    "brand": "Brand",
+    "category": "Category",
+    "tracking": "Tracking type",
+    "serialized": "Serialized",
+    "batch": "Batch / Lot",
+    "active": "Active",
+    "none": "Select...",
+    "deleteTitle": "Delete product",
+    "deleteMessage": "Delete this product? This cannot be undone."
+  },
   "menu": {
     "dashboard": "Dashboard",
     "inventory": "Inventory",
