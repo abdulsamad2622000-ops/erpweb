@@ -1,17 +1,25 @@
-import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { delay, of } from 'rxjs';
+import { Observable, delay, of, throwError } from 'rxjs';
 import { APP_CONFIG } from '../config/app-config';
 import { FIXTURES } from '../mock/fixtures';
 import { MockModeService } from '../mock/mock-mode.service';
 
+const MOCKED_PREFIXES = [APP_CONFIG.apiBase, '/sanctum'];
+
 export const mockInterceptor: HttpInterceptorFn = (req, next) => {
-  if (!inject(MockModeService).enabled() || !req.url.startsWith(APP_CONFIG.apiBase)) {
+  const mocked = MOCKED_PREFIXES.some((p) => req.url.startsWith(p));
+  if (!inject(MockModeService).enabled() || !mocked) {
     return next(req);
   }
-  const path = req.url.slice(APP_CONFIG.apiBase.length).split('?')[0];
-  const handler = FIXTURES[`${req.method} ${path}`];
+  const raw = req.url.startsWith(APP_CONFIG.apiBase) ? req.url.slice(APP_CONFIG.apiBase.length) : req.url;
+  const handler = FIXTURES[`${req.method} ${raw.split('?')[0]}`];
   if (!handler) return next(req);
-  const body = handler({ method: req.method, url: req.url, body: req.body });
-  return of(new HttpResponse({ status: 200, body })).pipe(delay(200));
+
+  const res = handler({ method: req.method, url: req.url, body: req.body });
+  const out$: Observable<HttpEvent<unknown>> =
+    res.status >= 400
+      ? throwError(() => new HttpErrorResponse({ status: res.status, error: res.body, url: req.url }))
+      : of(new HttpResponse({ status: res.status, body: res.body }));
+  return out$.pipe(delay(200));
 };
