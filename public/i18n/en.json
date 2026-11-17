@@ -16,6 +16,14 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "clear": "Clear",
+    "reason": {
+      "label": "Reason",
+      "hint": "Minimum {{ min }} characters."
+    },
+    "approval": {
+      "noteLabel": "Note (optional)",
+      "checkbox": "I approve this action"
+    },
     "save": "Save",
     "delete": "Delete",
     "add": "Add",
