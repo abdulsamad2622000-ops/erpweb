@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserPermission extends Model
 {
-    protected $fillable = ['user_id', 'permission_key', 'scope', 'expires_at', 'limit_value'];
+    protected $fillable = ['user_id', 'permission_key', 'effect', 'scope', 'expires_at', 'limit_value'];
 
     protected function casts(): array
     {
