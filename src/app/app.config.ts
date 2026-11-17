@@ -9,6 +9,7 @@ import { provideTransloco } from '@jsverse/transloco';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
+import { PRIMEUI_LICENSE } from './core/config/primeui-license';
 import { TranslocoHttpLoader } from './core/i18n/transloco-loader';
 
 export const appConfig: ApplicationConfig = {
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     }),
     providePrimeNG({
       theme: { preset: Aura, options: { darkModeSelector: '.dark' } },
+      license: PRIMEUI_LICENSE,
     }),
   ],
 };
