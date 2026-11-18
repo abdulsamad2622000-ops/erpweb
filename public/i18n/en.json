@@ -25,6 +25,15 @@
     "rowsPerPage": "Rows per page",
     "previous": "Previous page",
     "next": "Next page",
+    "scan": {
+      "label": "Scan or type a code",
+      "camera": "Scan with camera",
+      "mute": "Mute scan sound",
+      "unmute": "Unmute scan sound",
+      "cameraHint": "Point the camera at a barcode or QR code.",
+      "cameraUnsupported": "Camera scan is not supported on this browser. Use a USB scanner or type the code.",
+      "cameraDenied": "Camera is not available. Allow camera access and try again."
+    },
     "status": {
       "active": "Active",
       "inactive": "Inactive",

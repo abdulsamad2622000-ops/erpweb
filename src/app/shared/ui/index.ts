@@ -7,3 +7,4 @@ export * from './data-table/data-table.component';
 export * from './data-table/data-table.models';
 export * from './crud-dialog/crud-dialog.component';
 export * from './list-page/list-page.component';
+export * from './scan-input/scan-input.component';
