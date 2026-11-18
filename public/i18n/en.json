@@ -43,6 +43,14 @@
     },
     "currency": {
       "pkr": "PKR"
+    },
+    "reason": {
+      "label": "Reason",
+      "minHint": "At least {{min}} characters."
+    },
+    "approval": {
+      "title": "Request approval",
+      "submit": "Send request"
     }
   },
   "errors": {

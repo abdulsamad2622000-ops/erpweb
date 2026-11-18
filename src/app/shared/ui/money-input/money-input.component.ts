@@ -4,7 +4,8 @@ import { normalizeMoney } from '../../utils/money';
 
 function sanitize(raw: string): string {
   const cleaned = raw.replace(/[^\d.]/g, '');
-  const [intPart, ...rest] = cleaned.split('.');
+  const [rawInt, ...rest] = cleaned.split('.');
+  const intPart = rest.length && rawInt === '' ? '0' : rawInt;
   return rest.length ? `${intPart}.${rest.join('').slice(0, 2)}` : intPart;
 }
 

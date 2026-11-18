@@ -44,6 +44,13 @@ describe('MoneyInput', () => {
     expect(onChange).toHaveBeenLastCalledWith('5.99');
   });
 
+  it('adds a zero before a leading dot', () => {
+    const { input, onChange } = setup();
+    type(input, '.5');
+    expect(input.value).toBe('0.5');
+    expect(onChange).toHaveBeenLastCalledWith('0.5');
+  });
+
   it('emits null when cleared', () => {
     const { input, onChange } = setup();
     type(input, '5');
