@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, permissionGuard } from './core/auth/guards';
 import { FEATURE_FLAGS } from './core/config/feature-flags';
@@ -12,6 +13,15 @@ const placeholderRoutes: Routes = flattenMenu()
     loadComponent: () =>
       import('./features/placeholder/placeholder.page').then((m) => m.PlaceholderPage),
   }));
+
+// Sirf ng serve mein. Production build mein ye route register nahi hota.
+const devRoutes: Routes = [
+  {
+    path: 'dev/components',
+    loadComponent: () =>
+      import('./features/dev/components-showcase.page').then((m) => m.ComponentsShowcasePage),
+  },
+];
 
 export const routes: Routes = [
   {
@@ -61,6 +71,35 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/products/pages/products.page').then((m) => m.ProductsPage),
       },
+      {
+        path: 'users-roles/users',
+        canActivate: [permissionGuard],
+        data: { title: 'users', permission: 'users.user.view' },
+        loadComponent: () =>
+          import('./features/users/pages/users.page').then((m) => m.UsersPage),
+      },
+      {
+        path: 'users-roles/roles',
+        canActivate: [permissionGuard],
+        data: { title: 'roles', permission: 'users.role.view' },
+        loadComponent: () =>
+          import('./features/users/pages/roles.page').then((m) => m.RolesPage),
+      },
+      {
+        path: 'users-roles/roles/new',
+        canActivate: [permissionGuard],
+        data: { title: 'roles', permission: 'users.role.create' },
+        loadComponent: () =>
+          import('./features/users/pages/role-form.page').then((m) => m.RoleFormPage),
+      },
+      {
+        path: 'users-roles/roles/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'roles', permission: 'users.role.view' },
+        loadComponent: () =>
+          import('./features/users/pages/role-form.page').then((m) => m.RoleFormPage),
+      },
+      ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {
         path: '403',
