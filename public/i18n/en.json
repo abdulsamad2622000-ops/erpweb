@@ -199,6 +199,7 @@
     "logoutTitle": "Force logout",
     "logoutMessage": "End all active sessions of this user?",
     "resetPassword": "Send password reset",
+    "permissions": "Permissions",
     "resetTitle": "Password reset",
     "resetMessage": "Send a password reset link to this user?",
     "deleteTitle": "Delete user",
@@ -233,9 +234,216 @@
     "deleteTitle": "Delete role",
     "deleteMessage": "Delete this role? This cannot be undone."
   },
+  "overrides": {
+    "title": "User permissions",
+    "intro": "Role permissions apply by default. Use Allow or Deny to change them for this user only.",
+    "role": "Role",
+    "noRole": "No role",
+    "count": "{{ count }} overrides",
+    "granted": "Granted",
+    "notGranted": "Not granted",
+    "roleHas": "Role: yes",
+    "roleHasNot": "Role: no",
+    "mode": {
+      "default": "Default",
+      "allow": "Allow",
+      "deny": "Deny"
+    },
+    "save": "Save overrides",
+    "clear": "Clear all",
+    "saved": "Permissions saved.",
+    "back": "Back to users",
+    "notGrantable": "Allow is disabled for permissions you do not hold yourself."
+  },
+  "audit": {
+    "title": "Permission change log",
+    "when": "When",
+    "actor": "Done by",
+    "action": "Action",
+    "target": "Target",
+    "detail": "Detail",
+    "actions": {
+      "user": {
+        "created": "User created",
+        "updated": "User updated",
+        "deleted": "User deleted",
+        "enabled": "User enabled",
+        "disabled": "User disabled",
+        "forceLogout": "Force logout",
+        "passwordReset": "Password reset sent",
+        "permissions": "User permissions changed"
+      },
+      "role": {
+        "created": "Role created",
+        "updated": "Role updated",
+        "deleted": "Role deleted"
+      }
+    }
+  },
+  "settingsPage": {
+    "saved": "Saved.",
+    "company": {
+      "title": "Company profile",
+      "name": "Company name",
+      "logo": "Logo",
+      "logoUpload": "Choose logo",
+      "logoRemove": "Remove logo",
+      "logoHint": "PNG, JPG or WebP, up to 512 KB.",
+      "logoTooLarge": "The logo is too large (max 512 KB).",
+      "address": "Address",
+      "city": "City",
+      "country": "Country",
+      "phone": "Phone",
+      "email": "Email",
+      "taxNumber": "Tax number",
+      "taxRate": "Default tax rate (%)",
+      "currency": "Currency"
+    },
+    "numberSeries": {
+      "title": "Number series",
+      "hint": "Set how document numbers look. The example shows the next number that will be used.",
+      "document": "Document",
+      "prefix": "Prefix",
+      "next": "Next number",
+      "padding": "Digits",
+      "resetYearly": "Restart numbering every year",
+      "example": "Example",
+      "edit": "Edit number series",
+      "code": {
+        "PO": "Purchase order",
+        "GRN": "Goods received note (GRN)",
+        "INVOICE": "Sales invoice"
+      }
+    },
+    "priceTiers": {
+      "title": "Price tiers",
+      "hint": "Tiers are used for product prices and customer pricing.",
+      "name": "Tier name",
+      "code": "Tier",
+      "active": "Active",
+      "edit": "Edit price tier",
+      "retailLocked": "The retail tier is always active.",
+      "codes": {
+        "retail": "Retail",
+        "wholesale": "Wholesale",
+        "dealer": "Dealer"
+      }
+    },
+    "costing": {
+      "title": "Costing and stock rules",
+      "method": "Costing method",
+      "negativeStock": "When stock is not enough",
+      "methods": {
+        "fifo": "First in, first out (FIFO)",
+        "fifoHint": "The oldest purchase cost is used first.",
+        "weighted_average": "Weighted average",
+        "weighted_averageHint": "Cost is averaged over all units in stock.",
+        "serial_specific": "Specific serial cost",
+        "serial_specificHint": "Each serial keeps its own purchase cost. Best for serialized laptops."
+      },
+      "rules": {
+        "block": "Block the sale",
+        "blockHint": "Stock can never go below zero.",
+        "warn": "Warn and allow",
+        "warnHint": "A warning is shown and the sale can continue.",
+        "allow": "Allow without warning",
+        "allowHint": "Stock can go below zero silently."
+      }
+    },
+    "backup": {
+      "title": "Backup information",
+      "note": "Backups are managed on the server. This page is for information only.",
+      "status": "Status",
+      "last": "Last backup",
+      "never": "No backup yet",
+      "frequency": "Frequency",
+      "time": "Backup time",
+      "retention": "Keep backups for",
+      "days": "{{ days }} days",
+      "location": "Location",
+      "statuses": {
+        "ok": "Healthy",
+        "failed": "Failed",
+        "never": "Never run"
+      },
+      "frequencies": {
+        "daily": "Every day",
+        "weekly": "Every week"
+      }
+    }
+  },
+  "settingsBranches": {
+    "title": "Branches",
+    "add": "Add branch",
+    "edit": "Edit branch",
+    "code": "Branch code",
+    "name": "Branch name",
+    "city": "City",
+    "address": "Address",
+    "phone": "Phone",
+    "active": "Active",
+    "deleteTitle": "Delete branch",
+    "deleteMessage": "Delete this branch? This cannot be undone."
+  },
+  "settingsWarehouses": {
+    "title": "Warehouses",
+    "add": "Add warehouse",
+    "edit": "Edit warehouse",
+    "code": "Warehouse code",
+    "name": "Warehouse name",
+    "branch": "Branch",
+    "type": "Type",
+    "active": "Active",
+    "chooseBranch": "Select a branch...",
+    "deleteTitle": "Delete warehouse",
+    "deleteMessage": "Delete this warehouse? This cannot be undone.",
+    "types": {
+      "sellable": "Sellable",
+      "showroom": "Showroom",
+      "damaged": "Damaged",
+      "quarantine": "Quarantine",
+      "repair": "Repair",
+      "returns": "Returns",
+      "in_transit": "In transit"
+    }
+  },
+  "settingsLocations": {
+    "title": "Location tree",
+    "warehouse": "Warehouse",
+    "chooseWarehouse": "Select a warehouse...",
+    "noWarehouse": "Choose a warehouse to see its locations.",
+    "addZone": "Add zone",
+    "add": "Add {{level}}",
+    "edit": "Edit {{level}}",
+    "addChild": "Add {{level}} inside",
+    "code": "Code",
+    "name": "Name",
+    "active": "Active",
+    "loading": "Loading locations...",
+    "empty": "No locations in this warehouse yet. Add the first zone.",
+    "retry": "Try again",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "printLabels": "Print bin labels",
+    "printSelected": "Print selected ({{count}})",
+    "printOne": "Print label",
+    "printTitle": "Bin labels",
+    "noBins": "This warehouse has no bins to print.",
+    "selectBin": "Select bin {{name}}",
+    "labelPrintFailed": "Could not create the labels. Please try again.",
+    "deleteTitle": "Delete location",
+    "deleteMessage": "Delete this location? This cannot be undone.",
+    "levels": {
+      "zone": "Zone",
+      "rack": "Rack",
+      "shelf": "Shelf",
+      "bin": "Bin"
+    }
+  },
   "menu": {
     "users": "Users",
     "roles": "Roles",
+    "audit": "Change log",
     "dashboard": "Dashboard",
     "inventory": "Inventory",
     "stock": "Stock",
@@ -270,6 +478,14 @@
     "email": "Email",
     "website": "Website",
     "usersRoles": "Users & roles",
-    "settings": "Settings"
+    "settings": "Settings",
+    "companyProfile": "Company profile",
+    "numberSeries": "Number series",
+    "priceTiers": "Price tiers",
+    "costing": "Costing and stock",
+    "backup": "Backup",
+    "branches": "Branches",
+    "warehouses": "Warehouses",
+    "locationTree": "Location tree"
   }
 }

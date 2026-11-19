@@ -63,9 +63,22 @@ export const MENU: MenuItem[] = [
     children: [
       { key: 'users', path: 'users-roles/users', icon: 'pi pi-users', permission: 'users.user.view' },
       { key: 'roles', path: 'users-roles/roles', icon: 'pi pi-id-card', permission: 'users.role.view' },
+      { key: 'audit', path: 'users-roles/audit', icon: 'pi pi-history', permission: 'users.audit.view' },
     ],
   },
-  { key: 'settings', path: 'settings', icon: 'pi pi-cog', permission: 'settings.manage' },
+  {
+    key: 'settings', path: 'settings', icon: 'pi pi-cog', permission: 'settings.manage',
+    children: [
+      { key: 'companyProfile', path: 'settings/company', icon: 'pi pi-building', permission: 'settings.manage' },
+      { key: 'branches', path: 'settings/branches', icon: 'pi pi-sitemap', permission: 'settings.manage' },
+      { key: 'warehouses', path: 'settings/warehouses', icon: 'pi pi-box', permission: 'settings.manage' },
+      { key: 'locationTree', path: 'settings/locations', icon: 'pi pi-map', permission: 'settings.manage' },
+      { key: 'numberSeries', path: 'settings/number-series', icon: 'pi pi-hashtag', permission: 'settings.manage' },
+      { key: 'priceTiers', path: 'settings/price-tiers', icon: 'pi pi-tags', permission: 'settings.manage' },
+      { key: 'costing', path: 'settings/costing', icon: 'pi pi-calculator', permission: 'settings.manage' },
+      { key: 'backup', path: 'settings/backup', icon: 'pi pi-database', permission: 'settings.manage' },
+    ],
+  },
 ];
 
 /** Sirf leaf items (jin ke liye route banega) */

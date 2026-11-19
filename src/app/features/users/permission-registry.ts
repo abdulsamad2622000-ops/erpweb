@@ -80,7 +80,7 @@ export const PERMISSION_MODULES: PermissionModule[] = [
   {
     key: 'users',
     label: 'Users & roles',
-    rows: [row('Users', 'users.user', CRUD), row('Roles', 'users.role', CRUD)],
+    rows: [row('Users', 'users.user', CRUD), row('Roles', 'users.role', CRUD), row('Audit log', 'users.audit', ['view'])],
   },
   { key: 'settings', label: 'Settings', rows: [row('Settings', 'settings', ['manage'])] },
 ];

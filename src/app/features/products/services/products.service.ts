@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config';
@@ -10,7 +10,7 @@ export interface Paged<T> {
   total: number;
 }
 
-abstract class CrudApi<T extends { id: number }, I> {
+export abstract class CrudApi<T extends { id: number }, I> {
   protected readonly http = inject(HttpClient);
   protected abstract readonly path: string;
 
@@ -19,15 +19,16 @@ abstract class CrudApi<T extends { id: number }, I> {
   }
 
   list(q: Partial<TableQuery> = {}): Observable<Paged<T>> {
-    let params = new HttpParams()
-      .set('page', q.page ?? 1)
-      .set('pageSize', q.pageSize ?? 10);
-    if (q.search) params = params.set('search', q.search);
-    if (q.sort) params = params.set('sort', `${q.sort.field}:${q.sort.direction}`);
+    // Query string URL mein hi banate hain, taake mock interceptor (req.url) ko search/sort/paging dikhe
+    const qs = new URLSearchParams();
+    qs.set('page', String(q.page ?? 1));
+    qs.set('pageSize', String(q.pageSize ?? 10));
+    if (q.search) qs.set('search', q.search);
+    if (q.sort) qs.set('sort', `${q.sort.field}:${q.sort.direction}`);
     for (const [k, v] of Object.entries(q.filters ?? {})) {
-      if (v) params = params.set(k, v);
+      if (v) qs.set(k, String(v));
     }
-    return this.http.get<Paged<T>>(this.base, { params });
+    return this.http.get<Paged<T>>(`${this.base}?${qs.toString()}`);
   }
 
   get(id: number): Observable<T> {

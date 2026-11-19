@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { UserType } from '../../../core/auth/auth.models';
 import { AuthStore } from '../../../core/auth/auth.store';
@@ -177,6 +178,7 @@ export class UsersPage implements OnInit {
   private readonly i18n = inject(TranslocoService);
   private readonly confirm = inject(ConfirmDialogService);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly dlg = viewChild.required(CrudDialogComponent);
 
   protected readonly allTypes: UserType[] = ['super_admin', 'admin', 'staff'];
@@ -227,6 +229,7 @@ export class UsersPage implements OnInit {
     { id: 'enable', label: this.i18n.translate('users.enable'), icon: 'pi pi-check-circle', visible: (r) => !r.isActive && this.canEdit(r) },
     { id: 'logout', label: this.i18n.translate('users.forceLogout'), icon: 'pi pi-sign-out', visible: (r) => this.canEdit(r) && !this.isSelf(r) },
     { id: 'reset', label: this.i18n.translate('users.resetPassword'), icon: 'pi pi-key', visible: (r) => this.canEdit(r) },
+    { id: 'permissions', label: this.i18n.translate('users.permissions'), icon: 'pi pi-shield', visible: (r) => this.canEdit(r) && r.type !== 'super_admin' },
     { id: 'delete', label: this.i18n.translate('common.delete'), icon: 'pi pi-trash', danger: true, visible: (r) => this.auth.can('users.user.delete') && this.canManage(r) && !this.isSelf(r) },
   ];
 
@@ -282,6 +285,7 @@ export class UsersPage implements OnInit {
       case 'disable': void this.askSetActive(e.row); break;
       case 'logout': void this.askLogout(e.row); break;
       case 'reset': void this.askReset(e.row); break;
+      case 'permissions': void this.router.navigate(['/users-roles/users', e.row.id, 'permissions']); break;
       case 'delete': void this.askDelete(e.row); break;
     }
   }
