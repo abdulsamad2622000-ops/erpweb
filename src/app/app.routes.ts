@@ -99,6 +99,77 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/users/pages/role-form.page').then((m) => m.RoleFormPage),
       },
+      {
+        path: 'users-roles/users/:id/permissions',
+        canActivate: [permissionGuard],
+        data: { title: 'users', permission: 'users.user.edit' },
+        loadComponent: () =>
+          import('./features/users/pages/user-permissions.page').then((m) => m.UserPermissionsPage),
+      },
+      {
+        path: 'users-roles/audit',
+        canActivate: [permissionGuard],
+        data: { title: 'audit', permission: 'users.audit.view' },
+        loadComponent: () =>
+          import('./features/users/pages/audit.page').then((m) => m.AuditPage),
+      },
+      { path: 'settings', pathMatch: 'full', redirectTo: 'settings/company' },
+      {
+        path: 'settings/locations',
+        canActivate: [permissionGuard],
+        data: { title: 'locationTree', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/locations.page').then((m) => m.LocationsPage),
+      },
+      {
+        path: 'settings/branches',
+        canActivate: [permissionGuard],
+        data: { title: 'branches', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/branches.page').then((m) => m.BranchesPage),
+      },
+      {
+        path: 'settings/warehouses',
+        canActivate: [permissionGuard],
+        data: { title: 'warehouses', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/warehouses.page').then((m) => m.WarehousesPage),
+      },
+      {
+        path: 'settings/company',
+        canActivate: [permissionGuard],
+        data: { title: 'companyProfile', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/company.page').then((m) => m.CompanyPage),
+      },
+      {
+        path: 'settings/number-series',
+        canActivate: [permissionGuard],
+        data: { title: 'numberSeries', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/number-series.page').then((m) => m.NumberSeriesPage),
+      },
+      {
+        path: 'settings/price-tiers',
+        canActivate: [permissionGuard],
+        data: { title: 'priceTiers', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/price-tiers.page').then((m) => m.PriceTiersPage),
+      },
+      {
+        path: 'settings/costing',
+        canActivate: [permissionGuard],
+        data: { title: 'costing', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/costing.page').then((m) => m.CostingPage),
+      },
+      {
+        path: 'settings/backup',
+        canActivate: [permissionGuard],
+        data: { title: 'backup', permission: 'settings.manage' },
+        loadComponent: () =>
+          import('./features/settings/pages/backup.page').then((m) => m.BackupPage),
+      },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {

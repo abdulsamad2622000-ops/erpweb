@@ -21,7 +21,7 @@ const products: Product[] = [
 const idOf = (url: string): number => Number(url.split('?')[0].split('/').pop());
 const nextId = (rows: { id: number }[]): number => Math.max(0, ...rows.map((r) => r.id)) + 1;
 
-function paged<T>(rows: T[], url: string, searchOf: (r: T) => string) {
+export function paged<T>(rows: T[], url: string, searchOf: (r: T) => string) {
   const q = new URL(url, 'http://mock').searchParams;
   const page = Number(q.get('page') ?? 1);
   const pageSize = Number(q.get('pageSize') ?? 10);
@@ -41,12 +41,12 @@ function paged<T>(rows: T[], url: string, searchOf: (r: T) => string) {
   return { data: out, total };
 }
 
-interface CrudOptions<T> {
+export interface CrudOptions<T> {
   inUse?: (id: number) => boolean;
   duplicate?: (body: Omit<T, 'id'>, ignoreId: number) => string | null;
 }
 
-function crud<T extends { id: number }>(
+export function crud<T extends { id: number }>(
   path: string,
   rows: T[],
   searchOf: (r: T) => string,

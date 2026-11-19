@@ -20,7 +20,7 @@ export const ROLES: MockRole[] = ROLE_TEMPLATES.map((t, i) => ({
   isSystem: false,
 }));
 
-const users: ManagedUser[] = [
+export const users: ManagedUser[] = [
   { id: 1, name: 'Demo Super Admin', email: 'super@demo.test', type: 'super_admin', roleId: null, roleName: null, branchIds: [1, 2], isActive: true, accessExpiresAt: null, discountPercent: null, adjustmentUnits: null },
   { id: 2, name: 'Demo Admin', email: 'admin@demo.test', type: 'admin', roleId: 4, roleName: 'Branch Manager', branchIds: [1, 2], isActive: true, accessExpiresAt: null, discountPercent: 5, adjustmentUnits: 10 },
   { id: 3, name: 'Demo Store Keeper', email: 'keeper@demo.test', type: 'staff', roleId: 1, roleName: 'Store Keeper', branchIds: [1], isActive: true, accessExpiresAt: null, discountPercent: 2, adjustmentUnits: 3 },
@@ -37,7 +37,7 @@ const EMAIL_TYPE: Record<string, UserType> = {
 };
 
 /** Mock login session se pata karta hai ke kaun request kar raha hai (asli backend session se karega). */
-function actorType(): UserType | null {
+export function actorType(): UserType | null {
   try {
     return EMAIL_TYPE[sessionStorage.getItem('erp.mock.session') ?? ''] ?? null;
   } catch {

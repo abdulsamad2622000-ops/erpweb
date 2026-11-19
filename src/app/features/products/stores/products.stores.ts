@@ -16,7 +16,7 @@ function messageOf(e: unknown): string {
   return err.error?.message ?? 'Something went wrong.';
 }
 
-abstract class CrudStore<T extends { id: number }, I> {
+export abstract class CrudStore<T extends { id: number }, I> {
   protected abstract readonly api: CrudApiLike<T, I>;
 
   readonly rows = signal<T[]>([]);
