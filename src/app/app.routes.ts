@@ -65,6 +65,13 @@ export const routes: Routes = [
           import('./features/products/pages/categories.page').then((m) => m.CategoriesPage),
       },
       {
+        path: 'products/barcodes',
+        canActivate: [permissionGuard],
+        data: { title: 'barcodes', permission: 'barcode.label.view' },
+        loadComponent: () =>
+          import('./features/barcodes/pages/barcodes.page').then((m) => m.BarcodesPage),
+      },
+      {
         path: 'products/list',
         canActivate: [permissionGuard],
         data: { title: 'productList', permission: 'products.product.view' },

@@ -22,7 +22,8 @@ interface MockUser {
 const CRUD_KEYS = ['products.product', 'products.brand', 'products.category', 'users.user', 'users.role'].flatMap((p) =>
   ['create', 'edit', 'delete'].map((a) => `${p}.${a}`),
 );
-const ALL_KEYS = [...new Set([...flattenMenu().map((i) => i.permission), ...CRUD_KEYS])];
+const BARCODE_KEYS = ['barcode.label.create', 'barcode.label.print', 'barcode.label.reprint'];
+const ALL_KEYS = [...new Set([...flattenMenu().map((i) => i.permission), ...CRUD_KEYS, ...BARCODE_KEYS])];
 const BRANCHES: Branch[] = [
   { id: 1, name: 'Karachi Main' },
   { id: 2, name: 'Lahore' },

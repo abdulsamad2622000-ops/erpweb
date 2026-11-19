@@ -47,7 +47,7 @@ export const PERMISSION_MODULES: PermissionModule[] = [
       row('Cost price', 'products.cost', ['view']),
       row('Brands', 'products.brand', CRUD),
       row('Categories', 'products.category', CRUD),
-      row('Barcodes & labels', 'barcode.label', ['view', 'create', 'print']),
+      row('Barcodes & labels', 'barcode.label', ['view', 'create', 'print', 'reprint']),
     ],
   },
   {

@@ -1,4 +1,5 @@
-export type PaperSize = 'a4' | 'thermal80';
+/** 'label': page size extraCss deta hai (label printer). */
+export type PaperSize = 'a4' | 'thermal80' | 'label';
 
 /** Print HTML mein jane wali har value is se guzarein. */
 export function escapeHtml(value: string | number | null | undefined): string {
@@ -42,8 +43,10 @@ export function buildPrintDocument(
   body: string,
   paper: PaperSize,
   dir: 'ltr' | 'rtl' = 'ltr',
+  extraCss = '',
 ): string {
-  const css = BASE_CSS + (paper === 'a4' ? A4_CSS : THERMAL_CSS);
+  const paperCss = paper === 'a4' ? A4_CSS : paper === 'thermal80' ? THERMAL_CSS : '';
+  const css = BASE_CSS + paperCss + extraCss;
   return (
     '<!doctype html><html dir="' + dir + '"><head><meta charset="utf-8">' +
     '<title>' + escapeHtml(title) + '</title><style>' + css + '</style></head>' +

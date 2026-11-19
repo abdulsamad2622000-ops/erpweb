@@ -585,5 +585,88 @@
     "branches": "Branches",
     "warehouses": "Warehouses",
     "locationTree": "Location tree"
+  },
+  "barcodes": {
+    "title": "Barcodes & labels",
+    "tabs": {
+      "labels": "Print labels",
+      "templates": "Templates",
+      "history": "Print history"
+    },
+    "kind": "Type",
+    "allKinds": "All types",
+    "kinds": {
+      "sku": "Product (SKU)",
+      "serial": "Serial",
+      "bin": "Bin"
+    },
+    "value": "Barcode value",
+    "name": "Name",
+    "details": "Details",
+    "noItems": "No items found.",
+    "noHistory": "Nothing has been printed yet.",
+    "addToQueue": "Add to print queue",
+    "queue": "Print queue",
+    "queueEmpty": "Add items from the list to print their labels.",
+    "template": "Template",
+    "copies": "Copies",
+    "labelCount": "{{ n }} label(s) will be printed.",
+    "preview": "Preview",
+    "print": "Print labels",
+    "printed": "Sent {{ n }} label(s) to the printer.",
+    "reprint": "Reprint",
+    "reprintTitle": "Reprint a damaged label",
+    "reprintHint": "Scan the serial, SKU or bin barcode. A reason is required and the reprint is logged.",
+    "reprintMessage": "Why does the label for {{ value }} need to be reprinted?",
+    "scanPlaceholder": "Scan or type a barcode",
+    "when": "When",
+    "user": "User",
+    "printKind": "Action",
+    "labels": "Labels",
+    "values": "Barcodes",
+    "reason": "Reason",
+    "printKinds": {
+      "print": "Print",
+      "reprint": "Reprint"
+    },
+    "newTemplate": "New template",
+    "default": "Default",
+    "templateName": "Template name",
+    "sizePreset": "Label size",
+    "customSize": "Custom size",
+    "widthMm": "Width (mm)",
+    "heightMm": "Height (mm)",
+    "symbology": "Barcode type",
+    "symbologies": {
+      "code128": "Code 128",
+      "ean13": "EAN-13",
+      "qr": "QR code"
+    },
+    "fields": "Fields on the label",
+    "fieldNames": {
+      "title": "Product or location name",
+      "subtitle": "Details line",
+      "value": "Barcode value (text)",
+      "price": "Price",
+      "company": "Company name"
+    },
+    "showLogo": "Show company logo",
+    "makeDefault": "Use as the default template",
+    "livePreview": "Live preview",
+    "deleteTitle": "Delete template?",
+    "deleteMessage": "Delete the template “{{ name }}”? This cannot be undone.",
+    "errors": {
+      "empty": "The barcode value is empty.",
+      "eanFormat": "EAN-13 needs 12 or 13 digits.",
+      "eanCheck": "The EAN-13 check digit is wrong.",
+      "code128": "Code 128 supports only standard keyboard characters.",
+      "tooLong": "The value is too long for a QR code.",
+      "invalidFor": "These values cannot be printed with this barcode type: {{ values }}",
+      "notFound": "No serial, SKU or bin found for this barcode.",
+      "nameRequired": "Template name is required.",
+      "nameLong": "Template name is too long.",
+      "size": "Label size must be 20–150 mm wide and 10–150 mm high.",
+      "previewFailed": "Preview is not available for these settings."
+    }
   }
 }

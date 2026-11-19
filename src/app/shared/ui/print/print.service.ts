@@ -7,6 +7,8 @@ export interface PrintOptions {
   body: string;
   paper: PaperSize;
   dir?: 'ltr' | 'rtl';
+  /** Mazeed CSS, e.g. label ka @page size. Sirf hamara apna CSS, user text nahi. */
+  extraCss?: string;
 }
 
 /** Chhupe iframe mein document bana kar browser print dialog kholta hai. */
@@ -40,7 +42,7 @@ export class PrintService {
         setTimeout(cleanup, 60_000);
       };
 
-      iframe.srcdoc = buildPrintDocument(options.title, options.body, options.paper, options.dir);
+      iframe.srcdoc = buildPrintDocument(options.title, options.body, options.paper, options.dir, options.extraCss);
       document.body.appendChild(iframe);
     });
   }
