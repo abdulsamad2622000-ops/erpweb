@@ -58,7 +58,13 @@ export const MENU: MenuItem[] = [
   { key: 'reports', path: 'reports', icon: 'pi pi-chart-bar', permission: 'reports.report.view' },
   { key: 'email', path: 'email', icon: 'pi pi-envelope', permission: 'email.template.view' },
   { key: 'website', path: 'website', icon: 'pi pi-globe', permission: 'web.order.view', flag: 'website' },
-  { key: 'usersRoles', path: 'users-roles', icon: 'pi pi-user-edit', permission: 'users.user.view' },
+  {
+    key: 'usersRoles', path: 'users-roles', icon: 'pi pi-user-edit', permission: 'users.user.view',
+    children: [
+      { key: 'users', path: 'users-roles/users', icon: 'pi pi-users', permission: 'users.user.view' },
+      { key: 'roles', path: 'users-roles/roles', icon: 'pi pi-id-card', permission: 'users.role.view' },
+    ],
+  },
   { key: 'settings', path: 'settings', icon: 'pi pi-cog', permission: 'settings.manage' },
 ];
 

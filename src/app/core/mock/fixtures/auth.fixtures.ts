@@ -19,7 +19,7 @@ interface MockUser {
   limits: UserLimits | null;
 }
 
-const CRUD_KEYS = ['products.product', 'products.brand', 'products.category'].flatMap((p) =>
+const CRUD_KEYS = ['products.product', 'products.brand', 'products.category', 'users.user', 'users.role'].flatMap((p) =>
   ['create', 'edit', 'delete'].map((a) => `${p}.${a}`),
 );
 const ALL_KEYS = [...new Set([...flattenMenu().map((i) => i.permission), ...CRUD_KEYS])];
