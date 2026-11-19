@@ -12,7 +12,7 @@ import { Brand, Category, Product } from '../models';
 import { BrandsService, CategoriesService } from '../services/products.service';
 import { ProductsStore } from '../stores/products.stores';
 import { categoryPaths } from '../utils/category-path';
-import { specSummary } from '../utils/product-utils';
+import { formatMoney, retailPrice, specSummary } from '../utils/product-utils';
 
 @Component({
   selector: 'app-products-page',
@@ -27,6 +27,14 @@ import { specSummary } from '../utils/product-utils';
         (click)="add()"
       >
         {{ 'products.add' | transloco }}
+      </button>
+      <button
+        *hasPermission="'products.product.create'"
+        type="button"
+        class="min-h-12 rounded-lg border border-[#2563EB] px-5 font-medium text-[#2563EB]"
+        (click)="importFile()"
+      >
+        {{ 'products.import' | transloco }}
       </button>
     </app-page-toolbar>
 
@@ -87,6 +95,12 @@ export class ProductsPage implements OnInit {
     },
     { key: 'barcode', header: this.i18n.translate('products.barcode'), cell: (r) => r.barcode ?? '-' },
     {
+      key: 'prices',
+      header: this.i18n.translate('products.retailPrice'),
+      cell: (r) => formatMoney(retailPrice(r)),
+    },
+    ...this.costColumn(),
+    {
       key: 'trackBatch',
       header: this.i18n.translate('products.tracking'),
       cell: (r) => this.i18n.translate(r.trackBatch ? 'products.batch' : 'products.serialized'),
@@ -113,6 +127,18 @@ export class ProductsPage implements OnInit {
       visible: () => this.auth.can('products.product.delete'),
     },
   ];
+
+  /** Cost price sirf products.cost.view wale ko dikhta hai. */
+  private costColumn(): TableColumn<Product>[] {
+    if (!this.auth.can('products.cost.view')) return [];
+    return [
+      {
+        key: 'costPrice',
+        header: this.i18n.translate('products.costPrice'),
+        cell: (r) => formatMoney(r.costPrice),
+      },
+    ];
+  }
 
   ngOnInit(): void {
     void this.loadLookups();
@@ -151,6 +177,10 @@ export class ProductsPage implements OnInit {
 
   protected add(): void {
     void this.router.navigate(['/products/list/new']);
+  }
+
+  protected importFile(): void {
+    void this.router.navigate(['/products/list/import']);
   }
 
   protected onAction(e: RowActionEvent<Product>): void {
