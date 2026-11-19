@@ -8,6 +8,7 @@ import { PRICE_HISTORY_FIXTURES } from './price-history.fixtures';
 import { ORG_FIXTURES } from './org.fixtures';
 import { SETTINGS_FIXTURES } from './settings.fixtures';
 import { RECOVERY_FIXTURES } from './recovery.fixtures';
+import { LABEL_FIXTURES } from './labels.fixtures';
 
 export type { FixtureHandler } from './fixture.types';
 
@@ -18,4 +19,5 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   ...PRODUCT_FIXTURES, ...PRICE_HISTORY_FIXTURES, ...auditWrap({ ...USER_FIXTURES, ...ROLE_FIXTURES, ...OVERRIDE_FIXTURES }), ...AUDIT_FIXTURES,
   ...SETTINGS_FIXTURES,
   ...ORG_FIXTURES,
+  ...LABEL_FIXTURES,
 };
