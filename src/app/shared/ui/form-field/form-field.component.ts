@@ -75,6 +75,8 @@ export class FormFieldComponent {
     if (errors['minlength']) return 'common.errors.minlength';
     if (errors['maxlength']) return 'common.errors.maxlength';
     if (errors['pattern']) return 'common.errors.pattern';
+    if (errors['min']) return 'common.errors.min';
+    if (errors['max']) return 'common.errors.max';
     return 'common.errors.invalid';
   });
 }
