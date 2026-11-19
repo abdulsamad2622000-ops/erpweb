@@ -8,14 +8,38 @@ const brands: Brand[] = [
 ];
 
 const categories: Category[] = [
-  { id: 1, name: 'Laptops', isActive: true },
-  { id: 2, name: 'Desktops', isActive: true },
+  { id: 1, name: 'Laptops', parentId: null, isActive: true },
+  { id: 2, name: 'Desktops', parentId: null, isActive: true },
+  { id: 3, name: 'Business Laptops', parentId: 1, isActive: true },
+  { id: 4, name: 'Gaming Laptops', parentId: 1, isActive: true },
+  { id: 5, name: 'All-in-One PCs', parentId: 2, isActive: true },
 ];
 
+function categoryError(b: Omit<Category, 'id'>, ignoreId: number): string | null {
+  const name = (b.name ?? '').trim().toLowerCase();
+  if (!name) return 'Name is required.';
+  const parentId = b.parentId ?? null;
+  if (parentId !== null) {
+    const byId = new Map(categories.map((c) => [c.id, c] as [number, Category]));
+    if (!byId.has(parentId)) return 'Parent category not found.';
+    // Parent khud ya uska koi bacha nahi ho sakta.
+    let cur: number | null = parentId;
+    let guard = 0;
+    while (cur !== null && guard++ < 50) {
+      if (ignoreId !== 0 && cur === ignoreId) return 'A category cannot be placed inside itself.';
+      cur = byId.get(cur)?.parentId ?? null;
+    }
+  }
+  const clash = categories.some(
+    (c) => c.id !== ignoreId && (c.parentId ?? null) === parentId && c.name.toLowerCase() === name,
+  );
+  return clash ? 'This name already exists here.' : null;
+}
+
 const products: Product[] = [
-  { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 1, trackBatch: false, isActive: true },
-  { id: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', barcode: null, brandId: 2, categoryId: 1, trackBatch: false, isActive: true },
-  { id: 3, sku: 'DSK-LEN-001', name: 'Lenovo ThinkCentre M70s', barcode: '8901000000033', brandId: 3, categoryId: 2, trackBatch: false, isActive: true },
+  { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 1, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '16 GB', storage: '512 GB SSD', gpu: 'Integrated', screen: '14"' }, isActive: true },
+  { id: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', barcode: null, brandId: 2, categoryId: 1, trackBatch: false, specs: { cpu: 'Intel Core i7', ram: '16 GB', storage: '512 GB SSD', gpu: 'Integrated', screen: '15.6"' }, isActive: true },
+  { id: 3, sku: 'DSK-LEN-001', name: 'Lenovo ThinkCentre M70s', barcode: '8901000000033', brandId: 3, categoryId: 2, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '8 GB', storage: '256 GB SSD', gpu: 'Integrated', screen: '' }, isActive: true },
 ];
 
 const idOf = (url: string): number => Number(url.split('?')[0].split('/').pop());
@@ -105,7 +129,7 @@ export const PRODUCT_FIXTURES: Record<string, FixtureHandler> = {
     duplicate: sameName(brands),
   }),
   ...crud('categories', categories, (c) => c.name, {
-    inUse: (id) => products.some((p) => p.categoryId === id),
-    duplicate: sameName(categories),
+    inUse: (id) => products.some((p) => p.categoryId === id) || categories.some((c) => c.parentId === id),
+    duplicate: categoryError,
   }),
 };

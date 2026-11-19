@@ -139,6 +139,14 @@
     "deleteMessage": "Delete this brand? This cannot be undone."
   },
   "categories": {
+    "parent": "Parent category",
+    "noParent": "No parent (top level)",
+    "addChild": "Add sub-category to {{name}}",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "loading": "Loading categories...",
+    "empty": "No categories yet. Add the first one.",
+    "retry": "Try again",
     "title": "Categories",
     "add": "Add category",
     "edit": "Edit category",
@@ -157,6 +165,7 @@
     "brand": "Brand",
     "category": "Category",
     "tracking": "Tracking type",
+    "specs": "Specs",
     "serialized": "Serialized",
     "batch": "Batch / Lot",
     "active": "Active",
@@ -439,6 +448,28 @@
       "shelf": "Shelf",
       "bin": "Bin"
     }
+  },
+  "productForm": {
+    "addTitle": "Add product",
+    "editTitle": "Edit product",
+    "tabsLabel": "Product sections",
+    "tabs": {
+      "basics": "Basics",
+      "specs": "Specs"
+    },
+    "hasErrors": "This tab has errors",
+    "serializedHint": "Every unit has its own serial number. Use this for laptops and computers.",
+    "batchHint": "Units are tracked by batch or lot number.",
+    "specsHint": "These details help staff compare models. All fields are optional.",
+    "cpu": "Processor (CPU)",
+    "ram": "Memory (RAM)",
+    "storage": "Storage",
+    "gpu": "Graphics (GPU)",
+    "screen": "Screen size",
+    "loading": "Loading product...",
+    "loadFailed": "Could not load this product.",
+    "retry": "Try again",
+    "back": "Back to products"
   },
   "menu": {
     "users": "Users",
