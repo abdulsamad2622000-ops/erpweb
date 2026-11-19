@@ -23,7 +23,11 @@ const CRUD_KEYS = ['products.product', 'products.brand', 'products.category', 'u
   ['create', 'edit', 'delete'].map((a) => `${p}.${a}`),
 );
 const LABEL_KEYS = ['barcode.label.create', 'barcode.label.print', 'barcode.label.reprint'];
-const ALL_KEYS = [...new Set([...flattenMenu().map((i) => i.permission), ...CRUD_KEYS, ...LABEL_KEYS])];
+const PURCHASE_KEYS = [
+  'purchase.supplier.create', 'purchase.supplier.edit', 'purchase.order.create', 'purchase.order.edit',
+  'purchase.order.approve', 'purchase.grn.create',
+];
+const ALL_KEYS = [...new Set([...flattenMenu().map((i) => i.permission), ...CRUD_KEYS, ...LABEL_KEYS, ...PURCHASE_KEYS])];
 const BRANCHES: Branch[] = [
   { id: 1, name: 'Karachi Main' },
   { id: 2, name: 'Lahore' },

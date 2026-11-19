@@ -72,6 +72,48 @@ export const routes: Routes = [
           import('./features/products/pages/products.page').then((m) => m.ProductsPage),
       },
       {
+        path: 'purchase/suppliers',
+        canActivate: [permissionGuard],
+        data: { title: 'suppliers', permission: 'purchase.supplier.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/suppliers.page').then((m) => m.SuppliersPage),
+      },
+      {
+        path: 'purchase/orders',
+        canActivate: [permissionGuard],
+        data: { title: 'orders', permission: 'purchase.order.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/purchase-orders.page').then((m) => m.PurchaseOrdersPage),
+      },
+      {
+        path: 'purchase/orders/new',
+        canActivate: [permissionGuard],
+        data: { title: 'orders', permission: 'purchase.order.create' },
+        loadComponent: () =>
+          import('./features/purchase/pages/purchase-order.page').then((m) => m.PurchaseOrderPage),
+      },
+      {
+        path: 'purchase/orders/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'orders', permission: 'purchase.order.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/purchase-order.page').then((m) => m.PurchaseOrderPage),
+      },
+      {
+        path: 'purchase/grn',
+        canActivate: [permissionGuard],
+        data: { title: 'grn', permission: 'purchase.grn.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/grns.page').then((m) => m.GrnsPage),
+      },
+      {
+        path: 'purchase/grn/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'grn', permission: 'purchase.grn.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/grn-receive.page').then((m) => m.GrnReceivePage),
+      },
+      {
         path: 'products/barcodes',
         canActivate: [permissionGuard],
         data: { title: 'barcodes', permission: 'barcode.label.view' },

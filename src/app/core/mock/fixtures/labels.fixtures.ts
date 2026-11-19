@@ -44,6 +44,15 @@ function applyDefault(t: LabelTemplate): void {
   if (t.isDefault) templates.forEach((x) => { if (x.id !== t.id && x.kind === t.kind) x.isDefault = false; });
 }
 
+/** Posted GRN ke serials label list mein (mock). */
+export function addLabelItems(list: LabelItem[]): void {
+  for (const i of list) if (!items.some((x) => x.code === i.code)) items.push(i);
+}
+
+export function labelGrns(): string[] {
+  return [...new Set(items.map((i) => i.grn).filter((g): g is string => !!g))].sort();
+}
+
 export const LABEL_FIXTURES: Record<string, FixtureHandler> = {
   'GET /labels/templates': () => ok(templates),
   'POST /labels/templates': (req) => {
@@ -79,6 +88,7 @@ export const LABEL_FIXTURES: Record<string, FixtureHandler> = {
     const found = items.find((i) => i.code.toUpperCase() === code || i.serial?.toUpperCase() === code);
     return found ? ok(found) : fail(404, 'No serial, SKU or bin matches this code.');
   },
+  'GET /labels/grns': () => ok(labelGrns()),
   'GET /labels/print-log': () => ok([...log].sort((a, b) => b.printedAt.localeCompare(a.printedAt))),
   'POST /labels/print-log': (req) => {
     const b = req.body as PrintLogInput;
