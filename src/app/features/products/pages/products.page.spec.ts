@@ -21,7 +21,7 @@ const CATEGORIES: Category[] = [
   { id: 2, name: 'Business Laptops', parentId: 1, isActive: true },
 ];
 const ROWS: Product[] = [
-  { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 2, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '16 GB', storage: '512 GB SSD', gpu: '', screen: '' }, isActive: true },
+  { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 2, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '16 GB', storage: '512 GB SSD', gpu: '', screen: '' }, prices: [{ tier: 'retail', price: 165000 }], costPrice: 142000, isActive: true },
   { id: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', barcode: null, brandId: 2, categoryId: 1, trackBatch: true, isActive: true },
 ];
 
@@ -142,5 +142,18 @@ describe('ProductsPage', () => {
     await flush();
     fixture.detectChanges();
     expect(el.textContent).toContain('This record is in use and cannot be deleted.');
+  });
+
+  it('shows the retail price for everyone', async () => {
+    const { el } = await setup(['products.product.view']);
+    expect(el.querySelector('tbody')?.textContent).toContain('165,000');
+  });
+
+  it('shows the cost price only with products.cost.view', async () => {
+    const without = await setup(['products.product.view']);
+    expect(without.el.querySelector('tbody')?.textContent).not.toContain('142,000');
+    TestBed.resetTestingModule();
+    const withCost = await setup(['products.product.view', 'products.cost.view']);
+    expect(withCost.el.querySelector('tbody')?.textContent).toContain('142,000');
   });
 });

@@ -72,6 +72,13 @@ export const routes: Routes = [
           import('./features/products/pages/products.page').then((m) => m.ProductsPage),
       },
       {
+        path: 'products/list/import',
+        canActivate: [permissionGuard],
+        data: { title: 'productList', permission: 'products.product.create' },
+        loadComponent: () =>
+          import('./features/products/pages/product-import.page').then((m) => m.ProductImportPage),
+      },
+      {
         path: 'products/list/new',
         canActivate: [permissionGuard],
         data: { title: 'productList', permission: 'products.product.create' },
