@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PriceTier extends Model
 {
-    protected $fillable = ['key', 'name', 'is_default', 'is_system', 'sort_order'];
+    protected $fillable = ['key', 'name', 'is_active', 'is_default', 'is_system', 'sort_order'];
 
     protected function casts(): array
     {
