@@ -43,7 +43,7 @@ class RoleController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->normalizePermissions($request);
-        $data = $request->validate(['name' => 'required|string|max:255|unique:roles,name', 'description' => 'nullable|string|max:500'] + $this->permissionRules());
+        $data = $request->validate(['name' => ['required', 'string', 'max:255', $this->uniqueName()], 'description' => 'nullable|string|max:500'] + $this->permissionRules());
 
         $role = DB::transaction(function () use ($request, $data) {
             $role = Role::create(['key' => $this->uniqueKey($data['name']), 'name' => trim($data['name']), 'description' => $data['description'] ?? '', 'is_system' => false]);
@@ -64,7 +64,7 @@ class RoleController extends Controller
 
         $this->normalizePermissions($request);
         $data = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('roles', 'name')->ignore($role->id)],
+            'name' => ['sometimes', 'required', 'string', 'max:255', $this->uniqueName($role->id)],
             'description' => 'sometimes|nullable|string|max:500',
         ] + $this->permissionRules());
 
@@ -129,6 +129,18 @@ class RoleController extends Controller
         if (is_array($perms) && $perms !== [] && array_is_list($perms) && is_string($perms[0])) {
             $request->merge(['permissions' => array_map(fn ($k) => ['key' => $k], $perms)]);
         }
+    }
+
+    /** Role ka naam bare/chhote huroof ke farq ke baghair unique (har database par ek jaisa). */
+    private function uniqueName(?int $ignoreId = null): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail) use ($ignoreId) {
+            $taken = Role::whereRaw('LOWER(name) = ?', [mb_strtolower(trim((string) $value))])
+                ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))->exists();
+            if ($taken) {
+                $fail('This role name already exists.');
+            }
+        };
     }
 
     private function permissionRules(): array
