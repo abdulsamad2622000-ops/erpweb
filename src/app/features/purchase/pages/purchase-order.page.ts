@@ -29,6 +29,9 @@ import { PO_TONE, UI, errorMessage } from '../utils/ui';
           @if (po(); as o) { <app-status-badge [label]="'purchase.poStatus.' + o.status | transloco" [tone]="tone[o.status]" /> }
         </div>
         <a routerLink="/purchase/orders" [class]="ui.btn">{{ 'purchase.orders.back' | transloco }}</a>
+        @if (po(); as o) {
+          <a [routerLink]="['/purchase/orders', o.id, 'matching']" [class]="ui.btn">{{ 'purchase.payables.matching.link' | transloco }}</a>
+        }
       </div>
 
       @if (po()?.approvalNote; as note) {

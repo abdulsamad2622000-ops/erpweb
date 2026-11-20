@@ -72,6 +72,20 @@ export const routes: Routes = [
           import('./features/products/pages/products.page').then((m) => m.ProductsPage),
       },
       {
+        path: 'purchase/payments',
+        canActivate: [permissionGuard],
+        data: { title: 'supplierPayments', permission: 'purchase.payment.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/supplier-payments.page').then((m) => m.SupplierPaymentsPage),
+      },
+      {
+        path: 'purchase/suppliers/:id/ledger',
+        canActivate: [permissionGuard],
+        data: { title: 'suppliers', permission: 'purchase.supplier.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/supplier-ledger.page').then((m) => m.SupplierLedgerPage),
+      },
+      {
         path: 'purchase/suppliers',
         canActivate: [permissionGuard],
         data: { title: 'suppliers', permission: 'purchase.supplier.view' },
@@ -91,6 +105,48 @@ export const routes: Routes = [
         data: { title: 'orders', permission: 'purchase.order.create' },
         loadComponent: () =>
           import('./features/purchase/pages/purchase-order.page').then((m) => m.PurchaseOrderPage),
+      },
+      {
+        path: 'inventory/stock',
+        canActivate: [permissionGuard],
+        data: { title: 'stock', permission: 'inventory.stock.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/stock.page').then((m) => m.StockPage),
+      },
+      {
+        path: 'inventory/serials/:serial',
+        canActivate: [permissionGuard],
+        data: { title: 'serials', permission: 'inventory.serial.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/serial-detail.page').then((m) => m.SerialDetailPage),
+      },
+      {
+        path: 'inventory/serials',
+        canActivate: [permissionGuard],
+        data: { title: 'serials', permission: 'inventory.serial.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/serials.page').then((m) => m.SerialsPage),
+      },
+      {
+        path: 'purchase/returns',
+        canActivate: [permissionGuard],
+        data: { title: 'purchaseReturns', permission: 'purchase.return.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/purchase-returns.page').then((m) => m.PurchaseReturnsPage),
+      },
+      {
+        path: 'purchase/orders/:id/matching',
+        canActivate: [permissionGuard],
+        data: { title: 'orders', permission: 'purchase.order.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/po-matching.page').then((m) => m.PoMatchingPage),
+      },
+      {
+        path: 'purchase/grn/:id/landed-cost',
+        canActivate: [permissionGuard],
+        data: { title: 'grn', permission: 'purchase.grn.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/grn-landed-cost.page').then((m) => m.GrnLandedCostPage),
       },
       {
         path: 'purchase/orders/:id',

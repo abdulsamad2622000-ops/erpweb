@@ -49,6 +49,44 @@ Open questions for the backend:
 - Price tiers are per product. Ask whether a price per variant is needed.
 - Price history endpoint: `GET /products/{id}/history`.
 - A bulk import endpoint (frontend sends one `POST /products` per row now).
+## Labels (Step 7)
+- `/products/barcodes` (`barcode.label.view`): list of serials, SKUs and bins; pick items, pick a template, print. Scan a serial to find it for reprint.
+- `/products/barcodes/templates` (`barcode.label.create`): label template designer with live preview.
+- Reprinting a label that was printed before needs the `barcode.label.reprint` permission and a reason (10 characters or more). Every print is saved in the history table.
+- Not done yet: PDF output (browser print only).
+
+## Purchase (Step 8)
+- `/purchase/suppliers`, `/purchase/orders` (draft, approval, receive), `/purchase/grn` (scan, paste or CSV serials, accept, reject or quarantine, post).
+- `/purchase/suppliers/:id/ledger`: running balance (opening balance, goods received, returns, payments).
+- `/purchase/payments`: supplier payments. The amount cannot be above what is owed.
+- `/purchase/grn/:id/landed-cost`: freight and other costs, shared across items by value. Only after the GRN is posted.
+- `/purchase/orders/:id/matching`: compares ordered, received and the supplier invoice (matched, does not match, waiting for invoice, nothing received).
+- `/purchase/returns`: return by scanning serials. One supplier per return, reason of 10 characters or more. A serial can be returned once.
+
+Open questions for the backend (Step 8b):
+- Paths and shapes of ledger, payments, landed-cost, matching/bill and returns (see `payables.service.ts`).
+- Does landed cost go into the supplier ledger, or only into item cost?
+- How does stock change on a purchase return (serial status "returned to supplier")?
+
+## Labels (Step 7)
+- `/products/barcodes` (`barcode.label.view`): list of serials, SKUs and bins; pick items, pick a template, print. Scan a serial to find it for reprint.
+- `/products/barcodes/templates` (`barcode.label.create`): label template designer with live preview.
+- Reprinting a label that was printed before needs the `barcode.label.reprint` permission and a reason (10 characters or more). Every print is saved in the history table.
+- Not done yet: PDF output (browser print only).
+
+## Purchase (Step 8)
+- `/purchase/suppliers`, `/purchase/orders` (draft, approval, receive), `/purchase/grn` (scan, paste or CSV serials, accept, reject or quarantine, post).
+- `/purchase/suppliers/:id/ledger`: running balance (opening balance, goods received, returns, payments).
+- `/purchase/payments`: supplier payments. The amount cannot be above what is owed.
+- `/purchase/grn/:id/landed-cost`: freight and other costs, shared across items by value. Only after the GRN is posted.
+- `/purchase/orders/:id/matching`: compares ordered, received and the supplier invoice (matched, does not match, waiting for invoice, nothing received).
+- `/purchase/returns`: return by scanning serials. One supplier per return, reason of 10 characters or more. A serial can be returned once.
+
+Open questions for the backend (Step 8b):
+- Paths and shapes of ledger, payments, landed-cost, matching/bill and returns (see `payables.service.ts`).
+- Does landed cost go into the supplier ledger, or only into item cost?
+- How does stock change on a purchase return (serial status "returned to supplier")?
+
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
 1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.

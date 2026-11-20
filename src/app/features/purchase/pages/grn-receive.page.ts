@@ -42,6 +42,7 @@ const FEEDBACK_MAX = 8;
           <div class="flex flex-wrap gap-2">
             @if (posted()) {
               <a [routerLink]="['/products/barcodes']" [queryParams]="{ grn: g.number }" [class]="ui.primary">{{ 'purchase.grn.printLabels' | transloco }}</a>
+              <a [routerLink]="['/purchase/grn', g.id, 'landed-cost']" [class]="ui.btn">{{ 'purchase.payables.landed.link' | transloco }}</a>
             } @else if (canEdit()) {
               <button type="button" [class]="ui.btn" [disabled]="busy()" (click)="saveDraft()">{{ 'purchase.grn.saveDraft' | transloco }}</button>
               <button type="button" [class]="ui.primary" [disabled]="busy() || progress().done === 0" (click)="post()">{{ 'purchase.grn.post' | transloco }}</button>

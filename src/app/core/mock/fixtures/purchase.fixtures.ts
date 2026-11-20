@@ -23,7 +23,7 @@ const inStock = new Set(['5CG3412XQQ', '5CD2219HPQ']);
 
 let poSeq = 108;
 let grnSeq = 42;
-const orders: PurchaseOrder[] = [
+export const orders: PurchaseOrder[] = [
   {
     id: 1, number: 'PO-0108', supplierId: 1, supplierName: 'Sample Traders', warehouseId: 1, orderDate: '2026-11-15',
     expectedDate: '2026-11-20', terms: '30 days credit', status: 'approved', approvalNote: null, approvedBy: 'Demo Super Admin',
@@ -38,7 +38,7 @@ const orders: PurchaseOrder[] = [
     lines: [{ productId: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', serialized: true, qty: 5, unitCost: 118000, receivedQty: 0 }],
   },
 ];
-const grns: Grn[] = [];
+export const grns: Grn[] = [];
 
 const segs = (url: string): string[] => url.split('?')[0].split('/').filter(Boolean);
 /** /purchase/orders/5/approve -> [5, 'approve'] */
