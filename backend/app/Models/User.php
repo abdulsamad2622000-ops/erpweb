@@ -16,7 +16,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'type', 'role', 'two_factor_enabled', 'is_active',
+        'name', 'email', 'password', 'type', 'role', 'two_factor_enabled', 'is_active', 'access_expires_at',
         'discount_percent', 'adjustment_units', 'max_sale_without_approval',
     ];
 
@@ -56,6 +56,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_enabled' => 'boolean',
             'is_active' => 'boolean',
+            'access_expires_at' => 'date',
         ];
     }
 
@@ -67,5 +68,11 @@ class User extends Authenticatable
     public function permissions(): HasMany
     {
         return $this->hasMany(UserPermission::class);
+    }
+
+    /** Temporary access khatam ho chuka? (din ke aakhir tak valid) */
+    public function accessExpired(): bool
+    {
+        return $this->access_expires_at !== null && $this->access_expires_at->endOfDay()->isPast();
     }
 }

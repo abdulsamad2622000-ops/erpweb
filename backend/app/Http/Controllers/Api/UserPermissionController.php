@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\GrantPolicy;
 use App\Services\PermissionRegistry;
@@ -90,6 +91,48 @@ class UserPermissionController extends Controller
         });
 
         return response()->json($this->payload($user->fresh()));
+    }
+
+    /** GET /users/{user}/permissions (frontend contract): role ki permissions + allow/deny lists */
+    public function showSimple(Request $request, User $user): JsonResponse
+    {
+        abort_unless($this->policy->canManage($request->user(), $user), 403, 'You cannot manage this user.');
+
+        return response()->json($this->simple($user));
+    }
+
+    /** PUT /users/{user}/permissions { allow: [], deny: [] } -> overrides (grant/deny) */
+    public function updateSimple(Request $request, User $user): JsonResponse
+    {
+        $data = $request->validate([
+            'allow' => 'present|array',
+            'allow.*' => 'string',
+            'deny' => 'present|array',
+            'deny.*' => 'string',
+        ]);
+        $overrides = array_merge(
+            array_map(fn ($k) => ['key' => $k, 'effect' => 'grant'], array_values(array_unique($data['allow']))),
+            array_map(fn ($k) => ['key' => $k, 'effect' => 'deny'], array_values(array_diff(array_unique($data['deny']), $data['allow']))),
+        );
+        $request->replace(['overrides' => $overrides]);
+        $this->update($request, $user);
+
+        return response()->json($this->simple($user->fresh()));
+    }
+
+    private function simple(User $user): array
+    {
+        $role = $user->role ? Role::with('permissions')->where('key', $user->role)->first() : null;
+        $rows = $user->permissions()->orderBy('permission_key')->get();
+
+        return [
+            'userId' => $user->id,
+            'userName' => $user->name,
+            'roleName' => $role?->name,
+            'rolePermissions' => $role ? $role->permissions->pluck('permission_key')->sort()->values() : [],
+            'allow' => $rows->where('effect', 'grant')->pluck('permission_key')->values(),
+            'deny' => $rows->where('effect', 'deny')->pluck('permission_key')->values(),
+        ];
     }
 
     private function payload(User $user): array

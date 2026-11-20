@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BranchController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\NumberSeriesController;
+use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\PermissionRegistryController;
 use App\Http\Controllers\Api\PriceTierController;
 use App\Http\Controllers\Api\RoleController;
@@ -22,6 +23,9 @@ Route::prefix('v1')->group(function () {
         Route::post('two-factor', [AuthController::class, 'twoFactor'])->middleware('throttle:10,1');
         Route::post('two-factor/resend', [AuthController::class, 'resend'])->middleware('throttle:10,1');
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:5,1');
+        Route::post('reset-password', [PasswordController::class, 'reset'])->middleware('throttle:5,1');
+        Route::post('recover-email', [PasswordController::class, 'recoverEmail'])->middleware('throttle:5,1');
     });
 
     Route::get('me', MeController::class)->middleware('auth:sanctum');
@@ -33,16 +37,21 @@ Route::prefix('v1')->group(function () {
         Route::middleware(EnsureUserType::class.':super_admin,admin')->group(function () {
             Route::get('permissions/registry', PermissionRegistryController::class);
             Route::get('audit-log', [AuditLogController::class, 'index']);
+            Route::get('audit', [AuditLogController::class, 'simple']);
 
             Route::get('users', [UserController::class, 'index']);
             Route::post('users', [UserController::class, 'store']);
             Route::get('users/{user}', [UserController::class, 'show']);
             Route::put('users/{user}', [UserController::class, 'update']);
             Route::patch('users/{user}/status', [UserController::class, 'status']);
+            Route::post('users/{user}/active', [UserController::class, 'status']);
+            Route::delete('users/{user}', [UserController::class, 'destroy']);
             Route::post('users/{user}/force-logout', [UserController::class, 'forceLogout']);
             Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword']);
             Route::get('users/{user}/overrides', [UserPermissionController::class, 'show']);
             Route::put('users/{user}/overrides', [UserPermissionController::class, 'update']);
+            Route::get('users/{user}/permissions', [UserPermissionController::class, 'showSimple']);
+            Route::put('users/{user}/permissions', [UserPermissionController::class, 'updateSimple']);
 
             Route::get('roles', [RoleController::class, 'index']);
             Route::get('roles/{role}', [RoleController::class, 'show']);
