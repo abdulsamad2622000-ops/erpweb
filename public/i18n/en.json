@@ -646,6 +646,35 @@
     "saved": "Template saved.",
     "pickField": "Pick at least one field."
   },
+  "inventory": {
+    "status": {
+      "in_stock": "In stock",
+      "quarantine": "Quarantine",
+      "rejected": "Rejected",
+      "returned": "Returned to supplier"
+    },
+    "stock": {
+      "title": "Stock overview",
+      "product": "Product",
+      "warehouse": "Warehouse",
+      "allWarehouses": "All warehouses",
+      "empty": "No stock yet. Receive a purchase order to add stock."
+    },
+    "serials": {
+      "title": "Serial numbers",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "empty": "No serials found."
+    },
+    "detail": {
+      "back": "Back to serials",
+      "history": "History",
+      "types": {
+        "received": "Received",
+        "returned": "Returned to supplier"
+      }
+    }
+  },
   "purchase": {
     "statusCol": "Status",
     "suppliers": {
@@ -700,6 +729,99 @@
       "rejectMessage": "Write why this order is rejected. The person who made it will see this.",
       "cancelTitle": "Cancel purchase order",
       "cancelMessage": "Cancel this order? It cannot be received after this."
+    },
+    "payables": {
+      "ledger": "Ledger",
+      "ledgerTitle": "{{ name }} - Ledger",
+      "back": "Back to suppliers",
+      "owed": "Amount owed to supplier",
+      "owedNow": "Owed now",
+      "date": "Date",
+      "type": "Type",
+      "ref": "Reference",
+      "increase": "Bill (+)",
+      "decrease": "Paid / returned (-)",
+      "balance": "Balance",
+      "noEntries": "No entries yet.",
+      "types": {
+        "opening": "Opening balance",
+        "grn": "Goods received",
+        "return": "Purchase return",
+        "payment": "Payment"
+      },
+      "recordPayment": "Record payment",
+      "paymentsTitle": "Supplier payments",
+      "newPayment": "New payment",
+      "allSuppliers": "All suppliers",
+      "pickSupplier": "Pick a supplier",
+      "amount": "Amount",
+      "method": "Method",
+      "methods": {
+        "cash": "Cash",
+        "bank_transfer": "Bank transfer",
+        "cheque": "Cheque"
+      },
+      "reference": "Reference / cheque no.",
+      "createdBy": "Entered by",
+      "amountInvalid": "Enter an amount above 0.",
+      "amountTooMuch": "This is more than the amount owed to the supplier.",
+      "saved": "Payment saved.",
+      "returns": {
+        "title": "Purchase returns",
+        "scan": "Scan a serial to return",
+        "scanPlaceholder": "Scan or type a serial and press Enter",
+        "noLines": "No serials added yet.",
+        "submit": "Return to supplier",
+        "history": "Past returns",
+        "number": "Return no.",
+        "otherSupplier": "This serial belongs to another supplier. This return is for {{ name }}.",
+        "reasonShort": "Write a reason of at least {{ min }} characters.",
+        "saved": "{{ number }} saved. The supplier ledger is reduced."
+      },
+      "landed": {
+        "link": "Landed cost",
+        "title": "{{ number }} - Landed cost",
+        "back": "Back to GRN",
+        "hint": "Add freight, duty and other costs. They are shared across the received items by value.",
+        "notPosted": "Post the GRN first. Landed cost can be added after posting.",
+        "costs": "Extra costs",
+        "label": "Cost name",
+        "add": "Add cost",
+        "noCosts": "No extra costs added.",
+        "totalCosts": "Total extra costs",
+        "goods": "Goods value",
+        "share": "Extra cost share",
+        "unitLanded": "Landed cost per unit",
+        "needName": "Every cost needs a name.",
+        "needAmount": "Every cost needs an amount above 0.",
+        "saved": "Landed cost saved."
+      },
+      "matching": {
+        "link": "PO / GRN / bill matching",
+        "title": "{{ number }} - Matching",
+        "hint": "Compares what was ordered, what was received and what the supplier billed.",
+        "ordered": "Ordered",
+        "received": "Received",
+        "grns": "GRNs",
+        "noGrns": "none yet",
+        "orderedValue": "Ordered value",
+        "receivedValue": "Received value",
+        "billValue": "Supplier bill",
+        "difference": "Bill minus received",
+        "billTitle": "Supplier invoice",
+        "billNumber": "Invoice number",
+        "billDate": "Invoice date",
+        "billAmount": "Invoice amount",
+        "saveBill": "Save invoice",
+        "fixBill": "Enter the invoice number, date and an amount above 0.",
+        "billSaved": "Supplier invoice saved.",
+        "status": {
+          "matched": "Matched",
+          "mismatch": "Does not match",
+          "no_bill": "Waiting for invoice",
+          "not_received": "Nothing received"
+        }
+      }
     },
     "grn": {
       "title": "Receive stock (GRN)",

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
@@ -11,7 +12,7 @@ import { UI, errorMessage } from '../utils/ui';
 
 @Component({
   selector: 'app-suppliers-page',
-  imports: [FormsModule, ReactiveFormsModule, TranslocoPipe, CrudDialogComponent, FormFieldComponent, HasPermissionDirective],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, TranslocoPipe, CrudDialogComponent, FormFieldComponent, HasPermissionDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-6xl space-y-4">
@@ -43,6 +44,7 @@ import { UI, errorMessage } from '../utils/ui';
                 <td [class]="ui.td">{{ 'purchase.suppliers.days' | transloco: { n: s.paymentTermsDays } }}</td>
                 <td [class]="ui.td">{{ (s.isActive ? 'common.status.active' : 'common.status.inactive') | transloco }}</td>
                 <td [class]="ui.td + ' text-end'">
+                  <a [routerLink]="[s.id, 'ledger']" [class]="ui.btn + ' me-2'">{{ 'purchase.payables.ledger' | transloco }}</a>
                   <button *hasPermission="'purchase.supplier.edit'" type="button" [class]="ui.btn" (click)="open(s)">{{ 'common.edit' | transloco }}</button>
                 </td>
               </tr>
