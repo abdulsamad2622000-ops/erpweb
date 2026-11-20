@@ -30,13 +30,13 @@ class SettingsScreenController extends Controller
 
     public function company(): JsonResponse
     {
-        return response()->json($this->companyOut($this->settings->get('company')));
+        return response()->json(['data' => $this->companyOut($this->settings->get('company'))]);
     }
 
     public function updateCompany(Request $request): JsonResponse
     {
         $d = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'logo' => ['nullable', 'string', 'max:700000', 'regex:#^(https?://|data:image/(png|jpeg|webp|svg\+xml);base64,)#'],
             'address' => 'nullable|string|max:500',
             'city' => 'nullable|string|max:100',
@@ -44,18 +44,26 @@ class SettingsScreenController extends Controller
             'phone' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
             'taxNumber' => 'nullable|string|max:100',
-            'taxRate' => 'required|numeric|min:0|max:100',
-            'currency' => 'required|string|size:3|alpha',
+            'taxRate' => 'sometimes|numeric|min:0|max:100',
+            'currency' => 'sometimes|string|size:3|alpha',
+            'logoUrl' => 'sometimes|nullable|url|max:500',
         ]);
-        $saved = $this->settings->put('company', [
-            'name' => trim($d['name']), 'logoUrl' => $d['logo'] ?? null, 'address' => $d['address'] ?? null,
-            'city' => $d['city'] ?? null, 'country' => $d['country'] ?? null, 'phone' => $d['phone'] ?? null,
-            'email' => $d['email'] ?? null, 'taxNumber' => $d['taxNumber'] ?? null,
-            'taxRate' => (float) $d['taxRate'], 'currency' => strtoupper($d['currency']),
-        ]);
+        // Sirf bheje gaye fields badalte hain (partial update bhi chalta hai)
+        $map = ['logo' => 'logoUrl', 'logoUrl' => 'logoUrl'];
+        $values = [];
+        foreach ($d as $k => $v) {
+            $values[$map[$k] ?? $k] = is_string($v) ? trim($v) : $v;
+        }
+        if (isset($values['currency'])) {
+            $values['currency'] = strtoupper($values['currency']);
+        }
+        if (isset($values['taxRate'])) {
+            $values['taxRate'] = (float) $values['taxRate'];
+        }
+        $saved = $this->settings->put('company', $values);
         AuditLog::record($request->user(), 'settings.updated', null, ['group' => 'company']);
 
-        return response()->json($this->companyOut($saved));
+        return response()->json(['data' => $this->companyOut($saved)]);
     }
 
     public function costing(): JsonResponse
@@ -145,6 +153,7 @@ class SettingsScreenController extends Controller
             'phone' => (string) ($c['phone'] ?? ''), 'email' => (string) ($c['email'] ?? ''),
             'taxNumber' => (string) ($c['taxNumber'] ?? ''), 'taxRate' => (float) ($c['taxRate'] ?? 0),
             'currency' => (string) ($c['currency'] ?? 'PKR'),
+            'logoUrl' => $c['logoUrl'] ?? null,
         ];
     }
 

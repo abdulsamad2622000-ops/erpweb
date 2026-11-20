@@ -25,12 +25,12 @@ class FrontendContractSettingsTest extends TestCase
 
     public function test_company_round_trip(): void
     {
-        $this->getJson('/api/v1/settings/company')->assertOk()->assertJsonPath('currency', 'PKR');
+        $this->getJson('/api/v1/settings/company')->assertOk()->assertJsonPath('data.currency', 'PKR');
 
         $this->putJson('/api/v1/settings/company', [
             'name' => 'Star Computer', 'logo' => null, 'address' => 'Saddar', 'city' => 'Karachi', 'country' => 'Pakistan',
             'phone' => '021-1234567', 'email' => 'info@star.test', 'taxNumber' => '123', 'taxRate' => 18, 'currency' => 'pkr',
-        ])->assertOk()->assertJsonPath('city', 'Karachi')->assertJsonPath('taxRate', 18)->assertJsonPath('currency', 'PKR');
+        ])->assertOk()->assertJsonPath('data.city', 'Karachi')->assertJsonPath('data.taxRate', 18)->assertJsonPath('data.currency', 'PKR');
 
         $this->putJson('/api/v1/settings/company', ['name' => '', 'taxRate' => 200, 'currency' => 'PK'])->assertStatus(422);
     }
