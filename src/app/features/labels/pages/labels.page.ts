@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { AuthStore } from '../../../core/auth/auth.store';
@@ -63,7 +63,7 @@ const PREVIEW_MAX = 6;
             <select id="label-grn" [ngModel]="grn()" (ngModelChange)="grn.set($event); reload()"
                     class="min-h-11 rounded-lg border border-slate-400 bg-transparent px-3 text-sm">
               <option value="">{{ 'labels.allGrns' | transloco }}</option>
-              @for (g of grns; track g) { <option [value]="g">{{ g }}</option> }
+              @for (g of grns(); track g) { <option [value]="g">{{ g }}</option> }
             </select>
           </div>
         }
@@ -175,7 +175,8 @@ export class LabelsPage implements OnInit {
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly kinds = KINDS;
-  protected readonly grns = ['GRN-0041', 'GRN-0042'];
+  private readonly route = inject(ActivatedRoute);
+  protected readonly grns = signal<string[]>([]);
   protected readonly kind = signal<LabelKind>('serial');
   protected readonly q = signal('');
   protected readonly grn = signal('');
@@ -213,9 +214,15 @@ export class LabelsPage implements OnInit {
 
   private async init(): Promise<void> {
     try {
-      this.templates.set(await firstValueFrom(this.api.templates()));
+      const [templates, grns] = await Promise.all([firstValueFrom(this.api.templates()), firstValueFrom(this.api.grns())]);
+      this.templates.set(templates);
+      this.grns.set(grns);
       this.pickDefaultTemplate();
+      // GRN screen se "Print labels": ?grn=GRN-0043 par wahi serials khulte aur select hote hain.
+      const grn = this.route.snapshot.queryParamMap.get('grn');
+      if (grn && grns.includes(grn)) this.grn.set(grn);
       await Promise.all([this.reload(), this.loadHistory(), this.settings.loadCompany().catch(() => undefined)]);
+      if (grn && this.grn() === grn) this.selected.set(new Set(this.items().filter((i) => i.printCount === 0).map((i) => i.code)));
     } catch {
       this.actionError.set(this.i18n.translate('errors.generic'));
     }

@@ -34,6 +34,11 @@ export class LabelsService {
     return this.http.get<LabelItem>(`${this.base}/lookup/${encodeURIComponent(code)}`);
   }
 
+  /** Jin GRNs ke serials label list mein hain. */
+  grns(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.base}/grns`);
+  }
+
   log(): Observable<PrintLogEntry[]> {
     return this.http.get<PrintLogEntry[]>(`${this.base}/print-log`);
   }

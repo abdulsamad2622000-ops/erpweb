@@ -9,6 +9,7 @@ import { ORG_FIXTURES } from './org.fixtures';
 import { SETTINGS_FIXTURES } from './settings.fixtures';
 import { RECOVERY_FIXTURES } from './recovery.fixtures';
 import { LABEL_FIXTURES } from './labels.fixtures';
+import { PURCHASE_FIXTURES } from './purchase.fixtures';
 
 export type { FixtureHandler } from './fixture.types';
 
@@ -20,4 +21,5 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   ...SETTINGS_FIXTURES,
   ...ORG_FIXTURES,
   ...LABEL_FIXTURES,
+  ...PURCHASE_FIXTURES,
 };
