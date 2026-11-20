@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductImportController;
+use App\Http\Controllers\Api\ProductScreenController;
 use App\Http\Controllers\Api\VariantController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('products', [ProductController::class, 'index']);
         Route::get('products/{product}', [ProductController::class, 'show']);
         Route::get('variants/{variant}/price-history', [VariantController::class, 'history']);
+        Route::get('products/{product}/history', [ProductScreenController::class, 'history']);
     });
 
     Route::middleware('permission:products.product.create')->group(function () {

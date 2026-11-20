@@ -21,6 +21,10 @@ class ProductController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->index($request);
+        }
+
         $query = Product::query()->with(['brand', 'category'])->withCount('variants')->orderBy('name');
 
         if ($v = $request->query('search')) {
@@ -50,11 +54,19 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->show($request, $product);
+        }
+
         return response()->json(['data' => ProductPresenter::product($product, ProductPresenter::canSeeCost($request->user()))]);
     }
 
     public function store(Request $request): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->store($request);
+        }
+
         $data = $request->validate(array_merge([
             'name' => 'required|string|max:255',
             'brand_id' => 'required|integer|exists:brands,id',
@@ -94,6 +106,10 @@ class ProductController extends Controller
     /** tracking_type banne ke baad badalta nahi (stock aane ke baad ghalat hoga). */
     public function update(Request $request, Product $product): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->update($request, $product);
+        }
+
         $data = $request->validate(array_merge([
             'name' => 'sometimes|required|string|max:255',
             'brand_id' => 'sometimes|integer|exists:brands,id',
