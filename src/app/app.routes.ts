@@ -72,6 +72,20 @@ export const routes: Routes = [
           import('./features/products/pages/products.page').then((m) => m.ProductsPage),
       },
       {
+        path: 'products/barcodes',
+        canActivate: [permissionGuard],
+        data: { title: 'barcodes', permission: 'barcode.label.view' },
+        loadComponent: () =>
+          import('./features/labels/pages/labels.page').then((m) => m.LabelsPage),
+      },
+      {
+        path: 'products/barcodes/templates',
+        canActivate: [permissionGuard],
+        data: { title: 'barcodes', permission: 'barcode.label.create' },
+        loadComponent: () =>
+          import('./features/labels/pages/label-templates.page').then((m) => m.LabelTemplatesPage),
+      },
+      {
         path: 'products/list/import',
         canActivate: [permissionGuard],
         data: { title: 'productList', permission: 'products.product.create' },
