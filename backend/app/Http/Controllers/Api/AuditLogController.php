@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Support\ApiQuery;
 use Illuminate\Http\Request;
 
 class AuditLogController extends Controller
@@ -50,5 +51,46 @@ class AuditLogController extends Controller
                 'lastPage' => $page->lastPage(),
             ],
         ]);
+    }
+
+    /** GET /audit (frontend contract): ?search=&sort=at:desc&page=&pageSize= -> { data: AuditEntry[], total } */
+    public function simple(Request $request): JsonResponse
+    {
+        $actor = $request->user();
+        $query = AuditLog::query()->with(['actor:id,name', 'target:id,name']);
+        if ($actor->type !== 'super_admin') {
+            $query->where(fn ($w) => $w
+                ->where('actor_id', $actor->id)
+                ->orWhereIn('target_user_id', User::where('type', 'staff')->select('id')));
+        }
+        if ($v = ApiQuery::param($request, 'search')) {
+            $query->where(fn ($w) => $w->where('action', 'like', "%{$v}%")
+                ->orWhereHas('actor', fn ($a) => $a->where('name', 'like', "%{$v}%"))
+                ->orWhereHas('target', fn ($t) => $t->where('name', 'like', "%{$v}%")));
+        }
+        ApiQuery::sort($query, $request, ['at' => 'id', 'action' => 'action'], 'id');
+        if (! $request->query('sort')) {
+            $query->reorder()->orderByDesc('id');
+        }
+        $page = $query->paginate(ApiQuery::perPage($request, 10));
+
+        return response()->json(ApiQuery::page($page, fn ($l) => [
+            'id' => $l->id,
+            'at' => $l->created_at?->toIso8601String(),
+            'actor' => $l->actor?->name ?? 'System',
+            'action' => $l->action,
+            'target' => $l->target?->name ?? (string) ($l->details['role'] ?? $l->details['email'] ?? ''),
+            'detail' => $this->detail($l->details ?? []),
+        ]));
+    }
+
+    private function detail(array $d): string
+    {
+        $parts = [];
+        foreach ($d as $k => $v) {
+            $parts[] = $k.': '.(is_scalar($v) || $v === null ? var_export($v, true) : json_encode($v));
+        }
+
+        return implode(', ', $parts);
     }
 }

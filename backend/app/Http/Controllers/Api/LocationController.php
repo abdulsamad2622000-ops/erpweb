@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Location;
 use App\Models\Warehouse;
 use Illuminate\Http\JsonResponse;
+use App\Support\ApiQuery;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -39,6 +40,33 @@ class LocationController extends Controller
         $location = Location::where('barcode', $barcode)->firstOrFail();
 
         return response()->json(['data' => $this->present($location, $this->pathOf($location))]);
+    }
+
+    /** GET /locations?warehouseId=&search=&page=&pageSize= (frontend: flat list, path ke saath) */
+    public function index(Request $request): JsonResponse
+    {
+        $query = Location::query();
+        if ($v = ApiQuery::param($request, 'warehouseId', 'warehouse_id')) {
+            $query->where('warehouse_id', $v);
+        }
+        if ($v = ApiQuery::param($request, 'level')) {
+            $query->where('level', $v);
+        }
+        if ($v = ApiQuery::param($request, 'search')) {
+            $query->where(fn ($w) => $w->where('name', 'like', "%{$v}%")->orWhere('code', 'like', "%{$v}%")->orWhere('barcode', 'like', "%{$v}%"));
+        }
+        ApiQuery::sort($query, $request, ['code' => 'code', 'name' => 'name', 'level' => 'level'], 'id');
+        $page = $query->paginate(ApiQuery::perPage($request, 100));
+
+        return response()->json(ApiQuery::page($page, fn ($l) => $this->present($l, $this->pathOf($l))));
+    }
+
+    /** POST /locations { warehouseId, parentId, code, name } (frontend) */
+    public function storeFlat(Request $request): JsonResponse
+    {
+        $request->validate(['warehouse_id' => 'required|integer|exists:warehouses,id']);
+
+        return $this->store($request, Warehouse::findOrFail($request->integer('warehouse_id')));
     }
 
     public function store(Request $request, Warehouse $warehouse): JsonResponse

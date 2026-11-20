@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { mockInterceptor } from './core/http/mock.interceptor';
 import { apiBaseInterceptor } from './core/http/api-base.interceptor';
 import { errorInterceptor } from './core/http/error.interceptor';
+import { envelopeInterceptor } from './core/http/envelope.interceptor';
 import { branchInterceptor } from './core/http/branch.interceptor';
 import { provideTransloco } from '@jsverse/transloco';
 import { providePrimeNG } from 'primeng/config';
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([mockInterceptor, apiBaseInterceptor, branchInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([mockInterceptor, apiBaseInterceptor, branchInterceptor, envelopeInterceptor, errorInterceptor])),
     MessageService,
     provideTransloco({
       config: {

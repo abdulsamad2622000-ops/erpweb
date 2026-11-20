@@ -13,8 +13,12 @@ use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->categories($request);
+        }
+
         $all = Category::orderBy('name')->get()->groupBy(fn ($c) => $c->parent_id ?? 0);
 
         $build = function ($parentId) use (&$build, $all) {

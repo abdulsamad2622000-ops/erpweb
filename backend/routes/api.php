@@ -6,10 +6,12 @@ use App\Http\Controllers\Api\BranchController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\NumberSeriesController;
+use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\PermissionRegistryController;
 use App\Http\Controllers\Api\PriceTierController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\SettingsScreenController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserPermissionController;
 use App\Http\Controllers\Api\WarehouseController;
@@ -22,9 +24,13 @@ Route::prefix('v1')->group(function () {
         Route::post('two-factor', [AuthController::class, 'twoFactor'])->middleware('throttle:10,1');
         Route::post('two-factor/resend', [AuthController::class, 'resend'])->middleware('throttle:10,1');
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:5,1');
+        Route::post('reset-password', [PasswordController::class, 'reset'])->middleware('throttle:5,1');
+        Route::post('recover-email', [PasswordController::class, 'recoverEmail'])->middleware('throttle:5,1');
     });
 
     Route::get('me', MeController::class)->middleware('auth:sanctum');
+    Route::get('health', fn () => ['status' => 'ok']);
 
     require __DIR__.'/catalog.php';
 
@@ -33,16 +39,21 @@ Route::prefix('v1')->group(function () {
         Route::middleware(EnsureUserType::class.':super_admin,admin')->group(function () {
             Route::get('permissions/registry', PermissionRegistryController::class);
             Route::get('audit-log', [AuditLogController::class, 'index']);
+            Route::get('audit', [AuditLogController::class, 'simple']);
 
             Route::get('users', [UserController::class, 'index']);
             Route::post('users', [UserController::class, 'store']);
             Route::get('users/{user}', [UserController::class, 'show']);
             Route::put('users/{user}', [UserController::class, 'update']);
             Route::patch('users/{user}/status', [UserController::class, 'status']);
+            Route::post('users/{user}/active', [UserController::class, 'status']);
+            Route::delete('users/{user}', [UserController::class, 'destroy']);
             Route::post('users/{user}/force-logout', [UserController::class, 'forceLogout']);
             Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword']);
             Route::get('users/{user}/overrides', [UserPermissionController::class, 'show']);
             Route::put('users/{user}/overrides', [UserPermissionController::class, 'update']);
+            Route::get('users/{user}/permissions', [UserPermissionController::class, 'showSimple']);
+            Route::put('users/{user}/permissions', [UserPermissionController::class, 'updateSimple']);
 
             Route::get('roles', [RoleController::class, 'index']);
             Route::get('roles/{role}', [RoleController::class, 'show']);
@@ -62,10 +73,22 @@ Route::prefix('v1')->group(function () {
         Route::get('warehouses/{warehouse}', [WarehouseController::class, 'show']);
         Route::get('warehouses/{warehouse}/locations', [LocationController::class, 'tree']);
         Route::get('locations/lookup', [LocationController::class, 'lookup']);
+        Route::get('locations', [LocationController::class, 'index']);
         Route::get('price-tiers', [PriceTierController::class, 'index']);
 
         // Settings screens: sirf settings.manage wale
         Route::middleware('permission:settings.manage')->group(function () {
+            // Frontend settings screens (contract)
+            Route::get('settings/company', [SettingsScreenController::class, 'company']);
+            Route::put('settings/company', [SettingsScreenController::class, 'updateCompany']);
+            Route::get('settings/costing', [SettingsScreenController::class, 'costing']);
+            Route::put('settings/costing', [SettingsScreenController::class, 'updateCosting']);
+            Route::get('settings/number-series', [SettingsScreenController::class, 'numberSeries']);
+            Route::put('settings/number-series/{id}', [SettingsScreenController::class, 'updateNumberSeries'])->whereNumber('id');
+            Route::get('settings/price-tiers', [SettingsScreenController::class, 'priceTiers']);
+            Route::put('settings/price-tiers/{priceTier}', [SettingsScreenController::class, 'updatePriceTier']);
+            Route::get('settings/backup', [SettingsScreenController::class, 'backup']);
+
             Route::get('settings/{group}', [SettingsController::class, 'show']);
             Route::put('settings/{group}', [SettingsController::class, 'update']);
 
@@ -81,6 +104,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('warehouses/{warehouse}', [WarehouseController::class, 'destroy']);
 
             Route::post('warehouses/{warehouse}/locations', [LocationController::class, 'store']);
+            Route::post('locations', [LocationController::class, 'storeFlat']);
             Route::put('locations/{location}', [LocationController::class, 'update']);
             Route::delete('locations/{location}', [LocationController::class, 'destroy']);
 

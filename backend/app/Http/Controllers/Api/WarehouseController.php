@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Location;
 use App\Models\Warehouse;
 use Illuminate\Http\JsonResponse;
+use App\Support\ApiQuery;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -17,27 +18,30 @@ class WarehouseController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Warehouse::query()->orderBy('branch_id')->orderBy('name');
+        $query = Warehouse::query();
 
-        if ($v = $request->query('branch_id')) {
+        if ($v = ApiQuery::param($request, 'branchId', 'branch_id')) {
             $query->where('branch_id', $v);
         }
-        if ($v = $request->query('type')) {
+        if ($v = ApiQuery::param($request, 'type')) {
             $query->where('type', $v);
         }
         if (in_array($request->query('status'), ['active', 'inactive'], true)) {
             $query->where('is_active', $request->query('status') === 'active');
         }
+        if ($v = ApiQuery::param($request, 'search')) {
+            $query->where(fn ($w) => $w->where('name', 'like', "%{$v}%")->orWhere('code', 'like', "%{$v}%"));
+        }
+        ApiQuery::sort($query, $request, ['name' => 'name', 'code' => 'code', 'type' => 'type', 'branchId' => 'branch_id'], 'name');
 
         $branches = Branch::pluck('name', 'id');
         $counts = Location::selectRaw('warehouse_id, count(*) as c')->groupBy('warehouse_id')->pluck('c', 'warehouse_id');
+        $page = $query->paginate(ApiQuery::perPage($request, 100));
 
-        return response()->json([
-            'types' => Warehouse::TYPES,
-            'data' => $query->get()
-                ->map(fn ($w) => $this->present($w, $branches[$w->branch_id] ?? null, (int) ($counts[$w->id] ?? 0)))
-                ->values(),
-        ]);
+        return response()->json(['types' => Warehouse::TYPES] + ApiQuery::page(
+            $page,
+            fn ($w) => $this->present($w, $branches[$w->branch_id] ?? null, (int) ($counts[$w->id] ?? 0)),
+        ));
     }
 
     public function show(Warehouse $warehouse): JsonResponse

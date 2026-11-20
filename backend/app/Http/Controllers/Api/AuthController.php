@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         $user = User::where('email', Str::lower($data['email']))->first();
 
-        if (! $user || ! $user->is_active || ! Hash::check($data['password'], $user->password)) {
+        if (! $user || ! $user->is_active || $user->accessExpired() || ! Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['These credentials do not match our records.'],
             ]);

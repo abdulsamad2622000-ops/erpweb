@@ -14,8 +14,12 @@ use Illuminate\Validation\ValidationException;
 
 class BrandController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if ($request->header('X-Client') === 'erp-web') {
+            return app(ProductScreenController::class)->brands($request);
+        }
+
         $counts = Product::selectRaw('brand_id, count(*) as c')->groupBy('brand_id')->pluck('c', 'brand_id');
 
         return response()->json([

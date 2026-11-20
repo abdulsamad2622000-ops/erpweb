@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\PermissionRegistry;
 use Illuminate\Http\JsonResponse;
+use App\Support\ApiQuery;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,17 @@ class RoleController extends Controller
     {
     }
 
-    public function index(): JsonResponse
+    /** ?search=&sort=name:asc&page=&pageSize= -> { data: RoleListItem[], total } */
+    public function index(Request $request): JsonResponse
     {
-        $roles = Role::with('permissions')->orderBy('id')->get();
+        $query = Role::query()->with('permissions');
+        if ($v = ApiQuery::param($request, 'search')) {
+            $query->where('name', 'like', "%{$v}%");
+        }
+        ApiQuery::sort($query, $request, ['name' => 'name', 'isSystem' => 'is_system'], 'id');
+        $page = $query->paginate(ApiQuery::perPage($request, 100));
 
-        return response()->json(['data' => $roles->map(fn ($r) => $this->present($r))->values()]);
+        return response()->json(ApiQuery::page($page, fn ($r) => $this->present($r)));
     }
 
     public function show(Role $role): JsonResponse
@@ -35,10 +42,11 @@ class RoleController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate(['name' => 'required|string|max:255'] + $this->permissionRules());
+        $this->normalizePermissions($request);
+        $data = $request->validate(['name' => ['required', 'string', 'max:255', $this->uniqueName()], 'description' => 'nullable|string|max:500'] + $this->permissionRules());
 
         $role = DB::transaction(function () use ($request, $data) {
-            $role = Role::create(['key' => $this->uniqueKey($data['name']), 'name' => $data['name'], 'is_system' => false]);
+            $role = Role::create(['key' => $this->uniqueKey($data['name']), 'name' => trim($data['name']), 'description' => $data['description'] ?? '', 'is_system' => false]);
             $this->syncPermissions($role, $data['permissions'] ?? []);
             AuditLog::record($request->user(), 'role.created', null, ['role' => $role->key]);
 
@@ -54,12 +62,17 @@ class RoleController extends Controller
             throw ValidationException::withMessages(['role' => 'The Super Admin role cannot be changed.']);
         }
 
-        $data = $request->validate(['name' => 'sometimes|required|string|max:255'] + $this->permissionRules());
+        $this->normalizePermissions($request);
+        $data = $request->validate([
+            'name' => ['sometimes', 'required', 'string', 'max:255', $this->uniqueName($role->id)],
+            'description' => 'sometimes|nullable|string|max:500',
+        ] + $this->permissionRules());
 
         DB::transaction(function () use ($request, $role, $data) {
-            if (isset($data['name'])) {
-                $role->update(['name' => $data['name']]);
-            }
+            $role->update(array_filter([
+                'name' => isset($data['name']) ? trim($data['name']) : null,
+                'description' => array_key_exists('description', $data) ? (string) $data['description'] : null,
+            ], fn ($v) => $v !== null));
             if (array_key_exists('permissions', $data)) {
                 $this->syncPermissions($role, $data['permissions']);
             }
@@ -109,6 +122,27 @@ class RoleController extends Controller
         return response()->noContent();
     }
 
+    /** Frontend permissions ko ['key', ...] bhejta hai; backend [{key, scope, limit}] samajhta hai. */
+    private function normalizePermissions(Request $request): void
+    {
+        $perms = $request->input('permissions');
+        if (is_array($perms) && $perms !== [] && array_is_list($perms) && is_string($perms[0])) {
+            $request->merge(['permissions' => array_map(fn ($k) => ['key' => $k], $perms)]);
+        }
+    }
+
+    /** Role ka naam bare/chhote huroof ke farq ke baghair unique (har database par ek jaisa). */
+    private function uniqueName(?int $ignoreId = null): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail) use ($ignoreId) {
+            $taken = Role::whereRaw('LOWER(name) = ?', [mb_strtolower(trim((string) $value))])
+                ->when($ignoreId, fn ($q) => $q->whereKeyNot($ignoreId))->exists();
+            if ($taken) {
+                $fail('This role name already exists.');
+            }
+        };
+    }
+
     private function permissionRules(): array
     {
         return [
@@ -146,14 +180,22 @@ class RoleController extends Controller
     private function present(Role $role): array
     {
         $role->loadMissing('permissions');
+        $keys = $role->permissions->pluck('permission_key')->sort()->values();
+        $users = User::where('role', $role->key)->count();
 
         return [
             'id' => $role->id,
             'key' => $role->key,
             'name' => $role->name,
+            'description' => (string) $role->description,
             'isSystem' => (bool) $role->is_system,
-            'usersCount' => User::where('role', $role->key)->count(),
-            'permissions' => $role->permissions->map(fn ($p) => [
+            // Frontend contract: permissions = key list, counts
+            'permissions' => $keys,
+            'permissionCount' => $keys->count(),
+            'userCount' => $users,
+            // Purane clients ke liye
+            'usersCount' => $users,
+            'permissionDetails' => $role->permissions->map(fn ($p) => [
                 'key' => $p->permission_key,
                 'scope' => $p->scope,
                 'limit' => $p->limit_value !== null ? (float) $p->limit_value : null,
