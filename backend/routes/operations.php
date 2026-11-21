@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware($p($perm));
     }
 
+    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware($p('inventory.putaway.create'));
+
     // Counts, adjustments, reservations (Step 9b)
     Route::get('inventory/counts', [StockControlController::class, 'counts'])->middleware($p('inventory.count.view'));
     Route::get('inventory/counts/{id}', [StockControlController::class, 'count'])->whereNumber('id')->middleware($p('inventory.count.view'));

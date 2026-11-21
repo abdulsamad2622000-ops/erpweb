@@ -20,6 +20,7 @@ return [
     'inventory.count.view',
     'inventory.ledger.view',
     'inventory.location.view',
+    'inventory.putaway.create',
     'inventory.reservation.create',
     'inventory.reservation.view',
     'inventory.serial.view',

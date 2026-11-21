@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
             'store_keeper' => ['Store Keeper', [
                 'dashboard.view.view', 'inventory.stock.view', 'inventory.serial.view', 'inventory.ledger.view',
                 'inventory.location.view', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.count.view',
-                'inventory.count.create', 'inventory.adjustment.view', 'inventory.adjustment.create', 'inventory.reservation.view',
+                'inventory.count.create', 'inventory.putaway.create', 'inventory.adjustment.view', 'inventory.adjustment.create', 'inventory.reservation.view',
                 'purchase.grn.view', 'purchase.grn.create', 'barcode.label.view', 'barcode.label.print',
             ]],
             'purchase_staff' => ['Purchase Staff', [
