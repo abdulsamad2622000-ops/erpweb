@@ -7,6 +7,7 @@ export const STOCK_TONE: Record<StockStatus, BadgeTone> = {
   rejected: 'danger',
   returned: 'neutral',
   damaged: 'danger',
+  sold: 'info',
 };
 
-export const STOCK_STATUSES: StockStatus[] = ['in_stock', 'quarantine', 'rejected', 'returned', 'damaged'];
+export const STOCK_STATUSES: StockStatus[] = ['in_stock', 'quarantine', 'rejected', 'returned', 'damaged', 'sold'];

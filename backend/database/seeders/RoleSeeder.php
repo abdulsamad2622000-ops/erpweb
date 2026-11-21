@@ -36,7 +36,8 @@ class RoleSeeder extends Seeder
             ]],
             'cashier' => ['Cashier', [
                 'dashboard.view.view', 'pos.sale.create', 'products.product.view',
-                'customers.customer.view', 'sales.invoice.view',
+                'customers.customer.view', 'customers.customer.create', 'sales.invoice.view',
+                'sales.return.view', 'sales.return.create',
             ]],
             'accountant' => ['Accountant', [
                 'dashboard.view.view', 'reports.report.view', 'purchase.payment.view', 'purchase.payment.create',

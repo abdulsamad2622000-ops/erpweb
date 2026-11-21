@@ -429,6 +429,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/settings/pages/backup.page').then((m) => m.BackupPage),
       },
+      {
+        path: 'sales/pos',
+        canActivate: [permissionGuard],
+        data: { title: 'pos', permission: 'pos.sale.create' },
+        loadComponent: () => import('./features/pos/pages/pos.page').then((m) => m.PosPage),
+      },
+      {
+        path: 'sales/returns',
+        canActivate: [permissionGuard],
+        data: { title: 'salesReturns', permission: 'sales.return.view' },
+        loadComponent: () => import('./features/pos/pages/sales-return.page').then((m) => m.SalesReturnPage),
+      },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {
