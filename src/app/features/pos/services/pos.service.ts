@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config';
@@ -29,7 +29,7 @@ export class PosService {
   }
 
   search(q: string): Observable<PosSearchResult[]> {
-    return this.http.get<PosSearchResult[]>(`${this.base}/search`, { params: new HttpParams().set('search', q) });
+    return this.http.get<PosSearchResult[]>(`${this.base}/search?search=${encodeURIComponent(q)}`);
   }
 
   complete(body: SaleInput): Observable<Sale> {
@@ -61,7 +61,7 @@ export class PosService {
   }
 
   customers(search: string): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${APP_CONFIG.apiBase}/customers`, { params: new HttpParams().set('search', search) });
+    return this.http.get<Customer[]>(`${APP_CONFIG.apiBase}/customers?search=${encodeURIComponent(search)}`);
   }
 
   addCustomer(body: CustomerInput): Observable<Customer> {

@@ -390,7 +390,7 @@ class PosController extends Controller
             'lines' => 'required|array|min:1',
             'lines.*.saleLineId' => 'required|integer',
             'lines.*.qty' => 'nullable|integer|min:1',
-            'refundMethod' => 'required|in:'.implode(',', self::METHODS),
+            'refundMethod' => 'required|in:'.implode(',', self::METHODS).',credit',
             'reason' => 'required|string|min:10|max:500',
         ], ['reason.min' => 'Write a reason of at least 10 characters.', 'lines.required' => 'Pick the items being returned.']);
         $u = $request->user();
@@ -401,6 +401,9 @@ class PosController extends Controller
 
         $rid = DB::transaction(function () use ($d, $u, $shift) {
             $sale = DB::table('sales')->lockForUpdate()->find($d['saleId']);
+            if ($d['refundMethod'] === 'credit' && ! $sale->customer_id) {
+                throw ValidationException::withMessages(['refundMethod' => 'Credit refund needs a customer on the sale.']);
+            }
             $ratio = (float) $sale->subtotal > 0 ? (float) $sale->total / (float) $sale->subtotal : 1;
             $rows = [];
             foreach ($d['lines'] as $i => $l) {
@@ -445,33 +448,68 @@ class PosController extends Controller
     private function customerOut(object $c): array
     {
         return ['id' => $c->id, 'name' => $c->name, 'phone' => $c->phone, 'email' => $c->email, 'type' => $c->type,
-            'priceTier' => $c->price_tier, 'creditLimit' => (float) $c->credit_limit, 'isActive' => (bool) $c->is_active];
+            'priceTier' => $c->price_tier, 'creditLimit' => (float) $c->credit_limit, 'isActive' => (bool) $c->is_active,
+            'paymentTermsDays' => (int) ($c->payment_terms_days ?? 0), 'address' => (string) ($c->address ?? ''), 'city' => (string) ($c->city ?? ''),
+            'balance' => WholesaleController::outstanding((int) $c->id)];
     }
 
     public function customers(Request $request): JsonResponse
     {
         $q = trim((string) $request->query('search', ''));
-        $rows = DB::table('customers')->where('is_active', true)
+        $all = $request->query('all') === 'true';
+        $rows = DB::table('customers')->when(! $all, fn ($w) => $w->where('is_active', true))
+            ->when($request->query('type'), fn ($w, $t) => $w->where('type', $t))
             ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('name', 'like', "%{$q}%")->orWhere('phone', 'like', "%{$q}%")))
-            ->orderBy('name')->limit(50)->get();
+            ->orderBy('name')->limit($all ? 500 : 50)->get();
 
         return response()->json($rows->map(fn ($c) => $this->customerOut($c)));
     }
 
-    public function storeCustomer(Request $request): JsonResponse
+    public function customer(int $id): JsonResponse
+    {
+        $c = DB::table('customers')->find($id);
+        abort_unless($c, 404, 'Customer not found.');
+
+        return response()->json($this->customerOut($c));
+    }
+
+    private function customerData(Request $request, ?int $id): array
     {
         $d = $request->validate(['name' => 'required|string|min:2|max:120', 'phone' => 'required|string|min:7|max:30',
-            'email' => 'nullable|email|max:120', 'type' => 'nullable|in:retail,wholesale,dealer'],
+            'email' => 'nullable|email|max:120', 'type' => 'nullable|in:retail,wholesale,dealer',
+            'priceTier' => 'nullable|string|exists:price_tiers,key', 'creditLimit' => 'nullable|numeric|min:0|max:1000000000',
+            'paymentTermsDays' => 'nullable|integer|min:0|max:365', 'address' => 'nullable|string|max:300', 'city' => 'nullable|string|max:80',
+            'isActive' => 'nullable|boolean'],
             ['phone.required' => 'Enter a phone number.']);
         $phone = preg_replace('/[^0-9+]/', '', $d['phone']);
-        if (DB::table('customers')->where('phone', $phone)->exists()) {
+        if (DB::table('customers')->where('phone', $phone)->when($id, fn ($w) => $w->where('id', '!=', $id))->exists()) {
             throw ValidationException::withMessages(['phone' => 'A customer with this phone already exists.']);
         }
         $type = $d['type'] ?? 'retail';
-        $id = DB::table('customers')->insertGetId(['name' => trim($d['name']), 'phone' => $phone, 'email' => trim($d['email'] ?? ''),
-            'type' => $type, 'price_tier' => $type, 'created_at' => now(), 'updated_at' => now()]);
+        $credit = (float) ($d['creditLimit'] ?? 0);
+        if ($credit > 0 && $request->user()->type !== 'super_admin' && ! app(\App\Services\PermissionResolver::class)->has($request->user(), 'customers.customer.edit')) {
+            throw ValidationException::withMessages(['creditLimit' => 'You cannot set a credit limit.']);
+        }
+
+        return ['name' => trim($d['name']), 'phone' => $phone, 'email' => trim($d['email'] ?? ''), 'type' => $type,
+            'price_tier' => $d['priceTier'] ?? $type, 'credit_limit' => $credit, 'payment_terms_days' => (int) ($d['paymentTermsDays'] ?? 0),
+            'address' => trim($d['address'] ?? ''), 'city' => trim($d['city'] ?? ''), 'is_active' => $d['isActive'] ?? true];
+    }
+
+    public function storeCustomer(Request $request): JsonResponse
+    {
+        $id = DB::table('customers')->insertGetId($this->customerData($request, null) + ['created_at' => now(), 'updated_at' => now()]);
         AuditLog::record($request->user(), 'customer.created', null, ['id' => $id]);
 
         return response()->json($this->customerOut(DB::table('customers')->find($id)), 201);
+    }
+
+    public function updateCustomer(Request $request, int $id): JsonResponse
+    {
+        abort_unless(DB::table('customers')->where('id', $id)->exists(), 404, 'Customer not found.');
+        DB::table('customers')->where('id', $id)->update($this->customerData($request, $id) + ['updated_at' => now()]);
+        AuditLog::record($request->user(), 'customer.updated', null, ['id' => $id]);
+
+        return response()->json($this->customerOut(DB::table('customers')->find($id)));
     }
 }
