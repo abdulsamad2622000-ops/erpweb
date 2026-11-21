@@ -132,6 +132,9 @@ class InventoryController extends Controller
     /** Bin barcode + serials: serials us bin mein darj. Sirf usi warehouse ke serials. */
     public function putaway(Request $request): JsonResponse
     {
+        if ($request->has('serial')) {
+            return $this->putawayOne($request);
+        }
         $d = $request->validate([
             'binBarcode' => 'required|string|max:64',
             'serials' => 'required|array|min:1|max:100',
@@ -317,5 +320,37 @@ class InventoryController extends Controller
             })->values(),
             'receivedSerials' => $t->lines->where('received', true)->pluck('serial')->values(),
         ];
+    }
+
+    /** Scan app (Step 10): { bin, serial }. Same bin dobara = kamyaab (offline replay mehfooz). */
+    private function putawayOne(Request $request): JsonResponse
+    {
+        $d = $request->validate(['bin' => 'required|string|max:64', 'serial' => 'required|string|max:60']);
+        $bin = Location::where('level', 'bin')->where('is_active', true)
+            ->whereRaw('UPPER(barcode) = ?', [PurchaseController::normalizeSerial($d['bin'])])->first();
+        abort_unless($bin, 404, 'Bin not found.');
+        $actor = $request->user();
+        $ref = $bin->barcode ?: $bin->code;
+
+        return DB::transaction(function () use ($d, $bin, $ref, $actor) {
+            $s = StockSerial::where('serial', PurchaseController::normalizeSerial($d['serial']))->lockForUpdate()->first();
+            abort_unless($s, 404, 'Serial not found.');
+            if ($s->status !== 'in_stock') {
+                return response()->json(['message' => 'Only in-stock items can be put away.', 'code' => 'not_in_stock'], 422);
+            }
+            if ((int) $s->warehouse_id !== (int) $bin->warehouse_id) {
+                return response()->json(['message' => 'Item and bin are in different warehouses.', 'code' => 'wrong_warehouse'], 422);
+            }
+            $prev = $s->bin_id ? Location::find($s->bin_id) : null;
+            if ((int) $s->bin_id !== (int) $bin->id) {
+                $s->update(['bin_id' => $bin->id]);
+                StockMovement::create(['at' => now(), 'direction' => '-', 'type' => 'putaway', 'serial' => $s->serial, 'product_id' => $s->product_id,
+                    'warehouse_id' => $s->warehouse_id, 'ref' => $ref, 'note' => null, 'user_id' => $actor->id]);
+                AuditLog::record($actor, 'stock.putaway', null, ['bin' => $ref, 'serials' => 1]);
+            }
+
+            return response()->json(['serial' => $s->serial, 'binBarcode' => $ref, 'binName' => $bin->name,
+                'warehouseId' => (int) $bin->warehouse_id, 'previousBin' => $prev ? ($prev->barcode ?: $prev->code) : null]);
+        });
     }
 }

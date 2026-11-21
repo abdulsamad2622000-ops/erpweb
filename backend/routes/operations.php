@@ -57,17 +57,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('inventory/transfers', [InventoryController::class, 'storeTransfer'])->middleware($p('inventory.transfer.create'));
     foreach (['dispatch' => 'inventory.transfer.create', 'receive' => 'inventory.transfer.create', 'cancel' => 'inventory.transfer.create',
         'approve' => 'inventory.transfer.approve', 'reject' => 'inventory.transfer.approve'] as $a => $perm) {
-        Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware($p($perm));
+        Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware([$p($perm), 'idempotent']);
     }
 
-    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware($p('inventory.putaway.create'));
+    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware([$p('inventory.putaway.create'), 'idempotent']);
 
     // Counts, adjustments, reservations (Step 9b)
     Route::get('inventory/counts', [StockControlController::class, 'counts'])->middleware($p('inventory.count.view'));
     Route::get('inventory/counts/{id}', [StockControlController::class, 'count'])->whereNumber('id')->middleware($p('inventory.count.view'));
     Route::post('inventory/counts', [StockControlController::class, 'storeCount'])->middleware($p('inventory.count.create'));
     foreach (['submit' => 'inventory.count.create', 'approve' => 'inventory.count.approve', 'reject' => 'inventory.count.approve'] as $a => $perm) {
-        Route::post("inventory/counts/{id}/{$a}", [StockControlController::class, 'countAction'])->whereNumber('id')->defaults('action', $a)->middleware($p($perm));
+        Route::post("inventory/counts/{id}/{$a}", [StockControlController::class, 'countAction'])->whereNumber('id')->defaults('action', $a)->middleware([$p($perm), 'idempotent']);
     }
     Route::get('inventory/adjustments', [StockControlController::class, 'adjustments'])->middleware($p('inventory.adjustment.view'));
     Route::get('inventory/adjustments/{id}', [StockControlController::class, 'adjustment'])->whereNumber('id')->middleware($p('inventory.adjustment.view'));
