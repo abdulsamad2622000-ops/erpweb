@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config';
 import { ReturnInput, ReturnResult } from '../../pos/models/pos.models';
 import {
+  AgingReport, CustomerLedger, CustomerReceipt, ReceiptInput,
   Challan, ChallanInput, CustomerForm, DocInput, Invoice, PaymentInput, PriceInfo, Quotation, SalesOrder, WholesaleCustomer,
 } from '../models/sales.models';
 
@@ -38,6 +39,16 @@ export class SalesService {
     return id
       ? this.http.put<WholesaleCustomer>(`${this.api}/customers/${id}`, body)
       : this.http.post<WholesaleCustomer>(`${this.api}/customers`, body);
+  }
+
+  ledger(id: number, from?: string | null, to?: string | null): Observable<CustomerLedger> {
+    return this.http.get<CustomerLedger>(`${this.api}/customers/${id}/ledger${qs({ from, to })}`);
+  }
+  receive(customerId: number, body: ReceiptInput, key: string): Observable<CustomerReceipt> {
+    return this.http.post<CustomerReceipt>(`${this.api}/customers/${customerId}/receipts`, body, { headers: { 'Idempotency-Key': key } });
+  }
+  aging(): Observable<AgingReport> {
+    return this.http.get<AgingReport>(`${this.api}/customers/aging`);
   }
 
   price(customerId: number, productId: number): Observable<PriceInfo> {

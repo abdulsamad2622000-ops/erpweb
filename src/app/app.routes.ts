@@ -494,6 +494,18 @@ export const routes: Routes = [
         loadComponent: () => import('./features/pos/pages/sales-return.page').then((m) => m.SalesReturnPage),
       },
       {
+        path: 'customers/aging',
+        canActivate: [permissionGuard],
+        data: { title: 'customers', permission: 'customers.customer.view' },
+        loadComponent: () => import('./features/sales/pages/aging.page').then((m) => m.AgingPage),
+      },
+      {
+        path: 'customers/:id/ledger',
+        canActivate: [permissionGuard],
+        data: { title: 'customers', permission: 'customers.customer.view' },
+        loadComponent: () => import('./features/sales/pages/customer-ledger.page').then((m) => m.CustomerLedgerPage),
+      },
+      {
         path: 'customers',
         canActivate: [permissionGuard],
         data: { title: 'customers', permission: 'customers.customer.view' },

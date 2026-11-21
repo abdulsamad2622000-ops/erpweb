@@ -137,3 +137,77 @@ export interface PaymentInput {
   amount: number;
   reference?: string | null;
 }
+
+export type LedgerEntryType = 'invoice' | 'change' | 'payment' | 'return' | 'receipt';
+
+export interface LedgerEntry {
+  date: string;
+  type: LedgerEntryType;
+  ref: string;
+  refId: number;
+  debit: number;
+  credit: number;
+  balance: number;
+  note: string | null;
+}
+
+export interface OpenInvoice {
+  id: number;
+  number: string;
+  date: string;
+  dueDate: string | null;
+  total: number;
+  balance: number;
+}
+
+export interface CustomerLedger {
+  customer: { id: number; name: string; phone: string; creditLimit: number; paymentTermsDays: number };
+  from: string | null;
+  to: string | null;
+  opening: number;
+  closing: number;
+  totalDebit: number;
+  totalCredit: number;
+  entries: LedgerEntry[];
+  open: OpenInvoice[];
+}
+
+export interface ReceiptInput {
+  method: PayMethod;
+  amount: number;
+  reference: string | null;
+  note: string | null;
+  /** Khaali = purani invoice pehle (FIFO). */
+  allocations?: { invoiceId: number; amount: number }[];
+}
+
+export interface CustomerReceipt {
+  id: number;
+  number: string;
+  customerId: number;
+  method: PayMethod;
+  amount: number;
+  reference: string | null;
+  note: string | null;
+  createdAt: string;
+  createdBy: string;
+  allocations: { invoiceId: number; number: string; amount: number }[];
+}
+
+export interface AgingRow {
+  customerId: number;
+  name: string;
+  phone: string;
+  creditLimit: number;
+  current: number;
+  d30: number;
+  d60: number;
+  d90: number;
+  over90: number;
+  total: number;
+}
+
+export interface AgingReport {
+  rows: AgingRow[];
+  totals: Omit<AgingRow, 'customerId' | 'name' | 'phone' | 'creditLimit'>;
+}
