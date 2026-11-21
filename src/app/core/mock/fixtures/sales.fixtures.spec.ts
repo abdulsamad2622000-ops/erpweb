@@ -53,3 +53,18 @@ describe('SALES_FIXTURES', () => {
     expect(after.paymentsDetail.length).toBe(2);
   });
 });
+
+describe('ledger fixtures', () => {
+  it('receives FIFO, shows ledger and aging', () => {
+    const cust = call('POST /customers', '/customers', {
+      name: 'Ledger Co', phone: '0333-1110000', email: '', type: 'wholesale', priceTier: 'wholesale', creditLimit: 0,
+      paymentTermsDays: 0, address: '', city: '', isActive: true,
+    }).body as WholesaleCustomer;
+    expect(call('POST /customers/:id/receipts', `/customers/${cust.id}/receipts`, { method: 'cash', amount: 10, reference: null, note: null }).status).toBe(422);
+    const ag = call('GET /customers/aging', '/customers/aging').body as { rows: { customerId: number }[] };
+    expect(ag.rows.some((r) => r.customerId === cust.id)).toBe(false);
+    const l = call('GET /customers/:id/ledger', `/customers/${cust.id}/ledger`).body as { closing: number; entries: unknown[] };
+    expect(l.closing).toBe(0);
+    expect(l.entries.length).toBe(0);
+  });
+});

@@ -1548,5 +1548,48 @@
         "overdue": "Overdue"
       }
     }
+  },
+  "ledgerPage": {
+    "title": "Ledger",
+    "statement": "Account statement",
+    "printStatement": "Print statement",
+    "receive": "Receive payment",
+    "balance": "Balance",
+    "openBills": "Unpaid bills",
+    "pickBills": "Choose bills myself",
+    "applied": "Applied",
+    "daysLate": "{{n}} days late",
+    "saved": "Receipt {{number}} saved: Rs {{amount}} applied to",
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "details": "Details",
+    "debit": "Debit (bill)",
+    "credit": "Credit (paid)",
+    "opening": "Opening balance",
+    "closing": "Closing balance",
+    "types": {
+      "invoice": "Invoice",
+      "change": "Change given",
+      "payment": "Payment",
+      "return": "Return credit",
+      "receipt": "Receipt"
+    },
+    "errors": {
+      "amount": "Enter the amount.",
+      "overDue": "Amount is more than the balance due.",
+      "overInvoice": "An applied amount is more than that bill's balance.",
+      "notMatching": "Applied amounts must add up to the receipt amount."
+    }
+  },
+  "agingPage": {
+    "title": "Receivables aging",
+    "current": "Not due",
+    "d30": "1–30 days",
+    "d60": "31–60 days",
+    "d90": "61–90 days",
+    "over90": "Over 90 days",
+    "overLimit": "Over credit limit",
+    "none": "No customer owes money."
   }
 }

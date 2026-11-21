@@ -23,9 +23,12 @@ const EMPTY: CustomerForm = {
     <section class="mx-auto max-w-6xl space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-xl font-semibold">{{ 'customersPage.title' | transloco }}</h1>
-        <button *hasPermission="'customers.customer.create'" type="button" [class]="ui.primary" (click)="openNew()">
-          + {{ 'customersPage.add' | transloco }}
-        </button>
+        <div class="flex flex-wrap gap-2">
+          <a routerLink="/customers/aging" [class]="ui.btn">{{ 'agingPage.title' | transloco }}</a>
+          <button *hasPermission="'customers.customer.create'" type="button" [class]="ui.primary" (click)="openNew()">
+            + {{ 'customersPage.add' | transloco }}
+          </button>
+        </div>
       </div>
       <div class="flex flex-wrap gap-2">
         <input #q [class]="ui.input + ' max-w-xs'" [attr.aria-label]="'common.search' | transloco"
@@ -55,7 +58,8 @@ const EMPTY: CustomerForm = {
                 <td [class]="ui.td + ' text-end'">{{ c.creditLimit ? fmt(c.creditLimit) : ('customersPage.cashOnly' | transloco) }}</td>
                 <td [class]="ui.td + ' text-end font-medium'" [class.text-red-600]="c.balance > 0">{{ fmt(c.balance) }}</td>
                 <td [class]="ui.td + ' whitespace-nowrap text-end'">
-                  <a [routerLink]="['/sales/invoices']" [queryParams]="{ customerId: c.id }" [class]="ui.btn">{{ 'customersPage.bills' | transloco }}</a>
+                  <a [routerLink]="['/customers', c.id, 'ledger']" [class]="ui.btn">{{ 'ledgerPage.title' | transloco }}</a>
+                  <a [routerLink]="['/sales/invoices']" [queryParams]="{ customerId: c.id }" [class]="ui.btn + ' ms-1'">{{ 'customersPage.bills' | transloco }}</a>
                   <button *hasPermission="'customers.customer.edit'" type="button" [class]="ui.btn + ' ms-1'" (click)="edit(c)">
                     {{ 'common.edit' | transloco }}
                   </button>

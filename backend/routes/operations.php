@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
+use App\Http\Controllers\Api\CustomerLedgerController;
 use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\WholesaleController;
 use App\Http\Controllers\Api\PurchaseController;
@@ -110,6 +111,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('customers', [PosController::class, 'storeCustomer'])->middleware($p('customers.customer.create'));
     Route::get('customers/{id}', [PosController::class, 'customer'])->whereNumber('id')->middleware($p('customers.customer.view'));
     Route::put('customers/{id}', [PosController::class, 'updateCustomer'])->whereNumber('id')->middleware($p('customers.customer.edit'));
+
+    // Customer ledger, receipts, aging (Step 13)
+    Route::get('customers/aging', [CustomerLedgerController::class, 'aging'])->middleware($p('customers.customer.view'));
+    Route::get('customers/{id}/ledger', [CustomerLedgerController::class, 'ledger'])->whereNumber('id')->middleware($p('customers.customer.view'));
+    Route::post('customers/{id}/receipts', [CustomerLedgerController::class, 'storeReceipt'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
+    Route::get('customer-receipts/{id}', [CustomerLedgerController::class, 'receipt'])->whereNumber('id')->middleware($p('customers.customer.view'));
 
     // Wholesale (Step 11)
     $W = WholesaleController::class;

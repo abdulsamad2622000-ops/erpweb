@@ -2,8 +2,10 @@ import { Customer, Sale } from '../../../features/pos/models/pos.models';
 import { round2 } from '../../../features/pos/utils/pos-utils';
 import { normalizeSerial } from '../../../features/purchase/utils/purchase-utils';
 import {
+  AgingReport, AgingRow, CustomerReceipt, LedgerEntry, OpenInvoice, ReceiptInput,
   Challan, ChallanInput, CustomerForm, DocInput, Invoice, PaymentInput, Quotation, SalesOrder, WholesaleCustomer,
 } from '../../../features/sales/models/sales.models';
+import { daysLate, fifoAllocate } from '../../../features/sales/utils/ledger-utils';
 import { FixtureHandler, FixtureResponse, fail, ok } from './fixture.types';
 import { warehouses } from './org.fixtures';
 import { MOCK_DISCOUNT_LIMIT, customers, sales } from './pos.fixtures';
@@ -194,7 +196,115 @@ function createInvoice(b: { challanId: number; payments?: PaymentInput[] }): Fix
   return { status: 201, body: invView(inv) };
 }
 
+interface MockReceipt extends CustomerReceipt {
+  at: string;
+}
+const receipts: MockReceipt[] = [];
+
+function openOf(customerId: number): OpenInvoice[] {
+  return sales
+    .filter((s) => s.customer?.id === customerId && saleBalance(s) > 0.004)
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt) || a.id - b.id)
+    .map((s) => ({ id: s.id, number: s.number, date: s.createdAt.slice(0, 10), dueDate: (s as Inv).dueDate ?? null, total: s.total, balance: saleBalance(s) }));
+}
+
+function ledger(customerId: number, from: string, to: string): FixtureResponse {
+  const c = customers.find((x) => x.id === customerId);
+  if (!c) return fail(404, 'Customer not found.');
+  const rows: Omit<LedgerEntry, 'balance'>[] = [];
+  const receiptPays = new Set(receipts.flatMap((r) => r.allocations.map((a) => `${a.invoiceId}:${r.at}`)));
+  for (const s of sales.filter((x) => x.customer?.id === customerId) as Inv[]) {
+    rows.push({ date: s.createdAt, type: 'invoice', ref: s.number, refId: s.id, debit: s.total, credit: 0, note: s.channel });
+    if (s.change > 0) rows.push({ date: s.createdAt, type: 'change', ref: s.number, refId: s.id, debit: s.change, credit: 0, note: null });
+    for (const p of s.paymentsDetail ?? s.payments.map((x) => ({ ...x, reference: null, paidAt: s.createdAt }))) {
+      if (receiptPays.has(`${s.id}:${p.paidAt}`)) continue;
+      rows.push({ date: p.paidAt ?? s.createdAt, type: 'payment', ref: s.number, refId: s.id, debit: 0, credit: p.amount, note: p.method });
+    }
+    for (const r of s.returns.filter((x) => x.refundMethod === 'credit')) {
+      rows.push({ date: r.createdAt, type: 'return', ref: r.number, refId: s.id, debit: 0, credit: r.amount, note: s.number });
+    }
+  }
+  for (const r of receipts.filter((x) => x.customerId === customerId)) {
+    rows.push({ date: r.at, type: 'receipt', ref: r.number, refId: r.id, debit: 0, credit: r.amount, note: r.method });
+  }
+  rows.sort((a, b) => a.date.localeCompare(b.date) || (a.debit > 0 ? -1 : 1) - (b.debit > 0 ? -1 : 1));
+  let bal = 0;
+  let opening = 0;
+  const entries: LedgerEntry[] = [];
+  for (const e of rows) {
+    bal = round2(bal + e.debit - e.credit);
+    const d = e.date.slice(0, 10);
+    if (from && d < from) {
+      opening = bal;
+      continue;
+    }
+    if (to && d > to) continue;
+    entries.push({ ...e, balance: bal });
+  }
+  return ok({
+    customer: { id: c.id, name: c.name, phone: c.phone, creditLimit: c.creditLimit, paymentTermsDays: extra.get(c.id)?.paymentTermsDays ?? 0 },
+    from: from || null, to: to || null, opening, closing: entries.length ? entries[entries.length - 1].balance : opening,
+    totalDebit: round2(entries.reduce((a, e) => a + e.debit, 0)), totalCredit: round2(entries.reduce((a, e) => a + e.credit, 0)),
+    entries, open: openOf(customerId),
+  });
+}
+
+function receive(customerId: number, b: ReceiptInput): FixtureResponse {
+  if (!customers.some((c) => c.id === customerId)) return fail(404, 'Customer not found.');
+  const open = openOf(customerId);
+  const due = round2(open.reduce((a, i) => a + i.balance, 0));
+  if (!(b?.amount > 0)) return fail(422, 'Enter the amount.');
+  if (b.amount > due + 0.001) return fail(422, `Only ${due} is due from this customer.`);
+  let plan: { invoiceId: number; amount: number }[];
+  if (b.allocations?.length) {
+    for (const a of b.allocations) {
+      const inv = open.find((i) => i.id === a.invoiceId);
+      if (!inv) return fail(422, 'This invoice has nothing due.');
+      if (a.amount > inv.balance + 0.001) return fail(422, `Only ${inv.balance} is due on ${inv.number}.`);
+    }
+    if (Math.abs(round2(b.allocations.reduce((a, x) => a + x.amount, 0)) - b.amount) > 0.001) {
+      return fail(422, 'Allocated amounts must add up to the receipt amount.');
+    }
+    plan = b.allocations;
+  } else plan = fifoAllocate(open, b.amount);
+  const at = new Date().toISOString();
+  for (const a of plan) {
+    const s = sales.find((x) => x.id === a.invoiceId) as Inv;
+    s.paid = round2(s.paid + a.amount);
+    s.payments.push({ method: b.method, amount: a.amount });
+    s.paymentsDetail = [...(s.paymentsDetail ?? []), { method: b.method, amount: a.amount, reference: b.reference ?? null, paidAt: at }];
+  }
+  const r: MockReceipt = {
+    id: receipts.length + 1, number: num('RCV-', receipts.length + 1), customerId, method: b.method, amount: round2(b.amount),
+    reference: b.reference ?? null, note: b.note ?? null, createdAt: at, createdBy: 'Mock user', at,
+    allocations: plan.map((a) => ({ ...a, number: sales.find((x) => x.id === a.invoiceId)!.number })),
+  };
+  receipts.push(r);
+  return { status: 201, body: r };
+}
+
+function aging(): FixtureResponse {
+  const t = today();
+  const rows: AgingRow[] = [];
+  for (const c of customers) {
+    const r: AgingRow = { customerId: c.id, name: c.name, phone: c.phone, creditLimit: c.creditLimit, current: 0, d30: 0, d60: 0, d90: 0, over90: 0, total: 0 };
+    for (const inv of openOf(c.id)) {
+      const late = daysLate(inv.dueDate ?? inv.date, t);
+      const k = late === 0 ? 'current' : late <= 30 ? 'd30' : late <= 60 ? 'd60' : late <= 90 ? 'd90' : 'over90';
+      r[k] = round2(r[k] + inv.balance);
+      r.total = round2(r.total + inv.balance);
+    }
+    if (r.total > 0.004) rows.push(r);
+  }
+  rows.sort((a, b) => b.total - a.total);
+  const sum = (k: keyof AgingReport['totals']) => round2(rows.reduce((a, r) => a + r[k], 0));
+  return ok({ rows, totals: { current: sum('current'), d30: sum('d30'), d60: sum('d60'), d90: sum('d90'), over90: sum('over90'), total: sum('total') } });
+}
+
 export const SALES_FIXTURES: Record<string, FixtureHandler> = {
+  'GET /customers/aging': () => aging(),
+  'GET /customers/:id/ledger': (req) => ledger(idAfter(req.url, 'customers'), qp(req.url, 'from'), qp(req.url, 'to')),
+  'POST /customers/:id/receipts': (req) => receive(idAfter(req.url, 'customers'), req.body as ReceiptInput),
   'GET /customers': (req) => {
     const all = qp(req.url, 'all') === 'true';
     const type = qp(req.url, 'type');
