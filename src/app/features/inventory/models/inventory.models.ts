@@ -12,7 +12,7 @@ export interface StockSerial {
   receivedAt: string;
 }
 
-export type TimelineType = 'received' | 'returned';
+export type TimelineType = 'received' | 'returned' | 'transferred_out' | 'transferred_in';
 
 export interface TimelineEvent {
   at: string;

@@ -735,7 +735,9 @@
       "history": "History",
       "types": {
         "received": "Received",
-        "returned": "Returned to supplier"
+        "returned": "Returned to supplier",
+        "transferred_out": "Sent to another warehouse",
+        "transferred_in": "Received from a transfer"
       }
     }
   },

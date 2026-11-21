@@ -36,6 +36,7 @@ composer install --no-dev --optimize-autoloader --no-interaction --quiet
 echo "== 4/6 Migrate + cache"
 php artisan down --retry=15 || true
 php artisan migrate --force
+php artisan db:seed --class=RoleSeeder --force   # system roles ki permissions naye keys ke saath
 php artisan config:cache
 php artisan route:cache
 php artisan up

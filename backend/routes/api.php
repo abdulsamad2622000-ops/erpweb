@@ -33,6 +33,7 @@ Route::prefix('v1')->group(function () {
     Route::get('health', fn () => ['status' => 'ok']);
 
     require __DIR__.'/catalog.php';
+    require __DIR__.'/operations.php';
 
     Route::middleware('auth:sanctum')->group(function () {
         // Super Admin aur Admin: users, overrides, roles (dekhna), registry, audit log
