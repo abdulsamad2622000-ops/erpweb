@@ -1256,10 +1256,22 @@
     },
     "noAccess": "You do not have access to any scan task. Ask an admin.",
     "tiles": {
-      "putaway": { "title": "Put-away", "desc": "Place scanned items into a bin" },
-      "transfers": { "title": "Transfers", "desc": "Scan items to check them before dispatch or on arrival" },
-      "counts": { "title": "Stock count", "desc": "Count the items in a warehouse" },
-      "lookup": { "title": "Serial lookup", "desc": "Scan a serial to see its status and history" }
+      "putaway": {
+        "title": "Put-away",
+        "desc": "Place scanned items into a bin"
+      },
+      "transfers": {
+        "title": "Transfers",
+        "desc": "Scan items to check them before dispatch or on arrival"
+      },
+      "counts": {
+        "title": "Stock count",
+        "desc": "Count the items in a warehouse"
+      },
+      "lookup": {
+        "title": "Serial lookup",
+        "desc": "Scan a serial to see its status and history"
+      }
     },
     "putaway": {
       "title": "Put-away",
@@ -1277,7 +1289,11 @@
       "placedIn": "Placed in {{ bin }}",
       "duplicate": "Already placed in this bin.",
       "queued": "Saved on this phone. It will sync later.",
-      "status": { "placed": "Placed", "queued": "Saved offline", "failed": "Failed" },
+      "status": {
+        "placed": "Placed",
+        "queued": "Saved offline",
+        "failed": "Failed"
+      },
       "errors": {
         "notInStock": "Only in-stock items can be put away.",
         "wrongWarehouse": "This item is in a different warehouse than the bin.",
@@ -1362,6 +1378,175 @@
       "recent": "Latest history",
       "warehouse": "Warehouse",
       "bin": "Bin"
+    }
+  },
+  "customersPage": {
+    "title": "Customers",
+    "add": "New customer",
+    "editTitle": "Edit customer",
+    "search": "Name or phone",
+    "type": "Type",
+    "allTypes": "All types",
+    "types": {
+      "retail": "Retail",
+      "wholesale": "Wholesale",
+      "dealer": "Dealer"
+    },
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "city": "City",
+    "address": "Address",
+    "priceTier": "Price list",
+    "creditLimit": "Credit limit",
+    "creditHint": "0 = cash only, no credit.",
+    "terms": "Payment terms (days)",
+    "balance": "Balance due",
+    "cashOnly": "Cash only",
+    "bills": "Bills",
+    "active": "Active"
+  },
+  "salesDocs": {
+    "searchHint": "Number or customer",
+    "all": "All",
+    "more": "Load more",
+    "clearCustomer": "Show all customers",
+    "number": "No.",
+    "customer": "Customer",
+    "date": "Date",
+    "items": "items",
+    "balance": "Balance",
+    "back": "Back",
+    "print": "Print",
+    "change": "Change",
+    "note": "Note",
+    "validUntil": "Valid until",
+    "validUntilLine": "This quotation is valid until {{date}}.",
+    "addItem": "Add item",
+    "pickCustomerFirst": "Pick a customer first",
+    "noItems": "Add items to this document.",
+    "tierLowest": "List {{tier}} · lowest {{low}}",
+    "createdBy": "Made by",
+    "quotation": "Quotation",
+    "order": "Sales order",
+    "challan": "Delivery challan",
+    "invoice": "Invoice",
+    "markSent": "Mark as sent",
+    "cancel": "Cancel",
+    "convert": "Make sales order",
+    "openOrder": "Open sales order",
+    "cancelQuotationMsg": "Cancel this quotation? It cannot be used after this.",
+    "convertMsg": "Make a sales order from {{number}}?",
+    "cancelOrderMsg": "Cancel this order? Nothing has been delivered yet.",
+    "fromQuotation": "From quotation",
+    "deliver": "Deliver",
+    "newChallan": "New delivery challan",
+    "fromWarehouse": "Warehouse",
+    "scanSerial": "Scan serial to deliver",
+    "delivered": "Delivered",
+    "thisChallan": "On this challan",
+    "done": "Done",
+    "nothingLeft": "Nothing left to deliver for serialized items.",
+    "createChallan": "Create challan ({{n}} items)",
+    "serial": "Serial",
+    "openInvoice": "Open invoice",
+    "makeInvoice": "Make invoice",
+    "invoiceTotal": "Invoice total",
+    "paidNow": "Paid now",
+    "reference": "Reference (cheque / transfer no.)",
+    "onCredit": "Rs {{n}} goes on credit.",
+    "overCredit": "Rs {{n}} on credit is over this customer's limit. Take more payment.",
+    "fullyPaid": "Fully paid.",
+    "createInvoice": "Create invoice",
+    "receivedBy": "Received by (name and signature): ____________________",
+    "dueDate": "Due date",
+    "returnedAmt": "Returned",
+    "payments": "Payments",
+    "receivePayment": "Receive payment",
+    "save": "Save payment",
+    "channel": {
+      "pos": "POS",
+      "wholesale": "Wholesale"
+    },
+    "refund": {
+      "cash": "Cash refund",
+      "card": "Card refund",
+      "transfer": "Transfer refund",
+      "credit": "Credit to customer account"
+    },
+    "errors": {
+      "qty": "Enter a quantity of 1 or more.",
+      "price": "Enter a price.",
+      "belowLowest": "Lowest price you can give is {{n}}."
+    },
+    "quotations": {
+      "title": "Quotations",
+      "add": "New quotation",
+      "edit": "Edit quotation",
+      "extra": "Valid until",
+      "amount": "Total"
+    },
+    "orders": {
+      "title": "Sales orders",
+      "add": "New sales order",
+      "extra": "Delivered",
+      "amount": "Total"
+    },
+    "challans": {
+      "title": "Delivery challans",
+      "extra": "Order",
+      "amount": " "
+    },
+    "invoices": {
+      "title": "Invoices",
+      "extra": "Details",
+      "amount": "Total"
+    },
+    "filter": {
+      "quotations": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "accepted": "Accepted",
+        "cancelled": "Cancelled"
+      },
+      "orders": {
+        "open": "Open",
+        "partial": "Partly delivered",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "challans": {
+        "false": "Not invoiced",
+        "true": "Invoiced"
+      },
+      "invoices": {
+        "unpaid": "Balance due"
+      }
+    },
+    "status": {
+      "quotation": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "accepted": "Accepted",
+        "cancelled": "Cancelled",
+        "expired": "Expired"
+      },
+      "order": {
+        "open": "Open",
+        "partial": "Partly delivered",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "challan": {
+        "pending": "Not invoiced",
+        "invoiced": "Invoiced"
+      },
+      "invoice": {
+        "unpaid": "Unpaid",
+        "partial": "Part paid",
+        "paid": "Paid",
+        "overdue": "Overdue"
+      }
     }
   }
 }

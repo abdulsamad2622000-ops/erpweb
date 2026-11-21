@@ -5,7 +5,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { ScanEvent, ScanInputComponent } from '../../../shared/ui/scan-input/scan-input.component';
 import { UI, errorMessage } from '../../purchase/utils/ui';
-import { PAY_METHODS, PayMethod, ReturnResult, Sale, SaleLine } from '../models/pos.models';
+import { PAY_METHODS, RefundMethod, ReturnResult, Sale, SaleLine } from '../models/pos.models';
 import { PosService } from '../services/pos.service';
 import { money, refundFor } from '../utils/pos-utils';
 
@@ -32,7 +32,7 @@ import { money, refundFor } from '../utils/pos-utils';
       @if (done(); as d) {
         <div role="status" class="rounded-xl border border-green-600 p-4 text-sm">
           {{ 'salesReturnPage.done' | transloco: { number: d.number, amount: fmt(d.amount) } }}
-          {{ 'posPage.methods.' + d.refundMethod | transloco }}.
+          {{ 'salesDocs.refund.' + d.refundMethod | transloco }}.
           <p class="mt-1">{{ 'salesReturnPage.exchangeHint' | transloco }}</p>
         </div>
       }
@@ -63,6 +63,9 @@ import { money, refundFor } from '../utils/pos-utils';
             @for (m of methods; track m) {
               <option [ngValue]="m">{{ 'posPage.methods.' + m | transloco }}</option>
             }
+            @if (s.customer) {
+              <option ngValue="credit">{{ 'salesDocs.refund.credit' | transloco }}</option>
+            }
           </select>
           <label for="sr-reason" class="block text-sm font-medium">{{ 'salesReturnPage.reason' | transloco }}</label>
           <textarea id="sr-reason" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="reason"></textarea>
@@ -89,7 +92,7 @@ export class SalesReturnPage {
   protected readonly error = signal<string | null>(null);
   protected readonly busy = signal(false);
   protected readonly done = signal<ReturnResult | null>(null);
-  protected method: PayMethod = 'cash';
+  protected method: RefundMethod = 'cash';
   protected reason = '';
 
   protected readonly amount = computed(() => {
@@ -116,6 +119,7 @@ export class SalesReturnPage {
     try {
       const s = await firstValueFrom(this.api.findSale(e.value));
       this.sale.set(s);
+      this.method = s.customer && s.channel === 'wholesale' ? 'credit' : 'cash';
       const code = e.value.trim().toUpperCase();
       const hit = s.lines.find((l) => l.serial === code && this.left(l) > 0);
       this.picked.set(new Set(hit ? [hit.id] : []));
