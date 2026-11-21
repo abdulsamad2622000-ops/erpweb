@@ -19,7 +19,14 @@ export class TransfersService {
     return this.http.post<Transfer>(this.base, body);
   }
   /** approve | reject | dispatch | receive | cancel. body: { note?, serials? } */
-  action(id: number, action: TransferAction, body: { note?: string | null; serials?: string[] } = {}): Observable<Transfer> {
-    return this.http.post<Transfer>(`${this.base}/${id}/${action}`, body);
+  action(
+    id: number,
+    action: TransferAction,
+    body: { note?: string | null; serials?: string[] } = {},
+    idempotencyKey?: string,
+  ): Observable<Transfer> {
+    return this.http.post<Transfer>(`${this.base}/${id}/${action}`, body, {
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
+    });
   }
 }

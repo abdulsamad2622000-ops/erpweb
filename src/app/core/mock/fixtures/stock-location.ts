@@ -7,6 +7,9 @@ export const serialWarehouse = new Map<string, number>();
 /** Adjustments se badli hui status. Serial -> nayi status. */
 export const statusOverride = new Map<string, StockStatus>();
 
+/** Put-away se rakhe hue serials. Serial -> bin ka barcode. */
+export const serialBin = new Map<string, string>();
+
 /** Adjustments ki history entries. Serial -> events. */
 export const adjustmentEvents = new Map<string, TimelineEvent[]>();
 

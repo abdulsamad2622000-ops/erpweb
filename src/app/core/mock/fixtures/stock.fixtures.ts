@@ -5,7 +5,7 @@ import { InspectionStatus } from '../../../features/purchase/models/purchase.mod
 import { FixtureHandler, fail, ok } from './fixture.types';
 import { returns } from './payables.fixtures';
 import { grns } from './purchase.fixtures';
-import { adjustmentEvents, reservationEvents, reservedRef, serialWarehouse, statusOverride } from './stock-location';
+import { adjustmentEvents, reservationEvents, reservedRef, serialBin, serialWarehouse, statusOverride } from './stock-location';
 
 const FROM_INSPECTION: Record<InspectionStatus, StockStatus> = {
   accepted: 'in_stock',
@@ -38,6 +38,7 @@ export function allSerials(): StockSerial[] {
           supplierName: g.supplierName,
           receivedAt: g.postedAt ?? g.createdAt,
           reservedRef: reservedRef(s.serial),
+          ...(serialBin.has(s.serial) ? { binCode: serialBin.get(s.serial) ?? null } : {}),
         });
       }
     }

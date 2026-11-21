@@ -13,6 +13,7 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { PRIMEUI_LICENSE } from './core/config/primeui-license';
 import { TranslocoHttpLoader } from './core/i18n/transloco-loader';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +33,9 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: { preset: Aura, options: { darkModeSelector: '.dark' } },
       license: PRIMEUI_LICENSE,
-    }),
+    }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
   ],
 };
