@@ -84,6 +84,6 @@ class AuthTest extends TestCase
 
         $this->actingAs($keeper, 'sanctum')->getJson('/api/v1/me')->assertOk()
             ->assertJsonCount(1, 'branches')
-            ->assertJsonCount(12, 'permissions');
+            ->assertJsonCount(1, 'permissions'); // test registry mein sirf dashboard.view.view keeper ke preset se milta hai
     }
 }
