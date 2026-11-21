@@ -86,10 +86,10 @@ class ReportsController extends Controller
     {
         $wh = $request->query('warehouseId');
         $q = DB::table('stock_serials')->where('status', 'in_stock')->when($wh, fn ($w) => $w->where('warehouse_id', (int) $wh));
-        $rows = $q->get(['product_id', 'warehouse_id', 'unit_cost', 'created_at'])->groupBy('product_id')->map(function ($g, $pid) {
+        $rows = $q->get(['product_id', 'warehouse_id', 'unit_cost', 'created_at', 'received_at'])->groupBy('product_id')->map(function ($g, $pid) {
             $p = ProductInfo::get((int) $pid);
             $value = self::m($g->sum(fn ($s) => (float) $s->unit_cost));
-            $oldest = $g->min('created_at');
+            $oldest = $g->map(fn ($s) => $s->received_at ?? $s->created_at)->min();
 
             return ['productId' => (int) $pid, 'name' => $p['name'], 'sku' => $p['sku'], 'units' => $g->count(), 'value' => $value,
                 'retailValue' => $p['price'] !== null ? self::m($p['price'] * $g->count()) : null,
