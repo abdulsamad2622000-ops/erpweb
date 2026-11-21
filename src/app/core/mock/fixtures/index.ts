@@ -16,6 +16,7 @@ import { TRANSFER_FIXTURES } from './transfers.fixtures';
 import { COUNT_FIXTURES } from './counts.fixtures';
 import { ADJUSTMENT_FIXTURES } from './adjustments.fixtures';
 import { RESERVATION_FIXTURES } from './reservations.fixtures';
+import { PUTAWAY_FIXTURES } from './putaway.fixtures';
 
 export type { FixtureHandler } from './fixture.types';
 
@@ -34,4 +35,5 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   ...COUNT_FIXTURES,
   ...ADJUSTMENT_FIXTURES,
   ...RESERVATION_FIXTURES,
+  ...PUTAWAY_FIXTURES,
 };

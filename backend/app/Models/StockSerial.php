@@ -19,6 +19,11 @@ class StockSerial extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function bin(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'bin_id');
+    }
+
     public function grn(): BelongsTo
     {
         return $this->belongsTo(Grn::class);

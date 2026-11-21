@@ -188,6 +188,27 @@ class PurchaseInventoryFlowTest extends TestCase
         $this->assertSame(['in'], array_values(array_unique(array_column($this->getJson('/api/v1/inventory/ledger')->json(), 'direction'))));
     }
 
+    public function test_putaway_into_bin(): void
+    {
+        $this->receive(['P0000001', 'P0000002']);
+        $bin = \App\Models\Location::create(['warehouse_id' => $this->wh1, 'parent_id' => null, 'level' => 'bin', 'name' => 'Bin 1', 'code' => 'B1', 'barcode' => 'BIN-MAIN-B1', 'is_active' => true]);
+        $other = \App\Models\Location::create(['warehouse_id' => $this->wh2, 'parent_id' => null, 'level' => 'bin', 'name' => 'Bin 9', 'code' => 'B9', 'barcode' => 'BIN-SHOW-B9', 'is_active' => true]);
+
+        $this->postJson('/api/v1/inventory/putaway', ['binBarcode' => 'nope', 'serials' => ['P0000001']])->assertStatus(422);
+        $this->postJson('/api/v1/inventory/putaway', ['binBarcode' => $other->barcode, 'serials' => ['P0000001']])->assertStatus(422); // doosra warehouse
+        $this->postJson('/api/v1/inventory/putaway', ['binBarcode' => 'bin-main-b1', 'serials' => ['p0000001', 'P0000002']])->assertOk()
+            ->assertJsonPath('moved', 2)->assertJsonPath('bin', 'BIN-MAIN-B1');
+        $this->postJson('/api/v1/inventory/putaway', ['binBarcode' => 'BIN-MAIN-B1', 'serials' => ['P0000001']])->assertStatus(422); // pehle se
+        $this->getJson('/api/v1/inventory/serials/P0000001')->assertJsonPath('binId', $bin->id)->assertJsonPath('binCode', 'BIN-MAIN-B1')
+            ->assertJsonPath('timeline.1.type', 'putaway');
+
+        // Transfer ke baad bin khaali
+        $t = $this->postJson('/api/v1/inventory/transfers', ['fromWarehouseId' => $this->wh1, 'toWarehouseId' => $this->wh2, 'serials' => ['P0000001']])->json('id');
+        $this->postJson("/api/v1/inventory/transfers/{$t}/approve");
+        $this->postJson("/api/v1/inventory/transfers/{$t}/dispatch");
+        $this->getJson('/api/v1/inventory/serials/P0000001')->assertJsonPath('binId', null);
+    }
+
     public function test_permissions_protect_purchase_routes(): void
     {
         $staff = User::create(['name' => 'Cashier', 'email' => 'c@t.test', 'password' => 'password', 'type' => 'staff', 'role' => 'cashier', 'is_active' => true]);

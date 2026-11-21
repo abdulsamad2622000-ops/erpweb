@@ -254,7 +254,7 @@ class PayablesController extends Controller
                 PurchaseReturnLine::create(['purchase_return_id' => $ret->id, 'serial' => $serial, 'product_id' => $r['stock']->product_id, 'unit_cost' => $r['stock']->unit_cost]);
                 StockMovement::create(['at' => now(), 'direction' => 'out', 'type' => 'return', 'serial' => $serial, 'product_id' => $r['stock']->product_id,
                     'warehouse_id' => $r['stock']->warehouse_id, 'ref' => $ret->number, 'note' => $ret->reason, 'user_id' => $actor->id]);
-                $r['stock']->update(['status' => 'returned']);
+                $r['stock']->update(['status' => 'returned', 'bin_id' => null]);
             }
             AuditLog::record($actor, 'purchase_return.created', null, ['number' => $ret->number, 'serials' => count($lines)]);
 

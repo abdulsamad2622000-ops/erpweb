@@ -32,6 +32,7 @@ export const PERMISSION_MODULES: PermissionModule[] = [
       row('Stock', 'inventory.stock', ['view']),
       row('Serials', 'inventory.serial', ['view']),
       row('Locations', 'inventory.location', ['view']),
+      row('Put-away', 'inventory.putaway', ['create']),
       row('Stock ledger', 'inventory.ledger', ['view']),
       row('Transfers', 'inventory.transfer', ['view', 'create', 'approve']),
       row('Stock counts', 'inventory.count', ['view', 'create', 'approve']),
@@ -113,7 +114,7 @@ export const ROLE_TEMPLATES: RoleTemplate[] = [
     name: 'Store Keeper',
     description: 'Stock, transfers and counts.',
     permissions: [
-      'dashboard.view.view', 'inventory.stock.view', 'inventory.serial.view', 'inventory.location.view',
+      'dashboard.view.view', 'inventory.stock.view', 'inventory.serial.view', 'inventory.location.view', 'inventory.putaway.create',
       'inventory.ledger.view', 'inventory.transfer.view', 'inventory.transfer.create',
       'inventory.count.view', 'inventory.count.create', 'products.product.view',
       'barcode.label.view', 'barcode.label.print',

@@ -23,7 +23,7 @@ const warehouses: Warehouse[] = [
   { id: 6, branchId: 3, code: 'ISB-SELL', name: 'Islamabad Main Store', type: 'sellable', isActive: true },
 ];
 
-const locations: WarehouseLocation[] = [
+export const locations: WarehouseLocation[] = [
   { id: 1, warehouseId: 1, parentId: null, level: 'zone', code: 'A', name: 'Zone A', barcode: null, isActive: true },
   { id: 2, warehouseId: 1, parentId: 1, level: 'rack', code: 'R1', name: 'Rack 1', barcode: null, isActive: true },
   { id: 3, warehouseId: 1, parentId: 2, level: 'shelf', code: 'S1', name: 'Shelf 1', barcode: null, isActive: true },
