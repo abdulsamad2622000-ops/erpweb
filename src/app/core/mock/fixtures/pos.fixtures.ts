@@ -19,7 +19,7 @@ interface ShiftRow extends PosShift {
 let shift: ShiftRow | null = null;
 export const sales: Sale[] = [];
 const held: HeldBill[] = [];
-const customers: Customer[] = [
+export const customers: Customer[] = [
   { id: 1, name: 'Bilal Ahmed', phone: '03001234567', email: '', type: 'retail', priceTier: 'retail', creditLimit: 0, isActive: true },
 ];
 let invSeq = 1;
@@ -153,6 +153,7 @@ function doReturn(req: { body: unknown }): FixtureResponse {
   if ((b.reason ?? '').trim().length < 10) return fail(422, 'Write a reason of at least 10 characters.');
   if (!b.lines?.length) return fail(422, 'Pick the items being returned.');
   if (b.refundMethod === 'cash' && !shift) return fail(409, 'Open a shift to refund cash.');
+  if (b.refundMethod === 'credit' && !sale.customer) return fail(422, 'Credit refund needs a customer on the sale.');
   const picks = b.lines.map((p) => {
     const l = sale.lines.find((x) => x.id === p.saleLineId);
     return { l, qty: l?.serial ? 1 : Math.max(1, p.qty || 1) };

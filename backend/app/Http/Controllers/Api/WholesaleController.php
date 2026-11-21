@@ -483,7 +483,7 @@ class WholesaleController extends Controller
             $q->where('sales.customer_id', (int) $v);
         }
         if (ApiQuery::param($request, 'unpaid') === 'true') {
-            $q->whereRaw('sales.total - sales.paid + sales.change_due > 0.004');
+            $q->whereRaw("sales.total - sales.paid + sales.change_due - COALESCE((SELECT SUM(r.amount) FROM sales_returns r WHERE r.sale_id = sales.id AND r.refund_method = 'credit'), 0) > 0.004");
         }
         $q->orderByDesc('sales.id');
 
