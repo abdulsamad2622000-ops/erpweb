@@ -19,7 +19,14 @@ export class CountsService {
     return this.http.post<StockCount>(this.base, body);
   }
   /** submit | approve | reject. body: { note?, serials? } */
-  action(id: number, action: CountAction, body: { note?: string | null; serials?: string[] } = {}): Observable<StockCount> {
-    return this.http.post<StockCount>(`${this.base}/${id}/${action}`, body);
+  action(
+    id: number,
+    action: CountAction,
+    body: { note?: string | null; serials?: string[] } = {},
+    idempotencyKey?: string,
+  ): Observable<StockCount> {
+    return this.http.post<StockCount>(`${this.base}/${id}/${action}`, body, {
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
+    });
   }
 }

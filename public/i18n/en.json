@@ -1235,5 +1235,133 @@
     "submit": "Confirm return",
     "done": "Return {{number}} saved. Refund Rs {{amount}} by",
     "exchangeHint": "For an exchange, go back to the POS and sell the new item."
+  },
+  "scanApp": {
+    "title": "ERP Scan",
+    "home": "Scan home",
+    "desktop": "Open desktop app",
+    "offline": "Offline",
+    "homeTitle": "What do you want to do?",
+    "homeHint": "Pick a task. Scan with the camera or a Bluetooth scanner.",
+    "install": {
+      "title": "Install ERP Scan",
+      "hint": "Add the app to your home screen. It opens full screen and keeps working without a connection.",
+      "button": "Install",
+      "dismiss": "Not now",
+      "iosHint": "On iPhone or iPad: tap the Share button, then choose Add to Home Screen."
+    },
+    "update": {
+      "message": "A new version of the app is ready.",
+      "button": "Reload now"
+    },
+    "noAccess": "You do not have access to any scan task. Ask an admin.",
+    "tiles": {
+      "putaway": { "title": "Put-away", "desc": "Place scanned items into a bin" },
+      "transfers": { "title": "Transfers", "desc": "Scan items to check them before dispatch or on arrival" },
+      "counts": { "title": "Stock count", "desc": "Count the items in a warehouse" },
+      "lookup": { "title": "Serial lookup", "desc": "Scan a serial to see its status and history" }
+    },
+    "putaway": {
+      "title": "Put-away",
+      "binStep": "Step 1: scan the bin label.",
+      "itemStep": "Step 2: scan every item you place in this bin. Scan another bin label to switch bins.",
+      "binPlaceholder": "Scan the bin label",
+      "itemPlaceholder": "Scan or type a serial",
+      "binNotFound": "Bin {{ code }} was not found.",
+      "activeBin": "Active bin",
+      "changeBin": "Change bin",
+      "done": "Done",
+      "empty": "Nothing placed yet. Scan the first item.",
+      "placed": "{{ n }} placed",
+      "failed": "{{ n }} failed",
+      "placedIn": "Placed in {{ bin }}",
+      "duplicate": "Already placed in this bin.",
+      "queued": "Saved on this phone. It will sync later.",
+      "status": { "placed": "Placed", "queued": "Saved offline", "failed": "Failed" },
+      "errors": {
+        "notInStock": "Only in-stock items can be put away.",
+        "wrongWarehouse": "This item is in a different warehouse than the bin.",
+        "serialNotFound": "Serial not found."
+      }
+    },
+    "transfers": {
+      "title": "Transfers",
+      "hint": "Pick a transfer to dispatch or receive.",
+      "empty": "No transfer is waiting for a scan.",
+      "items": "{{ n }} items",
+      "toDispatch": "Ready to dispatch",
+      "toReceive": "Waiting to be received"
+    },
+    "transfer": {
+      "dispatchHint": "Scan every item you load, to check it before dispatch.",
+      "receiveHint": "Scan every item that arrived.",
+      "progress": "{{ done }} of {{ total }} scanned",
+      "notInTransfer": "This serial is not in this transfer.",
+      "dispatchBtn": "Dispatch",
+      "receiveBtn": "Complete receipt",
+      "missingTitle": "Some items did not arrive",
+      "missingMessage": "{{ n }} items were not scanned and will be reported as missing. Continue?",
+      "dispatched": "Transfer dispatched.",
+      "received": "Receipt completed.",
+      "nothingToDo": "This transfer needs no scan work.",
+      "scanned": "Scanned",
+      "pending": "Not scanned yet",
+      "back": "Back to transfers"
+    },
+    "counts": {
+      "title": "Stock counts",
+      "hint": "Pick a count to start scanning.",
+      "empty": "No open stock count.",
+      "expected": "{{ n }} items expected"
+    },
+    "count": {
+      "hint": "Scan every item you can find. Items you do not scan are reported as missing.",
+      "progress": "{{ done }} counted, {{ total }} expected",
+      "extraCount": "{{ n }} not expected in this warehouse",
+      "extra": "Extra",
+      "empty": "Nothing counted yet. Scan the first item.",
+      "remove": "Remove",
+      "submit": "Submit count",
+      "submitted": "Count submitted for approval.",
+      "closed": "This count is no longer open.",
+      "unverified": "Not verified (offline)",
+      "back": "Back to counts"
+    },
+    "offlineData": "Showing data saved on this phone. It may be out of date.",
+    "queued": "Saved on this phone. It will sync when you are online.",
+    "sync": {
+      "title": "Sync",
+      "hint": "Scans saved on this phone wait here until they reach the server.",
+      "empty": "Everything is synced.",
+      "syncNow": "Sync now",
+      "offlineNote": "You are offline. Items will sync when you are back online.",
+      "retry": "Retry",
+      "discard": "Discard",
+      "discardTitle": "Discard this item?",
+      "discardMessage": "It will not be sent to the server.",
+      "pending": "Waiting",
+      "conflict": "Needs attention",
+      "chipOffline": "Offline ({{ n }})",
+      "chipSyncing": "Syncing ({{ n }})",
+      "chipWaiting": "{{ n }} waiting",
+      "chipConflict": "{{ n }} need attention",
+      "kinds": {
+        "putaway": "Put-away",
+        "transfer_dispatch": "Transfer dispatch",
+        "transfer_receive": "Transfer receipt",
+        "count_submit": "Stock count"
+      }
+    },
+    "lookup": {
+      "title": "Serial lookup",
+      "hint": "Scan or type a serial number.",
+      "placeholder": "Scan or type a serial",
+      "notFound": "Serial {{ serial }} was not found.",
+      "again": "Scan next",
+      "openDetail": "Full detail",
+      "recent": "Latest history",
+      "warehouse": "Warehouse",
+      "bin": "Bin"
+    }
   }
 }

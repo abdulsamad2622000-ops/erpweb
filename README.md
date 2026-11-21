@@ -68,25 +68,20 @@ Open questions for the backend (Step 8b):
 - Does landed cost go into the supplier ledger, or only into item cost?
 - How does stock change on a purchase return (serial status "returned to supplier")?
 
-## Labels (Step 7)
-- `/products/barcodes` (`barcode.label.view`): list of serials, SKUs and bins; pick items, pick a template, print. Scan a serial to find it for reprint.
-- `/products/barcodes/templates` (`barcode.label.create`): label template designer with live preview.
-- Reprinting a label that was printed before needs the `barcode.label.reprint` permission and a reason (10 characters or more). Every print is saved in the history table.
-- Not done yet: PDF output (browser print only).
+## Inventory (Step 9)
+- `/inventory/stock` (`inventory.stock.view`) and `/inventory/alerts`: stock by model and warehouse, low-stock and aging alerts.
+- `/inventory/serials` and `/inventory/serials/:serial` (`inventory.serial.view`): serial list and detail with a history timeline (received, returned, adjusted, reserved, released, put away, transferred out and in).
+- `/inventory/locations` (`inventory.location.view`): what is inside each bin. `/inventory/putaway` (`inventory.putaway.create`): scan a bin, then scan the serials to put away.
+- `/inventory/ledger` (`inventory.ledger.view`): stock ledger.
+- `/inventory/transfers` (`inventory.transfer.view`): request, approve, dispatch, receive, with discrepancy highlight.
+- `/inventory/counts` (`inventory.count.view`): stock count sessions with variance review and approval.
+- `/inventory/adjustments` (`inventory.adjustment.view`): adjustments with reason and approval.
+- `/inventory/reservations` (`inventory.reservation.view`): reservations.
 
-## Purchase (Step 8)
-- `/purchase/suppliers`, `/purchase/orders` (draft, approval, receive), `/purchase/grn` (scan, paste or CSV serials, accept, reject or quarantine, post).
-- `/purchase/suppliers/:id/ledger`: running balance (opening balance, goods received, returns, payments).
-- `/purchase/payments`: supplier payments. The amount cannot be above what is owed.
-- `/purchase/grn/:id/landed-cost`: freight and other costs, shared across items by value. Only after the GRN is posted.
-- `/purchase/orders/:id/matching`: compares ordered, received and the supplier invoice (matched, does not match, waiting for invoice, nothing received).
-- `/purchase/returns`: return by scanning serials. One supplier per return, reason of 10 characters or more. A serial can be returned once.
-
-Open questions for the backend (Step 8b):
-- Paths and shapes of ledger, payments, landed-cost, matching/bill and returns (see `payables.service.ts`).
-- Does landed cost go into the supplier ledger, or only into item cost?
-- How does stock change on a purchase return (serial status "returned to supplier")?
-
+Open questions for the backend (Step 9c):
+- `POST /inventory/putaway` with `{ binBarcode, serials[] }`.
+- A serial should carry `binId` and `binCode`.
+- An endpoint that lists the serials of one bin.
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
 1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.

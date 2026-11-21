@@ -1,0 +1,48 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "appData": {
+    "name": "erp-web",
+    "note": "Scan PWA: app shell, all lazy chunks, translations and icon fonts are cached. API calls are NOT cached here (IndexedDB handles scan data)."
+  },
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.csr.html",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js",
+          "/i18n/*.json"
+        ]
+      }
+    },
+    {
+      "name": "fonts-and-icons",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/media/**",
+          "/icons/**",
+          "/**/*.(woff|woff2|ttf|otf|eot)"
+        ]
+      }
+    },
+    {
+      "name": "images",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif)"
+        ]
+      }
+    }
+  ]
+}

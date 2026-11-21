@@ -45,6 +45,58 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/recover-email.page').then((m) => m.RecoverEmailPage),
   },
   {
+    path: 'scan',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/scan/scan-layout.component').then((m) => m.ScanLayoutComponent),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () => import('./features/scan/pages/scan-home.page').then((m) => m.ScanHomePage),
+      },
+      {
+        path: 'putaway',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-putaway.page').then((m) => m.ScanPutAwayPage),
+      },
+      {
+        path: 'transfers',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-transfers.page').then((m) => m.ScanTransfersPage),
+      },
+      {
+        path: 'transfers/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-transfer.page').then((m) => m.ScanTransferPage),
+      },
+      {
+        path: 'counts',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.count.create' },
+        loadComponent: () => import('./features/scan/pages/scan-counts.page').then((m) => m.ScanCountsPage),
+      },
+      {
+        path: 'counts/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.count.create' },
+        loadComponent: () => import('./features/scan/pages/scan-count.page').then((m) => m.ScanCountPage),
+      },
+      {
+        path: 'sync',
+        loadComponent: () => import('./features/scan/pages/scan-sync.page').then((m) => m.ScanSyncPage),
+      },
+      {
+        path: 'lookup',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.serial.view' },
+        loadComponent: () => import('./features/scan/pages/scan-lookup.page').then((m) => m.ScanLookupPage),
+      },
+    ],
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
