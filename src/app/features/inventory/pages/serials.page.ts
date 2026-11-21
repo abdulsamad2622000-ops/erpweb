@@ -59,7 +59,7 @@ import { STOCK_STATUSES, STOCK_TONE } from '../utils/inventory-ui';
                   <td [class]="ui.td">{{ s.name }}</td>
                   <td [class]="ui.td">{{ s.grnNumber }}</td>
                   <td [class]="ui.td">{{ s.supplierName }}</td>
-                  <td [class]="ui.td"><app-status-badge [label]="'inventory.status.' + s.status | transloco" [tone]="tone[s.status]" /></td>
+                  <td [class]="ui.td"><app-status-badge [label]="'inventory.status.' + s.status | transloco" [tone]="tone[s.status]" />@if (s.reservedRef) { <span class="ms-2"><app-status-badge [label]="'inventory.stock.reserved' | transloco" tone="info" /></span> }</td>
                 </tr>
               } @empty {
                 <tr><td colspan="5" class="px-4 py-6 text-center text-slate-500">{{ 'inventory.serials.empty' | transloco }}</td></tr>

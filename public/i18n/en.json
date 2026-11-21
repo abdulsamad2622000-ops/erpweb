@@ -538,6 +538,36 @@
     "historyNew": "New price",
     "historyBy": "Changed by"
   },
+  "reservationsPage": {
+    "title": "Reservations",
+    "add": "New reservation",
+    "hint": "A reservation keeps serials aside for a customer. Reserved serials stay in stock but cannot be transferred, adjusted or returned to the supplier until the reservation is released.",
+    "number": "Reservation",
+    "customer": "Customer",
+    "serials": "Serials",
+    "serialsCount": "{{ count }} serials",
+    "holdUntil": "Hold until",
+    "noHold": "No end date",
+    "status": {
+      "active": "Active",
+      "released": "Released",
+      "expired": "Expired"
+    },
+    "release": "Release",
+    "releaseTitle": "Release reservation",
+    "releaseMessage": "Release this reservation? The serials become available again.",
+    "empty": "No reservations yet.",
+    "newTitle": "New reservation",
+    "note": "Note",
+    "holdHint": "Optional. After this date the serials become available again.",
+    "serialInput": "Add serials",
+    "serialHint": "Scan or type a serial and press Enter. You can also paste many serials separated by new lines or commas.",
+    "serialAdd": "Add",
+    "remove": "Remove",
+    "needSerial": "Add at least one serial.",
+    "back": "Back to reservations",
+    "save": "Reserve serials"
+  },
   "menu": {
     "users": "Users",
     "roles": "Roles",
@@ -551,6 +581,7 @@
     "transfers": "Transfers",
     "counts": "Stock counts",
     "adjustments": "Adjustments",
+    "alerts": "Stock alerts",
     "reservations": "Reservations",
     "products": "Products",
     "productList": "Product list",
@@ -651,9 +682,12 @@
       "in_stock": "In stock",
       "quarantine": "Quarantine",
       "rejected": "Rejected",
-      "returned": "Returned to supplier"
+      "returned": "Returned to supplier",
+      "damaged": "Damaged"
     },
     "stock": {
+        "reserved": "Reserved",
+        "available": "Available",
       "title": "Stock overview",
       "product": "Product",
       "warehouse": "Warehouse",
@@ -721,6 +755,171 @@
       "cancelTitle": "Cancel {{ number }}",
       "cancelMessage": "Cancel this transfer?"
     },
+    "adjustments": {
+      "title": "Stock adjustments",
+      "add": "New adjustment",
+      "back": "Back to adjustments",
+      "number": "Adjustment no.",
+      "kind": "What to do",
+      "kinds": {
+        "quarantine": "Move to quarantine",
+        "release": "Release from quarantine",
+        "damage": "Mark as damaged"
+      },
+      "kindHint": {
+        "quarantine": "For serials in stock that need to be held back, for example for inspection.",
+        "release": "For serials in quarantine that are fine to sell again.",
+        "damage": "For serials that are broken. Damaged serials cannot be sold."
+      },
+      "serialsCount": "Serials",
+      "empty": "No adjustments yet.",
+      "now": "Now",
+      "after": "After approval",
+      "notAllowed": "Not possible for this serial now",
+      "inTransit": "In transit",
+      "noScans": "Scan the serials you want to change.",
+      "reason": "Reason",
+      "reasonHint": "At least {{ n }} characters.",
+      "pendingNote": "Stock changes only after someone approves this request.",
+      "send": "Send for approval",
+      "rejectedBecause": "Rejected because",
+      "saved": "Adjustment updated.",
+      "status": {
+        "pending": "Waiting for approval",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "approveTitle": "Approve {{ number }}",
+      "approveMessage": "Approve this adjustment? The stock will change now.",
+      "rejectTitle": "Reject adjustment",
+      "rejectMessage": "Write why this adjustment is rejected."
+    },
+    "adjustments": {
+      "title": "Stock adjustments",
+      "add": "New adjustment",
+      "back": "Back to adjustments",
+      "number": "Adjustment no.",
+      "kind": "What to do",
+      "kinds": {
+        "quarantine": "Move to quarantine",
+        "release": "Release from quarantine",
+        "damage": "Mark as damaged"
+      },
+      "kindHint": {
+        "quarantine": "For serials in stock that need to be held back, for example for inspection.",
+        "release": "For serials in quarantine that are fine to sell again.",
+        "damage": "For serials that are broken. Damaged serials cannot be sold."
+      },
+      "serialsCount": "Serials",
+      "empty": "No adjustments yet.",
+      "now": "Now",
+      "after": "After approval",
+      "notAllowed": "Not possible for this serial now",
+      "inTransit": "In transit",
+      "noScans": "Scan the serials you want to change.",
+      "reason": "Reason",
+      "reasonHint": "At least {{ n }} characters.",
+      "pendingNote": "Stock changes only after someone approves this request.",
+      "send": "Send for approval",
+      "rejectedBecause": "Rejected because",
+      "saved": "Adjustment updated.",
+      "status": {
+        "pending": "Waiting for approval",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "approveTitle": "Approve {{ number }}",
+      "approveMessage": "Approve this adjustment? The stock will change now.",
+      "rejectTitle": "Reject adjustment",
+      "rejectMessage": "Write why this adjustment is rejected."
+    },
+    "alerts": {
+      "title": "Stock alerts",
+      "hint": "Low stock compares what is in stock with the reorder level set on each product for each branch. Aging shows how long stock has been waiting.",
+      "toStock": "Stock overview",
+      "tabsLabel": "Alert types",
+      "tabs": {
+        "low": "Low stock",
+        "aging": "Aging stock"
+      },
+      "badge": {
+        "out": "Out of stock",
+        "low": "Low stock",
+        "aging": "Aging"
+      },
+      "low": {
+        "product": "Product",
+        "branch": "Branch",
+        "inStock": "In stock",
+        "level": "Reorder level",
+        "short": "Short by",
+        "empty": "No low stock. Every product is above its reorder level.",
+        "noLevels": "No reorder levels are set yet. Set them on each product, in the Warranty and stock tab."
+      },
+      "aging": {
+        "note": "Stock older than 90 days is marked as aging.",
+        "product": "Product",
+        "warehouse": "Warehouse",
+        "d0_30": "0 to 30 days",
+        "d31_60": "31 to 60 days",
+        "d61_90": "61 to 90 days",
+        "d90_plus": "Over 90 days",
+        "total": "Total",
+        "oldest": "Oldest (days)",
+        "empty": "No stock in hand yet."
+      }
+    },
+    "counts": {
+      "title": "Stock counts",
+      "add": "New stock count",
+      "back": "Back to counts",
+      "number": "Count no.",
+      "warehouse": "Warehouse",
+      "pickWarehouse": "Pick a warehouse",
+      "expected": "Expected serials",
+      "empty": "No stock counts yet.",
+      "start": "Start count",
+      "scanHint": "Scan every laptop you can find in this warehouse. Serials you do not scan are reported as missing.",
+      "scannedCount": "{{ done }} counted (system expects {{ total }})",
+      "noScans": "Nothing scanned yet.",
+      "notFound": "This serial is not known to the system.",
+      "submit": "Submit count",
+      "shortTitle": "Some serials were not scanned",
+      "shortMessage": "{{ n }} expected serial(s) were not scanned. They will be reported as missing.",
+      "varianceTitle": "Count result",
+      "matched": "{{ n }} serial(s) matched.",
+      "noVariance": "No differences. Every serial matched.",
+      "missingTitle": "Missing ({{ n }})",
+      "missingShort": "{{ n }} missing",
+      "extraTitle": "Extra ({{ n }})",
+      "extraShort": "{{ n }} extra",
+      "extraHint": "Found here, but the system says they belong elsewhere.",
+      "approveHint": "Approving records this result. Fix the stock from Adjustments.",
+      "rejectedBecause": "Rejected because",
+      "saved": "Count updated.",
+      "status": {
+        "open": "Counting",
+        "submitted": "Waiting for approval",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "approveTitle": "Approve {{ number }}",
+      "approveMessage": "Approve this count result?",
+      "rejectTitle": "Reject count",
+      "rejectMessage": "Write why this count is rejected."
+    },
     "ledger": {
       "title": "Stock ledger",
       "hint": "Every stock movement. Entries cannot be edited or deleted.",
@@ -734,8 +933,11 @@
       "back": "Back to serials",
       "history": "History",
       "types": {
+        "reserved": "Reserved",
+        "released": "Released",
         "received": "Received",
-        "returned": "Returned to supplier"
+        "returned": "Returned to supplier",
+        "adjusted": "Stock adjusted"
       }
     }
   },

@@ -5,7 +5,7 @@ import { InspectionStatus } from '../../../features/purchase/models/purchase.mod
 import { FixtureHandler, fail, ok } from './fixture.types';
 import { returns } from './payables.fixtures';
 import { grns } from './purchase.fixtures';
-import { serialWarehouse } from './stock-location';
+import { adjustmentEvents, reservationEvents, reservedRef, serialWarehouse, statusOverride } from './stock-location';
 
 const FROM_INSPECTION: Record<InspectionStatus, StockStatus> = {
   accepted: 'in_stock',
@@ -33,10 +33,11 @@ export function allSerials(): StockSerial[] {
           name: l.name,
           sku: l.sku,
           warehouseId: serialWarehouse.get(s.serial) ?? g.warehouseId,
-          status: returnOf(s.serial) ? 'returned' : FROM_INSPECTION[s.status],
+          status: returnOf(s.serial) ? 'returned' : (statusOverride.get(s.serial) ?? FROM_INSPECTION[s.status]),
           grnNumber: g.number,
           supplierName: g.supplierName,
           receivedAt: g.postedAt ?? g.createdAt,
+          reservedRef: reservedRef(s.serial),
         });
       }
     }
@@ -48,6 +49,8 @@ function timelineOf(s: StockSerial): TimelineEvent[] {
   const events: TimelineEvent[] = [{ at: s.receivedAt, type: 'received', ref: s.grnNumber, note: null }];
   const r = returnOf(s.serial);
   if (r) events.push({ at: `${r.date}T00:00:00.000Z`, type: 'returned', ref: r.number, note: r.reason });
+  events.push(...(adjustmentEvents.get(s.serial) ?? []));
+  events.push(...(reservationEvents.get(s.serial) ?? []));
   return events;
 }
 
@@ -60,11 +63,15 @@ export const STOCK_FIXTURES: Record<string, FixtureHandler> = {
       const key = `${s.productId}-${s.warehouseId}`;
       const row = map.get(key) ?? {
         productId: s.productId, name: s.name, sku: s.sku, warehouseId: s.warehouseId,
-        inStock: 0, quarantine: 0, rejected: 0, returned: 0,
+        inStock: 0, reserved: 0, quarantine: 0, rejected: 0, returned: 0, damaged: 0,
       };
-      if (s.status === 'in_stock') row.inStock++;
+      if (s.status === 'in_stock') {
+        row.inStock++;
+        if (s.reservedRef) row.reserved = (row.reserved ?? 0) + 1;
+      }
       else if (s.status === 'quarantine') row.quarantine++;
       else if (s.status === 'rejected') row.rejected++;
+      else if (s.status === 'damaged') row.damaged++;
       else row.returned++;
       map.set(key, row);
     }

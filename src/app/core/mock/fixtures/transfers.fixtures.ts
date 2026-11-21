@@ -1,7 +1,7 @@
 import { Transfer, TransferAction, TransferInput } from '../../../features/inventory/models/transfer.models';
 import { normalizeSerial } from '../../../features/purchase/utils/purchase-utils';
 import { FixtureHandler, FixtureResponse, fail, ok } from './fixture.types';
-import { serialWarehouse } from './stock-location';
+import { reservedRef, serialWarehouse } from './stock-location';
 import { allSerials } from './stock.fixtures';
 
 export const transfers: Transfer[] = [];
@@ -28,6 +28,8 @@ function create(req: { body: unknown }): FixtureResponse {
     const s = stock.find((x) => x.serial === serial);
     if (!s) return fail(422, `Serial ${serial} is not in stock.`);
     if (s.status !== 'in_stock') return fail(422, `Serial ${serial} is not available.`);
+    const held = reservedRef(serial);
+    if (held) return fail(422, `Serial ${serial} is reserved (${held}). Release the reservation first.`);
     if (s.warehouseId !== b.fromWarehouseId) return fail(422, `Serial ${serial} is in another warehouse.`);
     if (inOpenTransfer(serial) || lines.some((l) => l.serial === serial)) return fail(422, `Serial ${serial} is already in a transfer.`);
     lines.push({ serial, name: s.name, sku: s.sku });

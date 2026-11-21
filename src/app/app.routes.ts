@@ -128,6 +128,90 @@ export const routes: Routes = [
           import('./features/inventory/pages/transfers.page').then((m) => m.TransfersPage),
       },
       {
+        path: 'inventory/adjustments/new',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
+      },
+      {
+        path: 'inventory/adjustments/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
+      },
+      {
+        path: 'inventory/adjustments',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
+      },
+      {
+        path: 'inventory/adjustments/new',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
+      },
+      {
+        path: 'inventory/adjustments/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
+      },
+      {
+        path: 'inventory/adjustments',
+        canActivate: [permissionGuard],
+        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
+      },
+      {
+        path: 'inventory/counts/new',
+        canActivate: [permissionGuard],
+        data: { title: 'counts', permission: 'inventory.count.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/count.page').then((m) => m.CountPage),
+      },
+      {
+        path: 'inventory/counts/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'counts', permission: 'inventory.count.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/count.page').then((m) => m.CountPage),
+      },
+      {
+        path: 'inventory/counts',
+        canActivate: [permissionGuard],
+        data: { title: 'counts', permission: 'inventory.count.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/counts.page').then((m) => m.CountsPage),
+      },
+      {
+        path: 'inventory/reservations',
+        canActivate: [permissionGuard],
+        data: { title: 'reservations', permission: 'inventory.reservation.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/reservations.page').then((m) => m.ReservationsPage),
+      },
+      {
+        path: 'inventory/reservations/new',
+        canActivate: [permissionGuard],
+        data: { title: 'reservations', permission: 'inventory.reservation.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/reservation-new.page').then((m) => m.ReservationNewPage),
+      },
+      {
+        path: 'inventory/alerts',
+        canActivate: [permissionGuard],
+        data: { title: 'alerts', permission: 'inventory.stock.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/alerts.page').then((m) => m.AlertsPage),
+      },
+      {
         path: 'inventory/ledger',
         canActivate: [permissionGuard],
         data: { title: 'ledger', permission: 'inventory.ledger.view' },
