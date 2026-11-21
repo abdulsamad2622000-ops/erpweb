@@ -32,30 +32,36 @@ import { UI } from '../../purchase/utils/ui';
       }
 
       <div [class]="ui.tableWrap">
-        <table class="w-full min-w-[44rem] text-start text-sm">
+        <table class="w-full min-w-[52rem] text-start text-sm">
           <thead [class]="ui.thead"><tr>
             <th scope="col" [class]="ui.th">{{ 'inventory.stock.product' | transloco }}</th>
             <th scope="col" [class]="ui.th">{{ 'inventory.stock.warehouse' | transloco }}</th>
             <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.status.in_stock' | transloco }}</th>
+            <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.stock.reserved' | transloco }}</th>
+            <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.stock.available' | transloco }}</th>
             <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.status.quarantine' | transloco }}</th>
             <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.status.rejected' | transloco }}</th>
             <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.status.returned' | transloco }}</th>
+            <th scope="col" [class]="ui.th + ' text-end'">{{ 'inventory.status.damaged' | transloco }}</th>
           </tr></thead>
           <tbody>
             @if (loading()) {
-              <tr><td colspan="6" class="px-4 py-6 text-center text-slate-500" role="status">{{ 'common.loading' | transloco }}</td></tr>
+              <tr><td colspan="9" class="px-4 py-6 text-center text-slate-500" role="status">{{ 'common.loading' | transloco }}</td></tr>
             } @else {
               @for (r of rows(); track r.productId + '-' + r.warehouseId) {
                 <tr [class]="ui.tr">
                   <td [class]="ui.td"><span class="font-medium">{{ r.name }}</span><br /><span class="text-xs text-slate-500">{{ r.sku }}</span></td>
                   <td [class]="ui.td">{{ warehouseName(r.warehouseId) }}</td>
-                  <td [class]="ui.td + ' text-end font-medium'">{{ r.inStock }}</td>
+                  <td [class]="ui.td + ' text-end'">{{ r.inStock }}</td>
+                  <td [class]="ui.td + ' text-end'">{{ r.reserved ?? 0 }}</td>
+                  <td [class]="ui.td + ' text-end font-medium'">{{ available(r) }}</td>
                   <td [class]="ui.td + ' text-end'">{{ r.quarantine }}</td>
                   <td [class]="ui.td + ' text-end'">{{ r.rejected }}</td>
                   <td [class]="ui.td + ' text-end'">{{ r.returned }}</td>
+                  <td [class]="ui.td + ' text-end'">{{ r.damaged }}</td>
                 </tr>
               } @empty {
-                <tr><td colspan="6" class="px-4 py-6 text-center text-slate-500">{{ 'inventory.stock.empty' | transloco }}</td></tr>
+                <tr><td colspan="9" class="px-4 py-6 text-center text-slate-500">{{ 'inventory.stock.empty' | transloco }}</td></tr>
               }
             }
           </tbody>
@@ -83,6 +89,11 @@ export class StockPage implements OnInit {
 
   protected warehouseName(id: number): string {
     return this.names().get(id) ?? '-';
+  }
+
+  /** Bechne ke liye kitna bacha hai: in-stock minus reserved. */
+  protected available(r: StockSummaryRow): number {
+    return r.inStock - (r.reserved ?? 0);
   }
 
   private async init(): Promise<void> {

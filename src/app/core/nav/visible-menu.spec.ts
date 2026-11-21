@@ -8,7 +8,8 @@ describe('visibleMenu', () => {
   it('group mein sirf allowed children', () => {
     const m = visibleMenu((k) => k === 'inventory.stock.view');
     expect(m.map((i) => i.key)).toEqual(['inventory']);
-    expect(m[0].children?.map((c) => c.key)).toEqual(['stock']);
+    // Stock alerts stock ki hi permission par hain, is liye stock dekhne wala alerts bhi dekhta hai.
+    expect(m[0].children?.map((c) => c.key)).toEqual(['stock', 'alerts']);
   });
 
   it('website flag off ho to sab permissions ke baad bhi chhupa', () => {
