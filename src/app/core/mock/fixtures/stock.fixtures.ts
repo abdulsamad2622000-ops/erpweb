@@ -5,6 +5,7 @@ import { InspectionStatus } from '../../../features/purchase/models/purchase.mod
 import { FixtureHandler, fail, ok } from './fixture.types';
 import { returns } from './payables.fixtures';
 import { grns } from './purchase.fixtures';
+import { serialWarehouse } from './stock-location';
 
 const FROM_INSPECTION: Record<InspectionStatus, StockStatus> = {
   accepted: 'in_stock',
@@ -20,7 +21,7 @@ function returnOf(serial: string) {
 }
 
 /** Stock posted GRNs aur returns se banta hai, alag store nahi. */
-function allSerials(): StockSerial[] {
+export function allSerials(): StockSerial[] {
   const out: StockSerial[] = [];
   for (const g of grns) {
     if (g.status !== 'posted') continue;
@@ -31,7 +32,7 @@ function allSerials(): StockSerial[] {
           productId: l.productId,
           name: l.name,
           sku: l.sku,
-          warehouseId: g.warehouseId,
+          warehouseId: serialWarehouse.get(s.serial) ?? g.warehouseId,
           status: returnOf(s.serial) ? 'returned' : FROM_INSPECTION[s.status],
           grnNumber: g.number,
           supplierName: g.supplierName,
@@ -55,7 +56,7 @@ export const STOCK_FIXTURES: Record<string, FixtureHandler> = {
     const wh = Number(query(req.url).get('warehouseId') ?? 0);
     const map = new Map<string, StockSummaryRow>();
     for (const s of allSerials()) {
-      if (wh && s.warehouseId !== wh) continue;
+      if (s.warehouseId === 0 || (wh && s.warehouseId !== wh)) continue;
       const key = `${s.productId}-${s.warehouseId}`;
       const row = map.get(key) ?? {
         productId: s.productId, name: s.name, sku: s.sku, warehouseId: s.warehouseId,
