@@ -937,7 +937,9 @@
         "released": "Released",
         "received": "Received",
         "returned": "Returned to supplier",
-        "adjusted": "Stock adjusted"
+        "adjusted": "Stock adjusted",
+        "transferred_out": "Sent to another warehouse",
+        "transferred_in": "Received from a transfer"
       }
     }
   },

@@ -14,7 +14,7 @@ export interface StockSerial {
   reservedRef?: string | null;
 }
 
-export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released';
+export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released' | 'transferred_out' | 'transferred_in';
 
 export interface TimelineEvent {
   at: string;
