@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
 use App\Http\Controllers\Api\PosController;
+use App\Http\Controllers\Api\WholesaleController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\StockControlController;
 use Illuminate\Support\Facades\Route;
@@ -107,4 +108,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('pos/returns', [PosController::class, 'storeReturn'])->middleware($p('sales.return.create'));
     Route::get('customers', [PosController::class, 'customers'])->middleware($p('customers.customer.view'));
     Route::post('customers', [PosController::class, 'storeCustomer'])->middleware($p('customers.customer.create'));
+    Route::get('customers/{id}', [PosController::class, 'customer'])->whereNumber('id')->middleware($p('customers.customer.view'));
+    Route::put('customers/{id}', [PosController::class, 'updateCustomer'])->whereNumber('id')->middleware($p('customers.customer.edit'));
+
+    // Wholesale (Step 11)
+    $W = WholesaleController::class;
+    Route::get('sales/price', [$W, 'price'])->middleware($p('sales.quotation.view'));
+    Route::get('sales/quotations', [$W, 'quotations'])->middleware($p('sales.quotation.view'));
+    Route::get('sales/quotations/{id}', [$W, 'quotation'])->whereNumber('id')->middleware($p('sales.quotation.view'));
+    Route::post('sales/quotations', [$W, 'storeQuotation'])->middleware($p('sales.quotation.create'));
+    Route::put('sales/quotations/{id}', [$W, 'updateQuotation'])->whereNumber('id')->middleware($p('sales.quotation.edit'));
+    foreach (['send' => 'sales.quotation.edit', 'cancel' => 'sales.quotation.edit', 'convert' => 'sales.order.create'] as $a => $perm) {
+        Route::post("sales/quotations/{id}/{$a}", [$W, 'quotationAction'])->whereNumber('id')->defaults('action', $a)->middleware($p($perm));
+    }
+    Route::get('sales/orders', [$W, 'orders'])->middleware($p('sales.order.view'));
+    Route::get('sales/orders/{id}', [$W, 'order'])->whereNumber('id')->middleware($p('sales.order.view'));
+    Route::post('sales/orders', [$W, 'storeOrder'])->middleware($p('sales.order.create'));
+    Route::post('sales/orders/{id}/cancel', [$W, 'cancelOrder'])->whereNumber('id')->middleware($p('sales.order.edit'));
+    Route::get('sales/challans', [$W, 'challans'])->middleware($p('sales.challan.view'));
+    Route::get('sales/challans/{id}', [$W, 'challan'])->whereNumber('id')->middleware($p('sales.challan.view'));
+    Route::post('sales/challans', [$W, 'storeChallan'])->middleware([$p('sales.challan.create'), 'idempotent']);
+    Route::get('sales/invoices', [$W, 'invoices'])->middleware($p('sales.invoice.view'));
+    Route::get('sales/invoices/{id}', [$W, 'invoice'])->whereNumber('id')->middleware($p('sales.invoice.view'));
+    Route::post('sales/invoices', [$W, 'storeInvoice'])->middleware([$p('sales.invoice.create'), 'idempotent']);
+    Route::post('sales/invoices/{id}/payments', [$W, 'receivePayment'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
 });
