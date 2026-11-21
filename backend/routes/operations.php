@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
+use App\Http\Controllers\Api\AccountsController;
 use App\Http\Controllers\Api\CustomerLedgerController;
+use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\RepairController;
 use App\Http\Controllers\Api\ReportsController;
@@ -120,9 +122,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('customers/{id}/receipts', [CustomerLedgerController::class, 'storeReceipt'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
     Route::get('customer-receipts/{id}', [CustomerLedgerController::class, 'receipt'])->whereNumber('id')->middleware($p('customers.customer.view'));
 
+    // Accounts: expenses + cash book
+    $A = AccountsController::class;
+    Route::get('accounts/expense-categories', [$A, 'categories'])->middleware($p('accounts.expense.view'));
+    Route::post('accounts/expense-categories', [$A, 'storeCategory'])->middleware($p('accounts.expense.edit'));
+    Route::get('accounts/expenses', [$A, 'expenses'])->middleware($p('accounts.expense.view'));
+    Route::post('accounts/expenses', [$A, 'storeExpense'])->middleware([$p('accounts.expense.create'), 'idempotent']);
+    Route::put('accounts/expenses/{id}', [$A, 'updateExpense'])->whereNumber('id')->middleware($p('accounts.expense.edit'));
+    Route::post('accounts/expenses/{id}/void', [$A, 'voidExpense'])->whereNumber('id')->middleware($p('accounts.expense.edit'));
+    Route::get('accounts/cashbook', [$A, 'cashbook'])->middleware($p('accounts.cashbook.view'));
+
+    // Email
+    $E = EmailController::class;
+    Route::get('email/templates', [$E, 'templates'])->middleware($p('email.template.view'));
+    Route::put('email/templates/{key}', [$E, 'update'])->where('key', '[a-z_]+')->middleware($p('email.template.edit'));
+    Route::post('email/templates/{key}/test', [$E, 'test'])->where('key', '[a-z_]+')->middleware($p('email.template.edit'));
+    Route::get('email/logs', [$E, 'logs'])->middleware($p('email.template.view'));
+    Route::post('sales/invoices/{id}/email', [$E, 'sendInvoice'])->whereNumber('id')->middleware($p('email.message.send'));
+    Route::post('customers/{id}/statement-email', [$E, 'sendStatement'])->whereNumber('id')->middleware($p('email.message.send'));
+    Route::post('warranty/jobs/{id}/email', [$E, 'sendRepairReady'])->whereNumber('id')->middleware($p('email.message.send'));
+
     // Dashboard + reports (Step 15)
     Route::get('dashboard', [ReportsController::class, 'dashboard'])->middleware($p('dashboard.view.view'));
-    foreach (['sales', 'stock', 'purchases', 'repairs'] as $r) {
+    foreach (['sales', 'stock', 'purchases', 'repairs', 'profit'] as $r) {
         Route::get("reports/{$r}", [ReportsController::class, $r])->middleware($p('reports.report.view'));
     }
 

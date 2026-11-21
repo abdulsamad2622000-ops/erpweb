@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
+import { SendEmailComponent } from '../../email/ui/send-email.component';
 import { PrintService } from '../../../shared/ui/print/print.service';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 import { PAY_METHODS, PayMethod } from '../../pos/models/pos.models';
@@ -17,7 +18,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
 /** Job card detail: status aage, diagnosis/parts/charges, delivery, slip print. */
 @Component({
   selector: 'app-repair-job-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent],
+  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent, SendEmailComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-5xl space-y-4">
@@ -30,6 +31,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
           <div class="flex flex-wrap gap-2">
             <a routerLink="/warranty" [class]="ui.btn">{{ 'salesDocs.back' | transloco }}</a>
             <button type="button" [class]="ui.btn" (click)="print(j)">{{ 'repairsPage.printSlip' | transloco }}</button>
+            @if (j.status === 'ready') { <app-send-email *hasPermission="'email.message.send'" kind="repair" [refId]="j.id" /> }
           </div>
         </div>
 
@@ -63,6 +65,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
           <table class="w-full text-sm">
             <thead [class]="ui.thead"><tr>
               <th scope="col" [class]="ui.th">{{ 'repairsPage.part' | transloco }}</th>
+              <th scope="col" [class]="ui.th">{{ 'repairsPage.partSerial' | transloco }}</th>
               <th scope="col" [class]="ui.th">{{ 'posPage.qty' | transloco }}</th>
               <th scope="col" [class]="ui.th">{{ 'posPage.price' | transloco }}</th>
               <th scope="col" [class]="ui.th + ' text-end'">{{ 'posPage.amount' | transloco }}</th>
@@ -73,7 +76,10 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
                 <tr [class]="ui.tr">
                   <td [class]="ui.td"><input class="min-h-9 w-full rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
                     [attr.aria-label]="'repairsPage.part' | transloco" [ngModel]="p.description" (ngModelChange)="setPart(i, 'description', $event)" /></td>
-                  <td [class]="ui.td"><input type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
+                  <td [class]="ui.td"><input class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2" dir="ltr" [disabled]="!open(j)"
+                    [attr.aria-label]="'repairsPage.partSerial' | transloco" [placeholder]="'repairsPage.partSerialHint' | transloco"
+                    [ngModel]="p.serial ?? ''" (ngModelChange)="setPart(i, 'serial', $event)" /></td>
+                  <td [class]="ui.td"><input type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j) || !!p.serial"
                     [attr.aria-label]="'posPage.qty' | transloco" [ngModel]="p.qty" (ngModelChange)="setPart(i, 'qty', $event)" /></td>
                   <td [class]="ui.td"><input type="number" min="0" class="min-h-9 w-28 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
                     [attr.aria-label]="'posPage.price' | transloco" [ngModel]="p.unitPrice" (ngModelChange)="setPart(i, 'unitPrice', $event)" /></td>
@@ -210,6 +216,11 @@ export class RepairJobPage implements OnInit {
   }
 
   protected setPart(i: number, k: keyof RepairPart, v: unknown): void {
+    if (k === 'serial') {
+      const sn = String(v ?? '').trim().toUpperCase();
+      this.parts.update((p) => p.map((x, j) => (j === i ? { ...x, serial: sn || null, qty: sn ? 1 : x.qty } : x)));
+      return;
+    }
     const val = k === 'description' ? String(v) : k === 'qty' ? Math.max(1, Math.floor(+(v as number) || 1)) : Math.max(0, +(v as number) || 0);
     this.parts.update((p) => p.map((x, j) => (j === i ? { ...x, [k]: val } : x)));
   }
@@ -217,7 +228,7 @@ export class RepairJobPage implements OnInit {
   protected async saveWork(): Promise<void> {
     await this.run(async () => this.set(await firstValueFrom(this.api.update(this.id, {
       diagnosis: this.diagnosis.trim() || null, labour: this.labour(), promisedOn: this.promisedOn || null,
-      parts: this.parts().map((p) => ({ description: p.description.trim(), qty: p.qty, unitPrice: p.unitPrice })),
+      parts: this.parts().map((p) => ({ description: p.description.trim(), qty: p.qty, unitPrice: p.unitPrice, serial: p.serial ?? null })),
     }))));
   }
 

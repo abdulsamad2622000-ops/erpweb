@@ -76,6 +76,9 @@ export interface Dashboard {
   pendingPOs: number;
   canSeeMoney: boolean;
   monthProfit?: number;
+  monthExpenses?: number;
+  monthNet?: number;
+  todayCash?: number;
   stockValue?: number;
   receivable?: number;
   overdue?: number;

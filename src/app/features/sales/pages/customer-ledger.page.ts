@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
+import { SendEmailComponent } from '../../email/ui/send-email.component';
 import { PrintService } from '../../../shared/ui/print/print.service';
 import { PAY_METHODS, PayMethod } from '../../pos/models/pos.models';
 import { money } from '../../pos/utils/pos-utils';
@@ -16,7 +17,7 @@ import { newKey } from '../utils/sales-print';
 /** Step 13: customer ka khata (statement), print, aur payment wasool (FIFO ya chuni hui invoices). */
 @Component({
   selector: 'app-customer-ledger-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective],
+  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, SendEmailComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-6xl space-y-4">
@@ -27,6 +28,7 @@ import { newKey } from '../utils/sales-print';
           <div class="flex flex-wrap gap-2">
             <a routerLink="/customers" [class]="ui.btn">{{ 'salesDocs.back' | transloco }}</a>
             <button type="button" [class]="ui.btn" (click)="print(l)">{{ 'ledgerPage.printStatement' | transloco }}</button>
+            <app-send-email *hasPermission="'email.message.send'" kind="statement" [refId]="l.customer.id" />
             @if (due() > 0) {
               <button *hasPermission="'sales.invoice.edit'" type="button" [class]="ui.primary" (click)="openReceive()">{{ 'ledgerPage.receive' | transloco }}</button>
             }

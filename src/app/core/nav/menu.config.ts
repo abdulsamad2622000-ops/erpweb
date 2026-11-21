@@ -58,6 +58,13 @@ export const MENU: MenuItem[] = [
   { key: 'customers', path: 'customers', icon: 'pi pi-users', permission: 'customers.customer.view' },
   { key: 'warranty', path: 'warranty', icon: 'pi pi-shield', permission: 'warranty.claim.view' },
   { key: 'reports', path: 'reports', icon: 'pi pi-chart-bar', permission: 'reports.report.view' },
+  {
+    key: 'accounts', path: 'accounts', icon: 'pi pi-wallet', permission: 'accounts.expense.view',
+    children: [
+      { key: 'expenses', path: 'accounts/expenses', icon: 'pi pi-money-bill', permission: 'accounts.expense.view' },
+      { key: 'cashbook', path: 'accounts/cashbook', icon: 'pi pi-book', permission: 'accounts.cashbook.view' },
+    ],
+  },
   { key: 'email', path: 'email', icon: 'pi pi-envelope', permission: 'email.template.view' },
   { key: 'website', path: 'website', icon: 'pi pi-globe', permission: 'web.order.view', flag: 'website' },
   {

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Services\NumberSeriesService;
+use App\Models\StockMovement;
 use App\Services\ProductInfo;
+use App\Services\StockHolds;
 use App\Support\ApiQuery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -85,7 +87,8 @@ class RepairController extends Controller
             'warranty' => $j->warranty, 'warrantyUntil' => $j->warranty_until, 'problem' => $j->problem, 'accessories' => $j->accessories,
             'diagnosis' => $j->diagnosis, 'status' => $j->status, 'next' => self::FLOW[$j->status] ?? [],
             'estimate' => $j->estimate !== null ? (float) $j->estimate : null, 'labour' => (float) $j->labour,
-            'parts' => $parts->map(fn ($p) => ['id' => $p->id, 'description' => $p->description, 'qty' => (int) $p->qty, 'unitPrice' => (float) $p->unit_price])->all(),
+            'parts' => $parts->map(fn ($p) => ['id' => $p->id, 'description' => $p->description, 'qty' => (int) $p->qty, 'unitPrice' => (float) $p->unit_price,
+                'serial' => $p->serial])->all(),
             'partsTotal' => $partsTotal, 'total' => $total, 'paid' => (float) $j->paid, 'paidMethod' => $j->paid_method,
             'promisedOn' => $j->promised_on, 'deliveredAt' => self::iso($j->delivered_at),
             'assignedTo' => $j->assigned_to ? ['id' => (int) $j->assigned_to, 'name' => (string) DB::table('users')->where('id', $j->assigned_to)->value('name')] : null,
@@ -117,7 +120,7 @@ class RepairController extends Controller
     private function partsRules(): array
     {
         return ['parts' => 'nullable|array|max:50', 'parts.*.description' => 'required|string|max:160', 'parts.*.qty' => 'required|integer|min:1|max:999',
-            'parts.*.unitPrice' => 'required|numeric|min:0', 'labour' => 'nullable|numeric|min:0', 'estimate' => 'nullable|numeric|min:0',
+            'parts.*.unitPrice' => 'required|numeric|min:0', 'parts.*.serial' => 'nullable|string|max:40', 'labour' => 'nullable|numeric|min:0', 'estimate' => 'nullable|numeric|min:0',
             'diagnosis' => 'nullable|string|max:1000', 'promisedOn' => 'nullable|date', 'assignedTo' => 'nullable|integer|exists:users,id'];
     }
 
@@ -181,15 +184,70 @@ class RepairController extends Controller
             }
             DB::table('repair_jobs')->where('id', $id)->update($row);
             if (array_key_exists('parts', $d)) {
-                DB::table('repair_parts')->where('repair_job_id', $id)->delete();
-                foreach ($d['parts'] ?? [] as $p) {
-                    DB::table('repair_parts')->insert(['repair_job_id' => $id, 'description' => trim($p['description']), 'qty' => (int) $p['qty'],
-                        'unit_price' => self::m((float) $p['unitPrice'])]);
-                }
+                $this->saveParts($j, $d['parts'] ?? [], request()->user());
             }
         });
 
         return response()->json($this->jobOut($id));
+    }
+
+    /**
+     * Parts dobara likho. Serial wala part stock se nikalta hai (status consumed, movement out);
+     * hataya gaya serial wapas stock mein aata hai.
+     */
+    private function saveParts(object $j, array $parts, $user): void
+    {
+        $old = DB::table('repair_parts')->where('repair_job_id', $j->id)->whereNotNull('serial')->pluck('serial')->all();
+        $new = [];
+        foreach ($parts as $i => $p) {
+            $sn = isset($p['serial']) && trim($p['serial']) !== '' ? PurchaseController::normalizeSerial($p['serial']) : null;
+            if ($sn) {
+                if (isset($new[$sn])) {
+                    throw ValidationException::withMessages(["parts.{$i}" => "Serial {$sn} is added twice."]);
+                }
+                $new[$sn] = $i;
+            }
+        }
+        $now = now();
+        foreach (array_diff($old, array_keys($new)) as $sn) {
+            $this->releasePart($j, $sn, $user, $now);
+        }
+        foreach (array_diff(array_keys($new), $old) as $sn) {
+            $i = $new[$sn];
+            $s = DB::table('stock_serials')->where('serial', $sn)->lockForUpdate()->first();
+            $why = match (true) {
+                ! $s => 'is not in stock',
+                $s->status !== 'in_stock' => "is {$s->status}",
+                StockHolds::reservedRef($sn) !== null => 'is reserved',
+                StockHolds::inOpenTransfer($sn) || StockHolds::pendingAdjustment($sn) => 'is held by a transfer or adjustment',
+                default => null,
+            };
+            if ($why) {
+                throw ValidationException::withMessages(["parts.{$i}" => "Part serial {$sn} {$why}."]);
+            }
+            DB::table('stock_serials')->where('serial', $sn)->update(['status' => 'consumed', 'bin_id' => null, 'updated_at' => $now]);
+            StockMovement::create(['at' => $now, 'direction' => 'out', 'type' => 'repair', 'serial' => $sn, 'product_id' => $s->product_id,
+                'warehouse_id' => $s->warehouse_id, 'ref' => $j->number, 'note' => 'Used in repair', 'user_id' => $user->id]);
+        }
+        DB::table('repair_parts')->where('repair_job_id', $j->id)->delete();
+        foreach ($parts as $p) {
+            $sn = isset($p['serial']) && trim($p['serial']) !== '' ? PurchaseController::normalizeSerial($p['serial']) : null;
+            $st = $sn ? DB::table('stock_serials')->where('serial', $sn)->first(['unit_cost', 'product_id']) : null;
+            DB::table('repair_parts')->insert(['repair_job_id' => $j->id, 'description' => trim($p['description']), 'qty' => $sn ? 1 : (int) $p['qty'],
+                'unit_price' => self::m((float) $p['unitPrice']), 'serial' => $sn, 'product_id' => $st->product_id ?? null,
+                'unit_cost' => (float) ($st->unit_cost ?? 0)]);
+        }
+    }
+
+    private function releasePart(object $j, string $sn, $user, $now): void
+    {
+        $s = DB::table('stock_serials')->where('serial', $sn)->first();
+        if (! $s || $s->status !== 'consumed') {
+            return;
+        }
+        DB::table('stock_serials')->where('serial', $sn)->update(['status' => 'in_stock', 'updated_at' => $now]);
+        StockMovement::create(['at' => $now, 'direction' => 'in', 'type' => 'repair_return', 'serial' => $sn, 'product_id' => $s->product_id,
+            'warehouse_id' => $s->warehouse_id, 'ref' => $j->number, 'note' => 'Removed from repair', 'user_id' => $user->id]);
     }
 
     public function status(Request $request, int $id): JsonResponse
@@ -205,6 +263,11 @@ class RepairController extends Controller
             $note = trim($d['note'] ?? '');
             if ($d['status'] === 'cancelled' && mb_strlen($note) < 10) {
                 throw ValidationException::withMessages(['note' => 'Write why the job is cancelled (at least 10 characters).']);
+            }
+            if ($d['status'] === 'cancelled') {
+                foreach (DB::table('repair_parts')->where('repair_job_id', $id)->whereNotNull('serial')->pluck('serial') as $sn) {
+                    $this->releasePart($j, $sn, $u, now());
+                }
             }
             DB::table('repair_jobs')->where('id', $id)->update(['status' => $d['status'], 'updated_at' => now()]);
             DB::table('repair_events')->insert(['repair_job_id' => $id, 'status' => $d['status'], 'note' => $note ?: null, 'user_id' => $u->id, 'at' => now()]);

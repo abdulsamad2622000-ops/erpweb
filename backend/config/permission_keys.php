@@ -2,6 +2,10 @@
 
 // scripts/sync-permission-keys.mjs se generate hota hai. Haath se na badlein.
 return [
+    'accounts.cashbook.view',
+    'accounts.expense.create',
+    'accounts.expense.edit',
+    'accounts.expense.view',
     'barcode.label.create',
     'barcode.label.print',
     'barcode.label.reprint',
@@ -10,6 +14,7 @@ return [
     'customers.customer.edit',
     'customers.customer.view',
     'dashboard.view.view',
+    'email.message.send',
     'email.template.edit',
     'email.template.view',
     'inventory.adjustment.approve',

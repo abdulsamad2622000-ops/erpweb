@@ -607,6 +607,24 @@ export const routes: Routes = [
         data: { title: 'warranty', permission: 'warranty.claim.view' },
         loadComponent: () => import('./features/repairs/pages/repair-job.page').then((m) => m.RepairJobPage),
       },
+      {
+        path: 'accounts/expenses',
+        canActivate: [permissionGuard],
+        data: { title: 'expenses', permission: 'accounts.expense.view' },
+        loadComponent: () => import('./features/accounts/pages/expenses.page').then((m) => m.ExpensesPage),
+      },
+      {
+        path: 'accounts/cashbook',
+        canActivate: [permissionGuard],
+        data: { title: 'cashbook', permission: 'accounts.cashbook.view' },
+        loadComponent: () => import('./features/accounts/pages/cashbook.page').then((m) => m.CashbookPage),
+      },
+      {
+        path: 'email',
+        canActivate: [permissionGuard],
+        data: { title: 'email', permission: 'email.template.view' },
+        loadComponent: () => import('./features/email/pages/email.page').then((m) => m.EmailPage),
+      },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {

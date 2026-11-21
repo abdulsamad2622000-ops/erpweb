@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
+import { SendEmailComponent } from '../../email/ui/send-email.component';
 import { PrintService } from '../../../shared/ui/print/print.service';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 import { PAY_METHODS, PayMethod } from '../../pos/models/pos.models';
@@ -17,7 +18,7 @@ import { INVOICE_TONE } from '../utils/sales-utils';
 /** Invoice (POS ya wholesale): detail, payments, baqi raqam wasool, print. */
 @Component({
   selector: 'app-invoice-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent],
+  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent, SendEmailComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-4xl space-y-4">
@@ -29,6 +30,7 @@ import { INVOICE_TONE } from '../utils/sales-utils';
           <div class="flex flex-wrap gap-2">
             <a routerLink="/sales/invoices" [class]="ui.btn">{{ 'salesDocs.back' | transloco }}</a>
             <button type="button" [class]="ui.btn" (click)="print(s)">{{ 'salesDocs.print' | transloco }}</button>
+            <app-send-email *hasPermission="'email.message.send'" kind="invoice" [refId]="s.id" />
             <a *hasPermission="'sales.return.create'" routerLink="/sales/returns" [class]="ui.btn">{{ 'posPage.returns' | transloco }}</a>
           </div>
         </div>

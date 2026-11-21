@@ -23,6 +23,8 @@ export interface RepairPart {
   description: string;
   qty: number;
   unitPrice: number;
+  /** Stock se liya part (serial) — save par stock se nikal jata hai. */
+  serial?: string | null;
 }
 
 export interface RepairJob {
