@@ -125,8 +125,8 @@ class RepairController extends Controller
     {
         $d = $request->validate([
             'serial' => 'nullable|string|max:60', 'device' => 'nullable|string|max:160',
-            'customerId' => 'nullable|integer|exists:customers,id', 'customerName' => 'required_without:customerId|nullable|string|max:120',
-            'customerPhone' => 'required_without:customerId|nullable|string|max:30',
+            'customerId' => 'nullable|integer|exists:customers,id', 'customerName' => 'nullable|string|max:120',
+            'customerPhone' => 'nullable|string|max:30',
             'problem' => 'required|string|min:5|max:1000', 'accessories' => 'nullable|string|max:300',
         ] + $this->partsRules(), ['problem.required' => 'Describe the problem.', 'problem.min' => 'Describe the problem.']);
         $u = $request->user();

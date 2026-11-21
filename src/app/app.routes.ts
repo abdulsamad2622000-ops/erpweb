@@ -577,6 +577,24 @@ export const routes: Routes = [
         data: { title: 'invoices', permission: 'sales.invoice.view' },
         loadComponent: () => import('./features/sales/pages/invoice.page').then((m) => m.InvoicePage),
       },
+      {
+        path: 'warranty',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/repairs.page').then((m) => m.RepairsPage),
+      },
+      {
+        path: 'warranty/new',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.create' },
+        loadComponent: () => import('./features/repairs/pages/repair-new.page').then((m) => m.RepairNewPage),
+      },
+      {
+        path: 'warranty/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/repair-job.page').then((m) => m.RepairJobPage),
+      },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {
