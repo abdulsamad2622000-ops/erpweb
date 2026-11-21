@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PayablesController;
 use App\Http\Controllers\Api\CustomerLedgerController;
 use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\RepairController;
+use App\Http\Controllers\Api\ReportsController;
 use App\Http\Controllers\Api\WholesaleController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\StockControlController;
@@ -118,6 +119,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('customers/{id}/ledger', [CustomerLedgerController::class, 'ledger'])->whereNumber('id')->middleware($p('customers.customer.view'));
     Route::post('customers/{id}/receipts', [CustomerLedgerController::class, 'storeReceipt'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
     Route::get('customer-receipts/{id}', [CustomerLedgerController::class, 'receipt'])->whereNumber('id')->middleware($p('customers.customer.view'));
+
+    // Dashboard + reports (Step 15)
+    Route::get('dashboard', [ReportsController::class, 'dashboard'])->middleware($p('dashboard.view.view'));
+    foreach (['sales', 'stock', 'purchases', 'repairs'] as $r) {
+        Route::get("reports/{$r}", [ReportsController::class, $r])->middleware($p('reports.report.view'));
+    }
 
     // Warranty & repairs (Step 14)
     $R = RepairController::class;

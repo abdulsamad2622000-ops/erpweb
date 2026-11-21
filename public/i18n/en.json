@@ -1643,5 +1643,57 @@
       "delivered": "Delivered",
       "cancelled": "Cancelled"
     }
+  },
+  "dashboardPage": {
+    "hello": "Assalam o Alaikum, {{name}}",
+    "today": "Today's sales",
+    "bills": "{{n}} bills",
+    "month": "This month",
+    "profit": "Profit",
+    "receivable": "Customers owe",
+    "overdue": "Overdue",
+    "stock": "Stock in hand",
+    "units": "units",
+    "atCost": "Value at cost",
+    "payable": "We owe suppliers",
+    "openRepairs": "Open repair jobs",
+    "ready": "{{n}} ready",
+    "openOrders": "Orders to deliver",
+    "pendingPOs": "Purchase orders open",
+    "openPos": "Open POS",
+    "last14": "Sales, last 14 days",
+    "top": "Top products this month"
+  },
+  "reportsPage": {
+    "title": "Reports",
+    "tabs": {
+      "sales": "Sales & profit",
+      "stock": "Stock value",
+      "purchases": "Purchases",
+      "repairs": "Repairs"
+    },
+    "groupBy": "Group by",
+    "by": {
+      "day": "Day",
+      "product": "Product",
+      "staff": "Staff",
+      "channel": "Channel"
+    },
+    "csv": "Download CSV (Excel)",
+    "revenue": "Sales",
+    "cost": "Cost",
+    "profit": "Profit",
+    "bills": "Bills",
+    "returns": "Returns",
+    "costNote": "Cost = purchase cost of each serial (landed cost included); items without serial use the product cost price. Returned items are left out.",
+    "atRetail": "Value at retail price",
+    "oldest": "Oldest (days)",
+    "billed": "Supplier bills",
+    "paidOut": "Paid to suppliers",
+    "supplier": "Supplier",
+    "repairIncome": "Repair income",
+    "delivered": "Jobs delivered",
+    "receivedJobs": "Jobs received",
+    "byTech": "By technician"
   }
 }

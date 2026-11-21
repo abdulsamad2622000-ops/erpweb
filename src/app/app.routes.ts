@@ -103,6 +103,18 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       {
+        path: 'dashboard',
+        canActivate: [permissionGuard],
+        data: { title: 'dashboard', permission: 'dashboard.view.view' },
+        loadComponent: () => import('./features/reports/pages/dashboard.page').then((m) => m.DashboardPage),
+      },
+      {
+        path: 'reports',
+        canActivate: [permissionGuard],
+        data: { title: 'reports', permission: 'reports.report.view' },
+        loadComponent: () => import('./features/reports/pages/reports.page').then((m) => m.ReportsPage),
+      },
+      {
         path: 'products/brands',
         canActivate: [permissionGuard],
         data: { title: 'brands', permission: 'products.brand.view' },

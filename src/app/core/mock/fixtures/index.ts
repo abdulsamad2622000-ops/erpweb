@@ -17,6 +17,7 @@ import { COUNT_FIXTURES } from './counts.fixtures';
 import { ADJUSTMENT_FIXTURES } from './adjustments.fixtures';
 import { POS_FIXTURES } from './pos.fixtures';
 import { REPAIR_FIXTURES } from './repairs.fixtures';
+import { REPORT_FIXTURES } from './reports.fixtures';
 import { RESERVATION_FIXTURES } from './reservations.fixtures';
 import { SALES_FIXTURES } from './sales.fixtures';
 import { PUTAWAY_FIXTURES } from './putaway.fixtures';
@@ -43,4 +44,5 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   // POS ke customer routes ko wholesale wale (credit fields ke saath) override karte hain.
   ...SALES_FIXTURES,
   ...REPAIR_FIXTURES,
+  ...REPORT_FIXTURES,
 };
