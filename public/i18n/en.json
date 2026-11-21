@@ -651,7 +651,10 @@
     "backup": "Backup",
     "branches": "Branches",
     "warehouses": "Warehouses",
-    "locationTree": "Location tree"
+    "locationTree": "Location tree",
+    "accounts": "Accounts",
+    "expenses": "Expenses",
+    "cashbook": "Cash book"
   },
   "labels": {
     "title": "Barcodes & labels",

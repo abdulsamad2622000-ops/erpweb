@@ -140,6 +140,34 @@ class ReportsController extends Controller
                 'jobs' => $g->count(), 'income' => self::m($g->sum('paid'))])->values()]);
     }
 
+    /** P&L: sale munafa + repair (parts cost nikal kar) − kharche = asal munafa. */
+    public static function profitFor(Carbon $from, Carbon $to): array
+    {
+        $lines = self::saleLines($from, $to);
+        $revenue = self::m($lines->sum('revenue'));
+        $cogs = self::m($lines->sum('cost'));
+        $jobs = DB::table('repair_jobs')->where('status', 'delivered')->whereBetween('delivered_at', [$from, $to])->pluck('id');
+        $repairIncome = self::m((float) DB::table('repair_jobs')->whereIn('id', $jobs)->sum('paid'));
+        $repairCost = self::m((float) DB::table('repair_parts')->whereIn('repair_job_id', $jobs)->whereNotNull('serial')->sum('unit_cost'));
+        $exp = DB::table('expenses')->whereNull('voided_at')->whereBetween('date', [$from->toDateString(), $to->toDateString()])
+            ->select('expense_category_id', DB::raw('SUM(amount) as t'))->groupBy('expense_category_id')->get()
+            ->map(fn ($r) => ['category' => (string) DB::table('expense_categories')->where('id', $r->expense_category_id)->value('name'), 'amount' => self::m((float) $r->t)])
+            ->sortByDesc('amount')->values();
+        $expenses = self::m($exp->sum('amount'));
+        $gross = self::m($revenue - $cogs + $repairIncome - $repairCost);
+
+        return ['from' => $from->toDateString(), 'to' => $to->toDateString(), 'salesRevenue' => $revenue, 'costOfGoods' => $cogs,
+            'salesProfit' => self::m($revenue - $cogs), 'repairIncome' => $repairIncome, 'repairPartsCost' => $repairCost,
+            'grossProfit' => $gross, 'expenses' => $expenses, 'expensesByCategory' => $exp, 'netProfit' => self::m($gross - $expenses)];
+    }
+
+    public function profit(Request $request): JsonResponse
+    {
+        [$from, $to] = self::range($request);
+
+        return response()->json(self::profitFor($from, $to));
+    }
+
     public function dashboard(Request $request): JsonResponse
     {
         $u = $request->user();
@@ -168,8 +196,12 @@ class ReportsController extends Controller
                 - (float) DB::table('sales_returns')->where('refund_method', 'credit')->sum('amount');
             $overdue = (float) DB::table('sales')->whereNotNull('due_date')->where('due_date', '<', now()->toDateString())
                 ->selectRaw('COALESCE(SUM(total - paid + change_due), 0) as b')->value('b');
+            $pl = self::profitFor($month, now()->endOfDay());
             $out += [
                 'monthProfit' => self::m($lines->sum('revenue') - $lines->sum('cost')),
+                'monthExpenses' => $pl['expenses'], 'monthNet' => $pl['netProfit'],
+                'todayCash' => self::m(collect(AccountsController::movements($today, now()->endOfDay()))->where('method', 'cash')
+                    ->sum(fn ($r) => $r['in'] - $r['out'])),
                 'stockValue' => self::m((float) DB::table('stock_serials')->where('status', 'in_stock')->sum('unit_cost')),
                 'receivable' => self::m(max($receivable, 0)), 'overdue' => self::m(max($overdue, 0)),
                 'payable' => self::m((float) DB::table('supplier_bills')->sum('amount') - (float) DB::table('supplier_payments')->sum('amount')),

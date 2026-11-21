@@ -43,13 +43,14 @@ class RoleSeeder extends Seeder
             ]],
             'technician' => ['Technician', [
                 'dashboard.view.view', 'products.product.view', 'inventory.serial.view',
-                'warranty.claim.view', 'warranty.claim.create', 'warranty.claim.edit',
+                'warranty.claim.view', 'warranty.claim.create', 'warranty.claim.edit', 'inventory.stock.view',
             ]],
             'accountant' => ['Accountant', [
                 'dashboard.view.view', 'reports.report.view', 'purchase.payment.view', 'purchase.payment.create',
                 'purchase.supplier.view', 'purchase.order.view',
                 'sales.invoice.view', 'sales.invoice.create', 'sales.invoice.edit', 'sales.challan.view',
                 'customers.customer.view', 'customers.customer.edit',
+                'accounts.expense.view', 'accounts.expense.create', 'accounts.expense.edit', 'accounts.cashbook.view', 'email.message.send',
             ]],
         ];
 

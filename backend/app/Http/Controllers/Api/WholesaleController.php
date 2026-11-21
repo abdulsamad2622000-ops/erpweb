@@ -456,7 +456,7 @@ class WholesaleController extends Controller
 
     // ---------- Invoices (credit) ----------
 
-    private function invoiceOut(int $id): array
+    public function invoiceOut(int $id): array
     {
         $pos = app(PosController::class)->saleOut($id);
         $s = DB::table('sales')->find($id);

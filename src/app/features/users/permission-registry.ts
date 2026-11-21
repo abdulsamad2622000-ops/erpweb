@@ -77,7 +77,12 @@ export const PERMISSION_MODULES: PermissionModule[] = [
   { key: 'customers', label: 'Customers', rows: [row('Customers', 'customers.customer', ['view', 'create', 'edit'])] },
   { key: 'warranty', label: 'Warranty', rows: [row('Warranty claims', 'warranty.claim', ['view', 'create', 'edit'])] },
   { key: 'reports', label: 'Reports', rows: [row('Reports', 'reports.report', ['view'])] },
-  { key: 'email', label: 'Email', rows: [row('Email templates', 'email.template', ['view', 'edit'])] },
+  {
+    key: 'accounts',
+    label: 'Accounts',
+    rows: [row('Expenses', 'accounts.expense', ['view', 'create', 'edit']), row('Cash book', 'accounts.cashbook', ['view'])],
+  },
+  { key: 'email', label: 'Email', rows: [row('Email templates', 'email.template', ['view', 'edit']), row('Send email', 'email.message', ['send'])] },
   {
     key: 'users',
     label: 'Users & roles',
@@ -137,6 +142,7 @@ export const ROLE_TEMPLATES: RoleTemplate[] = [
     permissions: [
       'dashboard.view.view', 'purchase.payment.view', 'purchase.payment.create',
       'customers.customer.view', 'sales.invoice.view', 'reports.report.view', 'products.cost.view',
+      'accounts.expense.view', 'accounts.expense.create', 'accounts.cashbook.view', 'email.message.send',
     ],
   },
   {
