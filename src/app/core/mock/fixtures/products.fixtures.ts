@@ -36,7 +36,7 @@ function categoryError(b: Omit<Category, 'id'>, ignoreId: number): string | null
   return clash ? 'This name already exists here.' : null;
 }
 
-const products: Product[] = [
+export const products: Product[] = [
   { id: 1, sku: 'LAP-DELL-001', name: 'Dell Latitude 5440', barcode: '8901000000011', brandId: 1, categoryId: 1, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '16 GB', storage: '512 GB SSD', gpu: 'Integrated', screen: '14"' }, warrantyMonths: 12, costPrice: 142000, minPrice: 150000, prices: [{ tier: 'retail', price: 165000 }, { tier: 'wholesale', price: 155000 }, { tier: 'dealer', price: 151000 }], reorderLevels: [{ branchId: 1, level: 5 }], variants: [{ id: 1, sku: 'LAP-DELL-001-16-512', name: '16 GB / 512 GB SSD', barcode: null, isActive: true }], isActive: true },
   { id: 2, sku: 'LAP-HP-001', name: 'HP ProBook 450', barcode: null, brandId: 2, categoryId: 1, trackBatch: false, specs: { cpu: 'Intel Core i7', ram: '16 GB', storage: '512 GB SSD', gpu: 'Integrated', screen: '15.6"' }, warrantyMonths: 12, costPrice: 118000, minPrice: 125000, prices: [{ tier: 'retail', price: 138000 }, { tier: 'wholesale', price: 129000 }, { tier: 'dealer', price: 126000 }], reorderLevels: [{ branchId: 1, level: 3 }], variants: [], isActive: true },
   { id: 3, sku: 'DSK-LEN-001', name: 'Lenovo ThinkCentre M70s', barcode: '8901000000033', brandId: 3, categoryId: 2, trackBatch: false, specs: { cpu: 'Intel Core i5', ram: '8 GB', storage: '256 GB SSD', gpu: 'Integrated', screen: '' }, warrantyMonths: 36, costPrice: 82000, minPrice: 88000, prices: [{ tier: 'retail', price: 96000 }, { tier: 'wholesale', price: 90000 }, { tier: 'dealer', price: 88500 }], reorderLevels: [], variants: [], isActive: true },
