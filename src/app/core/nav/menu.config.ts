@@ -17,6 +17,7 @@ export const MENU: MenuItem[] = [
       { key: 'alerts', path: 'inventory/alerts', icon: 'pi pi-bell', permission: 'inventory.stock.view' },
       { key: 'serials', path: 'inventory/serials', icon: 'pi pi-hashtag', permission: 'inventory.serial.view' },
       { key: 'locations', path: 'inventory/locations', icon: 'pi pi-map-marker', permission: 'inventory.location.view' },
+      { key: 'putaway', path: 'inventory/putaway', icon: 'pi pi-download', permission: 'inventory.putaway.create' },
       { key: 'ledger', path: 'inventory/ledger', icon: 'pi pi-book', permission: 'inventory.ledger.view' },
       { key: 'transfers', path: 'inventory/transfers', icon: 'pi pi-arrow-right-arrow-left', permission: 'inventory.transfer.view' },
       { key: 'counts', path: 'inventory/counts', icon: 'pi pi-check-square', permission: 'inventory.count.view' },

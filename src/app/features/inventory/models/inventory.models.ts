@@ -12,9 +12,12 @@ export interface StockSerial {
   receivedAt: string;
   /** Kis reservation mein roka hua hai (nahi to null). */
   reservedRef?: string | null;
+  /** Kis bin mein rakha hai (nahi to null). */
+  binId?: number | null;
+  binCode?: string | null;
 }
 
-export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released';
+export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released' | 'putaway';
 
 export interface TimelineEvent {
   at: string;

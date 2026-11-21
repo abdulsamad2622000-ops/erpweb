@@ -205,6 +205,20 @@ export const routes: Routes = [
           import('./features/inventory/pages/reservation-new.page').then((m) => m.ReservationNewPage),
       },
       {
+        path: 'inventory/locations',
+        canActivate: [permissionGuard],
+        data: { title: 'locations', permission: 'inventory.location.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/bins.page').then((m) => m.BinsPage),
+      },
+      {
+        path: 'inventory/putaway',
+        canActivate: [permissionGuard],
+        data: { title: 'putaway', permission: 'inventory.putaway.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/putaway.page').then((m) => m.PutawayPage),
+      },
+      {
         path: 'inventory/alerts',
         canActivate: [permissionGuard],
         data: { title: 'alerts', permission: 'inventory.stock.view' },

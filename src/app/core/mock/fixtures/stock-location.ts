@@ -13,6 +13,18 @@ export const adjustmentEvents = new Map<string, TimelineEvent[]>();
 /** Reservations ki history entries (reserved aur released). Serial -> events. */
 export const reservationEvents = new Map<string, TimelineEvent[]>();
 
+/** Put-away ki history entries. Serial -> events. */
+export const putawayEvents = new Map<string, TimelineEvent[]>();
+
+export interface BinSlot {
+  binId: number;
+  warehouseId: number;
+  code: string;
+}
+
+/** Put-away se mila bin. Serial -> bin. */
+export const serialBin = new Map<string, BinSlot>();
+
 export interface Hold {
   ref: string;
   holdUntil: string | null;
