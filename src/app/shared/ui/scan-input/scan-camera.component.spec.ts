@@ -1,7 +1,8 @@
+import { Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ScanCameraComponent } from './scan-camera.component';
+import { ScanCameraComponent, ZXING_LOADER, ZxingModule } from './scan-camera.component';
 
 class FakeDetector {
   detect(): Promise<{ rawValue: string }[]> {
@@ -47,8 +48,9 @@ describe('ScanCameraComponent', () => {
     setMedia(undefined);
   });
 
-  function setup() {
+  function setup(providers: Provider[] = []) {
     TestBed.configureTestingModule({
+      providers,
       imports: [
         ScanCameraComponent,
         TranslocoTestingModule.forRoot({
@@ -73,8 +75,8 @@ describe('ScanCameraComponent', () => {
     return { fixture, el: fixture.nativeElement as HTMLElement, codes, open, closed: () => closed };
   }
 
-  it('browser support na kare to message dikhata hai', async () => {
-    setMedia(goodStream);
+  it('camera API hi na ho to message dikhata hai', async () => {
+    setMedia(undefined);
     const { el, open } = setup();
     await open();
     expect(el.querySelector('[role="alert"]')?.textContent).toContain('common.scan.cameraUnsupported');
@@ -111,5 +113,36 @@ describe('ScanCameraComponent', () => {
     expect(closed()).toBe(1);
     expect(stopped).toBe(1);
     expect(codes).toEqual([]);
+  });
+
+  it('BarcodeDetector na ho to ZXing se code milta hai aur camera band hota hai', async () => {
+    let zxingStops = 0;
+    const controls = { stop: () => zxingStops++ };
+    class FakeReader {
+      decodeFromConstraints(
+        _constraints: unknown,
+        _video: unknown,
+        cb: (r: { getText(): string } | undefined, e: undefined, c: typeof controls) => void,
+      ): Promise<typeof controls> {
+        cb({ getText: () => ' ZX1 ' }, undefined, controls);
+        return Promise.resolve(controls);
+      }
+    }
+    const fake = { BrowserMultiFormatReader: FakeReader } as unknown as ZxingModule;
+    setMedia(goodStream);
+    const { codes, open, closed } = setup([{ provide: ZXING_LOADER, useValue: () => Promise.resolve(fake) }]);
+    await open();
+    expect(codes).toEqual(['ZX1']);
+    expect(closed()).toBe(1);
+    expect(zxingStops).toBe(1);
+  });
+
+  it('ZXing fail ho to camera denied ka message dikhata hai', async () => {
+    setMedia(goodStream);
+    const { el, open } = setup([
+      { provide: ZXING_LOADER, useValue: () => Promise.reject(new Error('chunk load failed')) },
+    ]);
+    await open();
+    expect(el.querySelector('[role="alert"]')?.textContent).toContain('common.scan.cameraDenied');
   });
 });

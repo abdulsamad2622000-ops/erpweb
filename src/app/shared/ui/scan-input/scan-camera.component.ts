@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  InjectionToken,
   effect,
   inject,
   input,
@@ -26,9 +27,22 @@ function detectorCtor(): BarcodeDetectorCtor | undefined {
   return (globalThis as unknown as { BarcodeDetector?: BarcodeDetectorCtor }).BarcodeDetector;
 }
 
+/** ZXing ka sirf wo hissa jo hum use karte hain (test mein fake dena asaan). */
+export type ZxingModule = Pick<typeof import('@zxing/browser'), 'BrowserMultiFormatReader'>;
+
+/** ZXing tab hi download hota hai jab browser mein BarcodeDetector na ho (jaise iPhone Safari). */
+export const ZXING_LOADER = new InjectionToken<() => Promise<ZxingModule>>('ZXING_LOADER', {
+  providedIn: 'root',
+  factory: () => () => import('@zxing/browser'),
+});
+
+interface ScannerControlsLike {
+  stop(): void;
+}
+
 /**
  * Camera se barcode/QR scan. Parent [open] true kare, code milne par (detected) aur (closed) aate hain.
- * Browser ka BarcodeDetector use hota hai; support na ho to message dikhta hai.
+ * Pehle browser ka BarcodeDetector use hota hai; na ho to ZXing (lazy) chalta hai.
  * Is component ko lazy import karein (index.ts se export nahi).
  */
 @Component({
@@ -61,6 +75,7 @@ function detectorCtor(): BarcodeDetectorCtor | undefined {
             {{ 'common.scan.cameraHint' | transloco }}
           </p>
         }
+        <ng-content />
       </div>
       <div class="flex justify-end border-t border-slate-200 p-4 dark:border-slate-700">
         <button
@@ -78,6 +93,10 @@ export class ScanCameraComponent {
   readonly open = input(false);
   /** Kitni der baad dobara code dhoondna hai. */
   readonly intervalMs = input(250);
+  /** true ho to code milne par camera khula rehta hai aur lagatar scan karta hai (put-away, count). */
+  readonly continuous = input(false);
+  /** Continuous mode mein wahi code is muddat (ms) ke andar dobara nahi bheja jata. */
+  readonly repeatGuardMs = input(1500);
 
   readonly detected = output<string>();
   readonly closed = output<void>();
@@ -87,10 +106,17 @@ export class ScanCameraComponent {
   private readonly dlg = viewChild.required<ElementRef<HTMLDialogElement>>('dlg');
   private readonly video = viewChild.required<ElementRef<HTMLVideoElement>>('video');
   private readonly sound = inject(ScanSoundService);
+  private readonly loadZxing = inject(ZXING_LOADER);
 
   private stream: MediaStream | null = null;
+  private controls: ScannerControlsLike | null = null;
+  private readonly stoppedControls = new WeakSet<ScannerControlsLike>();
   private timer: ReturnType<typeof setInterval> | undefined;
   private busy = false;
+  /** Har start/stop par badalta hai, taake der se aane wala async kaam purana ho to ruk jaye. */
+  private session = 0;
+  private lastCode = '';
+  private lastAt = 0;
 
   constructor() {
     effect(() => {
@@ -121,15 +147,26 @@ export class ScanCameraComponent {
 
   private async start(): Promise<void> {
     this.error.set(null);
-    const Detector = detectorCtor();
     const media = typeof navigator === 'undefined' ? undefined : navigator.mediaDevices;
-    if (!Detector || !media?.getUserMedia) {
+    if (!media?.getUserMedia) {
       this.error.set('common.scan.cameraUnsupported');
       return;
     }
+    const session = ++this.session;
+    this.lastCode = '';
+    this.lastAt = 0;
+    const Detector = detectorCtor();
+    if (Detector) {
+      await this.startNative(Detector, media, session);
+    } else {
+      await this.startZxing(session);
+    }
+  }
+
+  private async startNative(Detector: BarcodeDetectorCtor, media: MediaDevices, session: number): Promise<void> {
     try {
       const stream = await media.getUserMedia({ video: { facingMode: 'environment' } });
-      if (!this.open()) {
+      if (!this.open() || session !== this.session) {
         stream.getTracks().forEach((t) => t.stop());
         return;
       }
@@ -148,18 +185,39 @@ export class ScanCameraComponent {
     }
   }
 
+  private async startZxing(session: number): Promise<void> {
+    try {
+      const { BrowserMultiFormatReader } = await this.loadZxing();
+      if (!this.open() || session !== this.session) return;
+      const reader = new BrowserMultiFormatReader(undefined, {
+        delayBetweenScanAttempts: this.intervalMs(),
+      });
+      const controls = await reader.decodeFromConstraints(
+        { video: { facingMode: 'environment' } },
+        this.video().nativeElement,
+        (result, _err, ctrl) => {
+          this.controls ??= ctrl;
+          const code = cleanScan(result?.getText() ?? '');
+          if (code) this.finish(code);
+        },
+      );
+      if (!this.open() || session !== this.session) {
+        this.stopControls(controls);
+        return;
+      }
+      this.controls ??= controls;
+    } catch {
+      this.error.set('common.scan.cameraDenied');
+    }
+  }
+
   private async tick(detector: BarcodeDetectorLike): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     try {
       const found = await detector.detect(this.video().nativeElement);
       const code = cleanScan(found[0]?.rawValue ?? '');
-      if (code) {
-        this.stop();
-        this.sound.success();
-        this.detected.emit(code);
-        this.closed.emit();
-      }
+      if (code) this.finish(code);
     } catch {
       // Ek frame fail ho to agla try karte hain.
     } finally {
@@ -167,11 +225,39 @@ export class ScanCameraComponent {
     }
   }
 
+  private finish(code: string): void {
+    if (this.continuous()) {
+      const now = Date.now();
+      if (code === this.lastCode && now - this.lastAt < this.repeatGuardMs()) return;
+      this.lastCode = code;
+      this.lastAt = now;
+      this.detected.emit(code);
+      return;
+    }
+    this.stop();
+    this.sound.success();
+    this.detected.emit(code);
+    this.closed.emit();
+  }
+
+  private stopControls(c: ScannerControlsLike): void {
+    if (this.stoppedControls.has(c)) return;
+    this.stoppedControls.add(c);
+    try {
+      c.stop();
+    } catch {
+      // Pehle se band ho to koi masla nahi.
+    }
+  }
+
   private stop(): void {
+    this.session++;
     if (this.timer !== undefined) {
       clearInterval(this.timer);
       this.timer = undefined;
     }
+    if (this.controls) this.stopControls(this.controls);
+    this.controls = null;
     this.stream?.getTracks().forEach((t) => t.stop());
     this.stream = null;
     this.video().nativeElement.srcObject = null;

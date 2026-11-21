@@ -16,6 +16,17 @@ export function errorKey(status: number): string {
   return 'errors.generic';
 }
 
+export function isScanUrl(url: string): boolean {
+  return url === '/scan' || url.startsWith('/scan/') || url.startsWith('/scan?');
+}
+
+/** Scan screens par "internet nahi" ka toast nahi: wahan sync chip aur offline queue ye batate hain. */
+export function shouldToast(status: number, routerUrl: string): boolean {
+  if (status === 422) return false;
+  if (status === 0 && isScanUrl(routerUrl)) return false;
+  return true;
+}
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(MessageService);
   const i18n = inject(TranslocoService);
@@ -38,7 +49,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
       if (err.status === 403) void router.navigateByUrl('/403');
 
-      if (err.status !== 422) {
+      if (shouldToast(err.status, router.url)) {
         toast.add({ severity: 'error', summary: i18n.translate(errorKey(err.status)), life: 5000 });
       }
       return throwError(() => err);

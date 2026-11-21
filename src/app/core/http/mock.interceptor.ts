@@ -29,6 +29,10 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   if (!inject(MockModeService).enabled() || !mocked) {
     return next(req);
   }
+  // Browser offline ho to mock bhi asli network jaisa fail kare (offline queue ke test ke liye).
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    return throwError(() => new HttpErrorResponse({ status: 0, url: req.url }));
+  }
   const raw = req.url.startsWith(APP_CONFIG.apiBase) ? req.url.slice(APP_CONFIG.apiBase.length) : req.url;
   const path = raw.split('?')[0];
 

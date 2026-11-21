@@ -1,4 +1,5 @@
 import { PutawayInput } from '../../../features/inventory/models/putaway.models';
+import type { PutAwayBody } from '../../../features/scan/models/putaway.models';
 import { normalizeSerial } from '../../../features/purchase/utils/purchase-utils';
 import { FixtureHandler, FixtureResponse, fail, ok } from './fixture.types';
 import { locations } from './org.fixtures';
@@ -7,7 +8,28 @@ import { allSerials } from './stock.fixtures';
 
 const MAX_SERIALS = 100;
 
+/** Scan app (Step 10): ek serial, { bin, serial }. Dobara same bin = kamyaab (offline replay mehfooz). */
+function placeOne(b: PutAwayBody): FixtureResponse {
+  const bin = locations.find((l) => l.level === 'bin' && l.isActive && (l.barcode ?? '').toUpperCase() === normalizeSerial(b.bin ?? ''));
+  if (!bin) return fail(404, 'Bin not found.');
+  const s = allSerials().find((x) => x.serial === normalizeSerial(b.serial ?? ''));
+  if (!s) return fail(404, 'Serial not found.');
+  if (s.status !== 'in_stock') return { status: 422, body: { message: 'Only in-stock items can be put away.', code: 'not_in_stock' } };
+  if (s.warehouseId !== bin.warehouseId) {
+    return { status: 422, body: { message: 'Item and bin are in different warehouses.', code: 'wrong_warehouse' } };
+  }
+  const ref = bin.barcode ?? bin.code;
+  const previousBin = s.binCode ?? null;
+  if (s.binId !== bin.id) {
+    serialBin.set(s.serial, { binId: bin.id, warehouseId: bin.warehouseId, code: ref });
+    const at = new Date().toISOString();
+    putawayEvents.set(s.serial, [...(putawayEvents.get(s.serial) ?? []), { at, type: 'putaway', ref, note: null }]);
+  }
+  return ok({ serial: s.serial, binBarcode: ref, binName: bin.name, warehouseId: bin.warehouseId, previousBin });
+}
+
 function putaway(req: { body: unknown }): FixtureResponse {
+  if ((req.body as Partial<PutAwayBody>)?.serial !== undefined) return placeOne(req.body as PutAwayBody);
   const b = req.body as PutawayInput;
   const code = normalizeSerial(b?.binBarcode ?? '');
   const bin = locations.find((l) => l.level === 'bin' && l.isActive && (l.barcode ?? '').toUpperCase() === code);
