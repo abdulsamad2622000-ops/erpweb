@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { PwaBannerComponent } from '../../core/pwa/pwa-banner.component';
 import { OfflineQueueService } from './services/offline-queue.service';
 
 /**
@@ -9,7 +10,7 @@ import { OfflineQueueService } from './services/offline-queue.service';
  */
 @Component({
   selector: 'app-scan-layout',
-  imports: [RouterOutlet, RouterLink, TranslocoPipe],
+  imports: [PwaBannerComponent, RouterOutlet, RouterLink, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex min-h-dvh flex-col bg-[#F6F7F9] text-[#0F172A] dark:bg-slate-950 dark:text-slate-100">
@@ -41,6 +42,7 @@ import { OfflineQueueService } from './services/offline-queue.service';
         </a>
       </header>
       <main class="flex-1 p-4">
+        <app-pwa-banner />
         <router-outlet />
       </main>
     </div>

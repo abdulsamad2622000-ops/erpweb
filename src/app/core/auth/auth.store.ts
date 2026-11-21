@@ -10,6 +10,7 @@ import {
   UserLimits,
 } from './auth.models';
 import { AuthService } from './auth.service';
+import { clearSession, readSession, saveSession } from './session-cache';
 
 export type AuthStatus = 'unknown' | 'loading' | 'authenticated' | 'anonymous';
 export type LoginOutcome = 'authenticated' | 'two_factor' | 'failed';
@@ -90,8 +91,27 @@ export const AuthStore = signalStore(
           challenge: null,
           status: 'authenticated',
         });
-      } catch {
-        patchState(store, { ...initialState, status: 'anonymous' });
+        saveSession({ user: me.user, permissions: me.permissions, branches, activeBranchId, limits: me.limits ?? null });
+      } catch (err) {
+        // Internet nahi (status 0): pichla session dobara istemal karo, logout mat karo.
+        const offline = (err as { status?: number } | null)?.status === 0;
+        const cached = offline ? readSession() : null;
+        if (cached) {
+          const saved = savedBranch();
+          patchState(store, {
+            user: cached.user,
+            permissions: cached.permissions,
+            branches: cached.branches,
+            activeBranchId:
+              saved !== null && cached.branches.some((b) => b.id === saved) ? saved : cached.activeBranchId,
+            limits: cached.limits,
+            challenge: null,
+            status: 'authenticated',
+          });
+        } else {
+          if (!offline) clearSession();
+          patchState(store, { ...initialState, status: 'anonymous' });
+        }
       }
     };
 
@@ -110,6 +130,8 @@ export const AuthStore = signalStore(
         return pending;
       },
       reset(): void {
+        // reset: session cache bhi saaf
+        clearSession();
         patchState(store, { ...initialState, status: 'anonymous' });
       },
       can(key: string): boolean {
@@ -152,6 +174,8 @@ export const AuthStore = signalStore(
         try {
           await firstValueFrom(auth.logout());
         } finally {
+          // logout: session cache bhi saaf
+          clearSession();
           patchState(store, { ...initialState, status: 'anonymous' });
         }
       },

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { injectCan } from '../../../core/auth/can';
+import { PwaBannerComponent } from '../../../core/pwa/pwa-banner.component';
 
 interface ScanTile {
   key: string;
@@ -20,10 +21,11 @@ const TILES: ScanTile[] = [
 
 @Component({
   selector: 'app-scan-home-page',
-  imports: [RouterLink, TranslocoPipe],
+  imports: [PwaBannerComponent, RouterLink, TranslocoPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-xl space-y-4">
+      <app-pwa-banner [showInstall]="true" [showUpdate]="false" />
       <div>
         <h1 class="text-xl font-semibold">{{ 'scanApp.homeTitle' | transloco }}</h1>
         <p class="text-sm text-slate-600 dark:text-slate-400">{{ 'scanApp.homeHint' | transloco }}</p>

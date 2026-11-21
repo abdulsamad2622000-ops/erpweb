@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideAppInitializer, inject, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
@@ -13,6 +13,7 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { PRIMEUI_LICENSE } from './core/config/primeui-license';
 import { TranslocoHttpLoader } from './core/i18n/transloco-loader';
+import { PwaService } from './core/pwa/pwa.service';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
@@ -33,9 +34,14 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: { preset: Aura, options: { darkModeSelector: '.dark' } },
       license: PRIMEUI_LICENSE,
-    }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
+    // beforeinstallprompt jaldi aa jata hai, isliye service app start par bana lete hain.
+    provideAppInitializer(() => {
+      inject(PwaService);
+    }),
   ],
 };

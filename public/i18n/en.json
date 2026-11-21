@@ -1146,6 +1146,17 @@
     "offline": "Offline",
     "homeTitle": "What do you want to do?",
     "homeHint": "Pick a task. Scan with the camera or a Bluetooth scanner.",
+    "install": {
+      "title": "Install ERP Scan",
+      "hint": "Add the app to your home screen. It opens full screen and keeps working without a connection.",
+      "button": "Install",
+      "dismiss": "Not now",
+      "iosHint": "On iPhone or iPad: tap the Share button, then choose Add to Home Screen."
+    },
+    "update": {
+      "message": "A new version of the app is ready.",
+      "button": "Reload now"
+    },
     "noAccess": "You do not have access to any scan task. Ask an admin.",
     "tiles": {
       "putaway": { "title": "Put-away", "desc": "Place scanned items into a bin" },
