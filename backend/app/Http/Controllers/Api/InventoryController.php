@@ -11,6 +11,7 @@ use App\Models\StockTransferLine;
 use App\Models\User;
 use App\Services\NumberSeriesService;
 use App\Services\ProductInfo;
+use App\Services\StockHolds;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,11 +44,19 @@ class InventoryController extends Controller
             if (! isset($rows[$key])) {
                 $p = ProductInfo::get($r->product_id);
                 $rows[$key] = ['productId' => $r->product_id, 'name' => $p['name'], 'sku' => $p['sku'], 'warehouseId' => $r->warehouse_id,
-                    'inStock' => 0, 'quarantine' => 0, 'rejected' => 0, 'returned' => 0];
+                    'inStock' => 0, 'reserved' => 0, 'quarantine' => 0, 'rejected' => 0, 'returned' => 0, 'damaged' => 0];
             }
-            $field = ['in_stock' => 'inStock', 'quarantine' => 'quarantine', 'rejected' => 'rejected', 'returned' => 'returned'][$r->status] ?? null;
+            $field = ['in_stock' => 'inStock', 'quarantine' => 'quarantine', 'rejected' => 'rejected', 'returned' => 'returned', 'damaged' => 'damaged'][$r->status] ?? null;
             if ($field) {
                 $rows[$key][$field] += (int) $r->c;
+            }
+        }
+        // In-stock mein se kitne reserved hain
+        $inStock = StockSerial::whereNotNull('warehouse_id')->where('status', 'in_stock')->when($wh = (int) $request->query('warehouseId'), fn ($q) => $q->where('warehouse_id', $wh))->get(['serial', 'product_id', 'warehouse_id']);
+        $held = StockHolds::reservedRefs($inStock->pluck('serial')->all());
+        foreach ($inStock as $x) {
+            if (isset($held[$x->serial], $rows["{$x->product_id}-{$x->warehouse_id}"])) {
+                $rows["{$x->product_id}-{$x->warehouse_id}"]['reserved']++;
             }
         }
         $rows = array_values($rows);
@@ -69,7 +78,10 @@ class InventoryController extends Controller
                     ->orWhereHas('variants', fn ($v) => $v->where('sku', 'like', "%{$term}%"))));
         }
 
-        return response()->json($q->limit(1000)->get()->map(fn ($s) => $this->serialOut($s)));
+        $list = $q->limit(1000)->get();
+        $held = StockHolds::reservedRefs($list->pluck('serial')->all());
+
+        return response()->json($list->map(fn ($s) => $this->serialOut($s, $held[$s->serial] ?? null)));
     }
 
     public function serial(string $serial): JsonResponse
@@ -79,14 +91,14 @@ class InventoryController extends Controller
 
         $timeline = StockMovement::where('serial', $s->serial)->orderBy('at')->orderBy('id')->get()->map(fn ($m) => [
             'at' => $m->at->toIso8601String(),
-            'type' => ['grn' => 'received', 'return' => 'returned', 'transfer_out' => 'transferred_out', 'transfer_in' => 'transferred_in'][$m->type] ?? $m->type,
+            'type' => ['grn' => 'received', 'return' => 'returned', 'transfer_out' => 'transferred_out', 'transfer_in' => 'transferred_in'][$m->type] ?? $m->type, // adjusted | reserved | released
             'ref' => $m->ref, 'note' => $m->note,
         ])->values();
 
-        return response()->json($this->serialOut($s) + ['timeline' => $timeline]);
+        return response()->json($this->serialOut($s, StockHolds::reservedRef($s->serial)) + ['timeline' => $timeline]);
     }
 
-    private function serialOut(StockSerial $s): array
+    private function serialOut(StockSerial $s, ?string $reservedRef = null): array
     {
         $p = ProductInfo::get($s->product_id);
 
@@ -94,12 +106,14 @@ class InventoryController extends Controller
             'serial' => $s->serial, 'productId' => $s->product_id, 'name' => $p['name'], 'sku' => $p['sku'],
             'warehouseId' => (int) ($s->warehouse_id ?? 0), 'status' => $s->status, 'grnNumber' => (string) $s->grn?->number,
             'supplierName' => (string) $s->supplier?->name, 'receivedAt' => $s->received_at?->toIso8601String(),
+            'reservedRef' => $reservedRef,
         ];
     }
 
     public function ledger(Request $request): JsonResponse
     {
-        $q = StockMovement::query()->orderByDesc('at')->orderByDesc('id');
+        // Sirf asli aana-jaana (reserve/adjust timeline ke liye hain, ledger ke nahi)
+        $q = StockMovement::query()->whereIn('direction', ['in', 'out'])->orderByDesc('at')->orderByDesc('id');
         if ($wh = (int) $request->query('warehouseId')) {
             $q->where('warehouse_id', $wh);
         }
@@ -145,6 +159,9 @@ class InventoryController extends Controller
                 }
                 if ($s->status !== 'in_stock') {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is not available."]);
+                }
+                if ($held = StockHolds::reservedRef($serial)) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is reserved ({$held}). Release the reservation first."]);
                 }
                 if ((int) $s->warehouse_id !== (int) $d['fromWarehouseId']) {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is in another warehouse."]);
