@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
             'sales_staff' => ['Sales Staff', [
                 'dashboard.view.view', 'products.product.view', 'inventory.stock.view',
                 'inventory.reservation.view', 'inventory.reservation.create',
-                'customers.customer.view', 'customers.customer.create', 'warranty.claim.view',
+                'customers.customer.view', 'customers.customer.create', 'warranty.claim.view', 'warranty.claim.create',
                 'sales.quotation.view', 'sales.quotation.create', 'sales.quotation.edit',
                 'sales.order.view', 'sales.order.create', 'sales.order.edit', 'sales.invoice.view',
                 'sales.challan.view', 'sales.challan.create', 'sales.return.view',
@@ -39,7 +39,11 @@ class RoleSeeder extends Seeder
             'cashier' => ['Cashier', [
                 'dashboard.view.view', 'pos.sale.create', 'products.product.view',
                 'customers.customer.view', 'customers.customer.create', 'sales.invoice.view',
-                'sales.return.view', 'sales.return.create',
+                'sales.return.view', 'sales.return.create', 'warranty.claim.view', 'warranty.claim.create',
+            ]],
+            'technician' => ['Technician', [
+                'dashboard.view.view', 'products.product.view', 'inventory.serial.view',
+                'warranty.claim.view', 'warranty.claim.create', 'warranty.claim.edit',
             ]],
             'accountant' => ['Accountant', [
                 'dashboard.view.view', 'reports.report.view', 'purchase.payment.view', 'purchase.payment.create',
