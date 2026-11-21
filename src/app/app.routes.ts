@@ -107,6 +107,34 @@ export const routes: Routes = [
           import('./features/purchase/pages/purchase-order.page').then((m) => m.PurchaseOrderPage),
       },
       {
+        path: 'inventory/transfers/new',
+        canActivate: [permissionGuard],
+        data: { title: 'transfers', permission: 'inventory.transfer.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/transfer.page').then((m) => m.TransferPage),
+      },
+      {
+        path: 'inventory/transfers/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'transfers', permission: 'inventory.transfer.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/transfer.page').then((m) => m.TransferPage),
+      },
+      {
+        path: 'inventory/transfers',
+        canActivate: [permissionGuard],
+        data: { title: 'transfers', permission: 'inventory.transfer.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/transfers.page').then((m) => m.TransfersPage),
+      },
+      {
+        path: 'inventory/ledger',
+        canActivate: [permissionGuard],
+        data: { title: 'ledger', permission: 'inventory.ledger.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/ledger.page').then((m) => m.LedgerPage),
+      },
+      {
         path: 'inventory/stock',
         canActivate: [permissionGuard],
         data: { title: 'stock', permission: 'inventory.stock.view' },

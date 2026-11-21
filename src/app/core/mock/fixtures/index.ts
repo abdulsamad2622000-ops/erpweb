@@ -12,6 +12,7 @@ import { LABEL_FIXTURES } from './labels.fixtures';
 import { PURCHASE_FIXTURES } from './purchase.fixtures';
 import { PAYABLES_FIXTURES } from './payables.fixtures';
 import { STOCK_FIXTURES } from './stock.fixtures';
+import { TRANSFER_FIXTURES } from './transfers.fixtures';
 
 export type { FixtureHandler } from './fixture.types';
 
@@ -26,4 +27,5 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   ...PURCHASE_FIXTURES,
   ...PAYABLES_FIXTURES,
   ...STOCK_FIXTURES,
+  ...TRANSFER_FIXTURES,
 };
