@@ -723,7 +723,8 @@
       "rejected": "Rejected",
       "returned": "Returned to supplier",
       "damaged": "Damaged",
-      "sold": "Sold"
+      "sold": "Sold",
+      "consumed": "Used in repair"
     },
     "stock": {
       "reserved": "Reserved",
@@ -1645,7 +1646,9 @@
       "ready": "Ready",
       "delivered": "Delivered",
       "cancelled": "Cancelled"
-    }
+    },
+    "partSerial": "From stock (serial)",
+    "partSerialHint": "optional"
   },
   "dashboardPage": {
     "hello": "Assalam o Alaikum, {{name}}",
@@ -1665,11 +1668,15 @@
     "pendingPOs": "Purchase orders open",
     "openPos": "Open POS",
     "last14": "Sales, last 14 days",
-    "top": "Top products this month"
+    "top": "Top products this month",
+    "expenses": "Expenses",
+    "net": "Net profit",
+    "cash": "Cash"
   },
   "reportsPage": {
     "title": "Reports",
     "tabs": {
+      "profit": "Profit & loss",
       "sales": "Sales & profit",
       "stock": "Stock value",
       "purchases": "Purchases",
@@ -1697,6 +1704,71 @@
     "repairIncome": "Repair income",
     "delivered": "Jobs delivered",
     "receivedJobs": "Jobs received",
-    "byTech": "By technician"
+    "byTech": "By technician",
+    "pl": {
+      "sales": "Sales",
+      "cogs": "Cost of laptops sold",
+      "repair": "Repair income",
+      "repairCost": "Repair parts from stock",
+      "gross": "Gross profit",
+      "expenses": "Total expenses",
+      "net": "Net profit"
+    }
+  },
+  "expensesPage": {
+    "title": "Expenses",
+    "add": "New expense",
+    "edit": "Edit expense",
+    "category": "Category",
+    "pick": "Pick a category…",
+    "paidTo": "Paid to",
+    "newCategory": "New category",
+    "void": "Void",
+    "voided": "Voided",
+    "voidMsg": "Void expense {{number}}? It will be left out of totals.",
+    "errors": {
+      "date": "Pick the date.",
+      "future": "Date cannot be in the future.",
+      "category": "Pick a category.",
+      "amount": "Enter the amount."
+    }
+  },
+  "cashbookPage": {
+    "title": "Cash book",
+    "in": "Money in",
+    "out": "Money out",
+    "time": "Time",
+    "types": {
+      "sale": "Sale",
+      "receipt": "Customer receipt",
+      "change": "Change given",
+      "refund": "Refund",
+      "repair": "Repair",
+      "supplier": "Supplier payment",
+      "expense": "Expense"
+    },
+    "note": "Shift opening cash (float) is not counted here; it stays in the POS shift."
+  },
+  "emailPage": {
+    "title": "Email",
+    "mailer": "Mail sender: {{mailer}} · from {{from}}.",
+    "notSetUp": "Mail is not set up on the server yet, so emails will not reach anyone.",
+    "subject": "Subject",
+    "body": "Message",
+    "vars": "You can use:",
+    "active": "Template is on",
+    "testTo": "Send a test to",
+    "sendTest": "Send test",
+    "saved": "Template saved.",
+    "testSent": "Test email sent to {{to}}. Save first if you changed the text.",
+    "log": "Sent emails",
+    "to": "To",
+    "st": {
+      "sent": "Sent",
+      "failed": "Failed"
+    },
+    "send": "Email",
+    "sendNow": "Send",
+    "sentTo": "Email sent {{to}}"
   }
 }

@@ -22,10 +22,15 @@ import { barHeights } from '../utils/report-utils';
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div [class]="ui.card"><p class="text-sm text-slate-600 dark:text-slate-400">{{ 'dashboardPage.today' | transloco }}</p>
             <p class="text-2xl font-semibold text-[#1E3A8A] dark:text-sky-300">Rs {{ fmt(d.todaySales) }}</p>
-            <p class="text-xs">{{ 'dashboardPage.bills' | transloco: { n: d.todayBills } }}</p></div>
+            <p class="text-xs">{{ 'dashboardPage.bills' | transloco: { n: d.todayBills } }}
+              @if (d.canSeeMoney) { · {{ 'dashboardPage.cash' | transloco }}: Rs {{ fmt(d.todayCash ?? 0) }} }</p></div>
           <div [class]="ui.card"><p class="text-sm text-slate-600 dark:text-slate-400">{{ 'dashboardPage.month' | transloco }}</p>
             <p class="text-2xl font-semibold">Rs {{ fmt(d.monthSales) }}</p>
-            @if (d.canSeeMoney) { <p class="text-xs text-green-700 dark:text-green-400">{{ 'dashboardPage.profit' | transloco }}: Rs {{ fmt(d.monthProfit ?? 0) }}</p> }</div>
+            @if (d.canSeeMoney) {
+              <p class="text-xs text-green-700 dark:text-green-400">{{ 'dashboardPage.profit' | transloco }}: Rs {{ fmt(d.monthProfit ?? 0) }}</p>
+              <p class="text-xs">{{ 'dashboardPage.expenses' | transloco }}: Rs {{ fmt(d.monthExpenses ?? 0) }} ·
+                <b [class.text-red-600]="(d.monthNet ?? 0) < 0">{{ 'dashboardPage.net' | transloco }}: Rs {{ fmt(d.monthNet ?? 0) }}</b></p>
+            }</div>
           @if (d.canSeeMoney) {
             <a routerLink="/customers/aging" [class]="ui.card + ' block'"><p class="text-sm text-slate-600 dark:text-slate-400">{{ 'dashboardPage.receivable' | transloco }}</p>
               <p class="text-2xl font-semibold">Rs {{ fmt(d.receivable ?? 0) }}</p>

@@ -50,8 +50,8 @@ class AccountsEmailTest extends TestCase
 
         $this->postJson("/api/v1/accounts/expenses/{$e['id']}/void", ['reason' => 'short'])->assertStatus(422);
         $this->postJson("/api/v1/accounts/expenses/{$e['id']}/void", ['reason' => 'Entered twice by mistake'])->assertOk()->assertJsonPath('voided', true);
-        $this->getJson('/api/v1/reports/profit')->assertOk()->assertJsonPath('salesRevenue', 10000)->assertJsonPath('expenses', 1000)
-            ->assertJsonPath('netProfit', 9000);
+        $this->getJson('/api/v1/reports/profit')->assertOk()->assertJsonPath('salesRevenue', 0)->assertJsonPath('expenses', 1000)
+            ->assertJsonPath('netProfit', -1000); // sale bina lines (revenue lines se aati hai)
         $this->getJson('/api/v1/dashboard')->assertJsonPath('monthExpenses', 1000)->assertJsonPath('todayCash', 10000);
     }
 

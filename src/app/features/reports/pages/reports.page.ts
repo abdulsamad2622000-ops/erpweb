@@ -6,9 +6,11 @@ import { money } from '../../pos/utils/pos-utils';
 import { UI, errorMessage } from '../../purchase/utils/ui';
 import { PurchaseReport, RepairReport, SalesGroup, SalesReport, StockReport } from '../models/report.models';
 import { ReportsService } from '../services/reports.service';
+import { ProfitReport } from '../../accounts/models/accounts.models';
+import { AccountsService } from '../../accounts/services/accounts.service';
 import { downloadCsv, monthRange, toCsv } from '../utils/report-utils';
 
-type Tab = 'sales' | 'stock' | 'purchases' | 'repairs';
+type Tab = 'profit' | 'sales' | 'stock' | 'purchases' | 'repairs';
 
 /** Step 15: reports — sales/munafa, stock value, purchases, repairs. CSV export. */
 @Component({
@@ -39,6 +41,22 @@ type Tab = 'sales' | 'stock' | 'purchases' | 'repairs';
         <button type="button" [class]="ui.btn" [disabled]="!hasData()" (click)="exportCsv()">{{ 'reportsPage.csv' | transloco }}</button>
       </div>
       @if (error(); as e) { <p role="alert" class="text-sm text-red-600">{{ e }}</p> }
+
+      @if (tab() === 'profit' && profit(); as r) {
+        <div [class]="ui.card + ' max-w-xl space-y-1 text-sm'">
+          <div class="flex justify-between"><span>{{ 'reportsPage.pl.sales' | transloco }}</span><span>{{ fmt(r.salesRevenue) }}</span></div>
+          <div class="flex justify-between"><span>− {{ 'reportsPage.pl.cogs' | transloco }}</span><span>{{ fmt(r.costOfGoods) }}</span></div>
+          <div class="flex justify-between"><span>+ {{ 'reportsPage.pl.repair' | transloco }}</span><span>{{ fmt(r.repairIncome) }}</span></div>
+          <div class="flex justify-between"><span>− {{ 'reportsPage.pl.repairCost' | transloco }}</span><span>{{ fmt(r.repairPartsCost) }}</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-1 font-semibold dark:border-slate-700"><span>{{ 'reportsPage.pl.gross' | transloco }}</span><span>{{ fmt(r.grossProfit) }}</span></div>
+          @for (e of r.expensesByCategory; track e.category) {
+            <div class="flex justify-between ps-3"><span>− {{ e.category }}</span><span>{{ fmt(e.amount) }}</span></div>
+          }
+          <div class="flex justify-between"><span>− {{ 'reportsPage.pl.expenses' | transloco }}</span><span>{{ fmt(r.expenses) }}</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-1 text-lg font-semibold dark:border-slate-700"
+            [class.text-red-600]="r.netProfit < 0" [class.text-green-700]="r.netProfit >= 0"><span>{{ 'reportsPage.pl.net' | transloco }}</span><span>Rs {{ fmt(r.netProfit) }}</span></div>
+        </div>
+      }
 
       @if (tab() === 'sales' && sales(); as r) {
         <div class="grid gap-3 sm:grid-cols-4">
@@ -141,11 +159,13 @@ type Tab = 'sales' | 'stock' | 'purchases' | 'repairs';
 })
 export class ReportsPage implements OnInit {
   private readonly api = inject(ReportsService);
+  private readonly accounts = inject(AccountsService);
   private readonly i18n = inject(TranslocoService);
   protected readonly ui = UI;
-  protected readonly tabs: Tab[] = ['sales', 'stock', 'purchases', 'repairs'];
+  protected readonly tabs: Tab[] = ['profit', 'sales', 'stock', 'purchases', 'repairs'];
   protected readonly groups: SalesGroup[] = ['day', 'product', 'staff', 'channel'];
-  protected readonly tab = signal<Tab>('sales');
+  protected readonly tab = signal<Tab>('profit');
+  protected readonly profit = signal<ProfitReport | null>(null);
   protected readonly sales = signal<SalesReport | null>(null);
   protected readonly stock = signal<StockReport | null>(null);
   protected readonly purchases = signal<PurchaseReport | null>(null);
@@ -179,6 +199,7 @@ export class ReportsPage implements OnInit {
 
   protected hasData(): boolean {
     const t = this.tab();
+    if (t === 'profit') return !!this.profit();
     return t === 'sales' ? !!this.sales()?.rows.length : t === 'stock' ? !!this.stock()?.rows.length
       : t === 'purchases' ? !!this.purchases()?.rows.length : !!this.repairs();
   }
@@ -187,7 +208,8 @@ export class ReportsPage implements OnInit {
     this.busy.set(true);
     try {
       const t = this.tab();
-      if (t === 'sales') this.sales.set(await firstValueFrom(this.api.sales(this.from, this.to, this.groupBy)));
+      if (t === 'profit') this.profit.set(await firstValueFrom(this.accounts.profit(this.from, this.to)));
+      else if (t === 'sales') this.sales.set(await firstValueFrom(this.api.sales(this.from, this.to, this.groupBy)));
       else if (t === 'stock') this.stock.set(await firstValueFrom(this.api.stock()));
       else if (t === 'purchases') this.purchases.set(await firstValueFrom(this.api.purchases(this.from, this.to)));
       else this.repairs.set(await firstValueFrom(this.api.repairs(this.from, this.to)));
@@ -203,7 +225,12 @@ export class ReportsPage implements OnInit {
     const t = (k: string): string => this.i18n.translate(k);
     const tab = this.tab();
     let csv = '';
-    if (tab === 'sales' && this.sales()) {
+    if (tab === 'profit' && this.profit()) {
+      const r = this.profit()!;
+      csv = toCsv(['', 'Rs'], [[t('reportsPage.pl.sales'), r.salesRevenue], [t('reportsPage.pl.cogs'), -r.costOfGoods], [t('reportsPage.pl.repair'), r.repairIncome],
+        [t('reportsPage.pl.repairCost'), -r.repairPartsCost], [t('reportsPage.pl.gross'), r.grossProfit],
+        ...r.expensesByCategory.map((e) => [e.category, -e.amount] as (string | number)[]), [t('reportsPage.pl.net'), r.netProfit]]);
+    } else if (tab === 'sales' && this.sales()) {
       const r = this.sales()!;
       csv = toCsv([t(`reportsPage.by.${r.groupBy}`), t('reportsPage.bills'), t('posPage.qty'), t('reportsPage.revenue'), t('reportsPage.cost'), t('reportsPage.profit'), '%'],
         r.rows.map((x) => [x.label, x.bills, x.qty, x.revenue, x.cost, x.profit, x.margin]));

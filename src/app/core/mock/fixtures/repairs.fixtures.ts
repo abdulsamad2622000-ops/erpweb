@@ -5,6 +5,7 @@ import { JOB_FLOW, isOpen, jobTotal, partsTotal } from '../../../features/repair
 import { FixtureHandler, FixtureResponse, fail, ok } from './fixture.types';
 import { customers, sales } from './pos.fixtures';
 import { products } from './products.fixtures';
+import { statusOverride } from './stock-location';
 import { allSerials } from './stock.fixtures';
 
 export const jobs: RepairJob[] = [];
@@ -99,6 +100,17 @@ export const REPAIR_FIXTURES: Record<string, FixtureHandler> = {
     if (!j) return fail(404, 'Job card not found.');
     if (!isOpen(j.status)) return fail(409, 'This job card is closed.');
     const b = req.body as JobUpdate;
+    if (b.parts) {
+      const old = j.parts.map((x) => x.serial).filter(Boolean) as string[];
+      const next = b.parts.map((x) => (x.serial ? normalizeSerial(x.serial) : null)).filter(Boolean) as string[];
+      for (const sn of next.filter((x) => !old.includes(x))) {
+        const st = allSerials().find((x) => x.serial === sn);
+        if (!st || st.status !== 'in_stock') return fail(422, `Part serial ${sn} is not in stock.`);
+      }
+      for (const sn of old.filter((x) => !next.includes(x))) statusOverride.set(sn, 'in_stock');
+      for (const sn of next) statusOverride.set(sn, 'consumed');
+      b.parts = b.parts.map((x) => ({ ...x, serial: x.serial ? normalizeSerial(x.serial) : null, qty: x.serial ? 1 : x.qty }));
+    }
     return ok(save({
       ...j,
       ...(b.diagnosis !== undefined ? { diagnosis: b.diagnosis } : {}),
