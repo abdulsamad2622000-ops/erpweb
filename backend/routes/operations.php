@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
+use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\StockControlController;
 use Illuminate\Support\Facades\Route;
@@ -88,4 +89,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('labels/grns', [LabelsController::class, 'grns'])->middleware($p('barcode.label.view'));
     Route::get('labels/print-log', [LabelsController::class, 'log'])->middleware($p('barcode.label.view'));
     Route::post('labels/print-log', [LabelsController::class, 'record'])->middleware($p('barcode.label.print'));
+
+    // Retail POS (Step 12)
+    $sale = $p('pos.sale.create');
+    Route::get('pos/shift', [PosController::class, 'shift'])->middleware($sale);
+    Route::post('pos/shift/open', [PosController::class, 'openShiftAction'])->middleware($sale);
+    Route::post('pos/shift/close', [PosController::class, 'closeShift'])->middleware($sale);
+    Route::get('pos/scan/{code}', [PosController::class, 'scan'])->middleware($sale);
+    Route::get('pos/search', [PosController::class, 'search'])->middleware($sale);
+    Route::post('pos/sales', [PosController::class, 'storeSale'])->middleware($sale);
+    Route::get('pos/sales', [PosController::class, 'recentSales'])->middleware($sale);
+    Route::get('pos/sales/{id}', [PosController::class, 'sale'])->whereNumber('id')->middleware($p('sales.invoice.view'));
+    Route::get('pos/sales/find/{code}', [PosController::class, 'findSale'])->middleware($p('sales.return.view'));
+    Route::get('pos/holds', [PosController::class, 'holds'])->middleware($sale);
+    Route::post('pos/holds', [PosController::class, 'storeHold'])->middleware($sale);
+    Route::delete('pos/holds/{id}', [PosController::class, 'deleteHold'])->whereNumber('id')->middleware($sale);
+    Route::post('pos/returns', [PosController::class, 'storeReturn'])->middleware($p('sales.return.create'));
+    Route::get('customers', [PosController::class, 'customers'])->middleware($p('customers.customer.view'));
+    Route::post('customers', [PosController::class, 'storeCustomer'])->middleware($p('customers.customer.create'));
 });
