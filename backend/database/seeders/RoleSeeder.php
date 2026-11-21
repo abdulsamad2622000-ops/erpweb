@@ -46,7 +46,8 @@ class RoleSeeder extends Seeder
         foreach ($presets as $key => [$name, $keys]) {
             $role = Role::updateOrCreate(['key' => $key], ['name' => $name, 'is_system' => true]);
             $role->permissions()->delete();
-            foreach (array_values(array_unique($keys)) as $permissionKey) {
+            // Sirf wohi keys jo registry mein hain (config badalne par bhi seeder na toote)
+            foreach (array_values(array_unique(array_intersect($keys, $all))) as $permissionKey) {
                 $role->permissions()->create(['permission_key' => $permissionKey]);
             }
         }

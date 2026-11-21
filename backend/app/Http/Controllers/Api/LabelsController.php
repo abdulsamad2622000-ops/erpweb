@@ -165,8 +165,8 @@ class LabelsController extends Controller
 
     private function item(string $kind, string $code, array $o): array
     {
-        return ['kind' => $kind, 'code' => $code, 'name' => '', 'sku' => null, 'serial' => null, 'specs' => null, 'price' => null, 'bin' => null,
-            'grn' => null, 'printCount' => 0] + $o;
+        return $o + ['kind' => $kind, 'code' => $code, 'name' => '', 'sku' => null, 'serial' => null, 'specs' => null, 'price' => null, 'bin' => null,
+            'grn' => null, 'printCount' => 0];
     }
 
     private function serialItems(string $q, string $grn, ?string $exact = null): Collection
@@ -231,6 +231,6 @@ class LabelsController extends Controller
     {
         $counts = DB::table('label_print_counts')->whereIn('code', $items->pluck('code'))->pluck('count', 'code');
 
-        return $items->map(fn ($i) => ['printCount' => (int) ($counts[$i['code']] ?? 0)] + $i);
+        return $items->map(fn ($i) => array_merge($i, ['printCount' => (int) ($counts[$i['code']] ?? 0)]));
     }
 }
