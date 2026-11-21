@@ -7,6 +7,7 @@ import { outstanding, paymentAmountError, round2 } from '../../../features/purch
 import { normalizeSerial } from '../../../features/purchase/utils/purchase-utils';
 import { FixtureHandler, fail, ok } from './fixture.types';
 import { grns, orders } from './purchase.fixtures';
+import { reservedRef } from './stock-location';
 
 const METHODS: PaymentMethod[] = ['cash', 'bank_transfer', 'cheque'];
 const MIN_REASON = 10;
@@ -180,6 +181,8 @@ export const PAYABLES_FIXTURES: Record<string, FixtureHandler> = {
       if (!r) return fail(422, `Serial ${serial} was not received through a posted GRN.`);
       if (r.po.supplierId !== b.supplierId) return fail(422, `Serial ${serial} belongs to ${r.po.supplierName}.`);
       if (isReturned(serial) || lines.some((l) => l.serial === serial)) return fail(422, `Serial ${serial} is already returned.`);
+      const held = reservedRef(serial);
+      if (held) return fail(422, `Serial ${serial} is reserved (${held}). Release the reservation first.`);
       lines.push({ serial, name: r.name, unitCost: r.unitCost });
     }
     const first = findReceived(lines[0].serial)!;

@@ -14,6 +14,7 @@ export const MENU: MenuItem[] = [
     key: 'inventory', path: 'inventory', icon: 'pi pi-box', permission: 'inventory.stock.view',
     children: [
       { key: 'stock', path: 'inventory/stock', icon: 'pi pi-list', permission: 'inventory.stock.view' },
+      { key: 'alerts', path: 'inventory/alerts', icon: 'pi pi-bell', permission: 'inventory.stock.view' },
       { key: 'serials', path: 'inventory/serials', icon: 'pi pi-hashtag', permission: 'inventory.serial.view' },
       { key: 'locations', path: 'inventory/locations', icon: 'pi pi-map-marker', permission: 'inventory.location.view' },
       { key: 'ledger', path: 'inventory/ledger', icon: 'pi pi-book', permission: 'inventory.ledger.view' },

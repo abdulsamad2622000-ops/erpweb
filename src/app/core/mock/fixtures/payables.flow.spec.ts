@@ -3,7 +3,7 @@ import { Grn } from '../../../features/purchase/models/purchase.models';
 import {
   LandedCost, LedgerEntry, PoMatching, PurchaseReturn, ReturnableSerial,
 } from '../../../features/purchase/models/payables.models';
-import { matchStatus, outstanding } from '../../../features/purchase/utils/payables-utils';
+import { matchStatus, outstanding, receivedValue } from '../../../features/purchase/utils/payables-utils';
 import { PAYABLES_FIXTURES as P } from './payables.fixtures';
 import { PURCHASE_FIXTURES as F } from './purchase.fixtures';
 
@@ -30,7 +30,7 @@ describe('receive, return, landed cost and matching flow', () => {
 
     const m = P['GET /purchase/orders/:id/matching'](req('GET', '/api/v1/purchase/orders/1/matching')).body as PoMatching;
     expect(matchStatus(m)).toBe('no_bill');
-    P['POST /purchase/orders/:id/bill'](req('POST', '/api/v1/purchase/orders/1/bill', { number: 'B-1', billDate: '2026-11-20', amount: 142000 }));
+    P['POST /purchase/orders/:id/bill'](req('POST', '/api/v1/purchase/orders/1/bill', { number: 'B-1', billDate: '2026-11-20', amount: receivedValue(m) }));
     const m2 = P['GET /purchase/orders/:id/matching'](req('GET', '/api/v1/purchase/orders/1/matching')).body as PoMatching;
     expect(matchStatus(m2)).toBe('matched');
   });

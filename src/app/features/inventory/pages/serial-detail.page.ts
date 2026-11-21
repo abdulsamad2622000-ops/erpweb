@@ -31,6 +31,7 @@ import { STOCK_TONE } from '../utils/inventory-ui';
           <div class="flex flex-wrap items-center gap-3">
             <span class="font-medium">{{ d.name }}</span>
             <app-status-badge [label]="'inventory.status.' + d.status | transloco" [tone]="tone[d.status]" />
+            @if (d.reservedRef) { <app-status-badge [label]="('inventory.stock.reserved' | transloco) + ' - ' + d.reservedRef" tone="info" /> }
           </div>
           <dl class="grid gap-2 text-sm sm:grid-cols-3">
             <div><dt class="text-slate-600 dark:text-slate-400">SKU</dt><dd>{{ d.sku }}</dd></div>

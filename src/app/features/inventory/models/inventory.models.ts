@@ -1,4 +1,4 @@
-export type StockStatus = 'in_stock' | 'quarantine' | 'rejected' | 'returned';
+export type StockStatus = 'in_stock' | 'quarantine' | 'rejected' | 'returned' | 'damaged';
 
 export interface StockSerial {
   serial: string;
@@ -10,9 +10,11 @@ export interface StockSerial {
   grnNumber: string;
   supplierName: string;
   receivedAt: string;
+  /** Kis reservation mein roka hua hai (nahi to null). */
+  reservedRef?: string | null;
 }
 
-export type TimelineType = 'received' | 'returned' | 'transferred_out' | 'transferred_in';
+export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released' | 'transferred_out' | 'transferred_in';
 
 export interface TimelineEvent {
   at: string;
@@ -31,9 +33,12 @@ export interface StockSummaryRow {
   sku: string;
   warehouseId: number;
   inStock: number;
+  /** In-stock mein se kitne reserved hain. Available = inStock - reserved. */
+  reserved?: number;
   quarantine: number;
   rejected: number;
   returned: number;
+  damaged: number;
 }
 
 export interface StockLedgerRow {
