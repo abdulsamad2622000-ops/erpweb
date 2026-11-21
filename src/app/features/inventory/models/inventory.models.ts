@@ -17,7 +17,15 @@ export interface StockSerial {
   binCode?: string | null;
 }
 
-export type TimelineType = 'received' | 'returned' | 'adjusted' | 'reserved' | 'released' | 'putaway';
+export type TimelineType =
+  | 'received'
+  | 'returned'
+  | 'adjusted'
+  | 'reserved'
+  | 'released'
+  | 'putaway'
+  | 'transferred_out'
+  | 'transferred_in';
 
 export interface TimelineEvent {
   at: string;

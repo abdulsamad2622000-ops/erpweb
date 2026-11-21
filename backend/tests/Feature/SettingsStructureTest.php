@@ -120,7 +120,7 @@ class SettingsStructureTest extends TestCase
         $this->putJson('/api/v1/number-series/grn', ['prefix' => 'GR/', 'include_year' => true])->assertOk();
         $this->assertSame('GR/'.now()->format('Y').'-00001', $svc->next('grn'));
 
-        $this->getJson('/api/v1/number-series')->assertOk()->assertJsonCount(6, 'data');
+        $this->getJson('/api/v1/number-series')->assertOk()->assertJsonCount(8, 'data'); // + transfer, purchase_return
         $this->putJson('/api/v1/number-series/nope', ['prefix' => 'X'])->assertStatus(404);
     }
 
