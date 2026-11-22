@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -56,7 +57,7 @@ class PosController extends Controller
 
         return [
             'id' => $s->id, 'warehouseId' => (int) $s->warehouse_id,
-            'warehouseName' => (string) DB::table('warehouses')->where('id', $s->warehouse_id)->value('name'),
+            'warehouseName' => Memo::warehouseName($s->warehouse_id),
             'openingCash' => (float) $s->opening_cash, 'openedAt' => \Illuminate\Support\Carbon::parse($s->opened_at)->toIso8601String(),
             'closedAt' => $s->closed_at ? \Illuminate\Support\Carbon::parse($s->closed_at)->toIso8601String() : null,
             'salesCount' => (clone $sales)->count(), 'salesTotal' => (float) (clone $sales)->sum('total'),
@@ -302,8 +303,8 @@ class PosController extends Controller
         return [
             'id' => $s->id, 'number' => $s->number, 'channel' => $s->channel,
             'createdAt' => \Illuminate\Support\Carbon::parse($s->created_at)->toIso8601String(),
-            'cashier' => (string) DB::table('users')->where('id', $s->created_by)->value('name'),
-            'warehouseName' => (string) DB::table('warehouses')->where('id', $s->warehouse_id)->value('name'),
+            'cashier' => Memo::userName($s->created_by),
+            'warehouseName' => Memo::warehouseName($s->warehouse_id),
             'customer' => $cust ? ['id' => $cust->id, 'name' => $cust->name, 'phone' => $cust->phone] : null,
             'subtotal' => (float) $s->subtotal, 'discount' => (float) $s->discount, 'total' => (float) $s->total,
             'paid' => (float) $s->paid, 'change' => (float) $s->change_due, 'note' => $s->note,
@@ -445,12 +446,30 @@ class PosController extends Controller
 
     // ---------- Customers (quick) ----------
 
-    private function customerOut(object $c): array
+    /** Sab customers ka udhaar do queries mein (list ke liye). */
+    private static function balances(array $ids): array
+    {
+        if (! $ids) {
+            return [];
+        }
+        $bills = DB::table('sales')->whereIn('customer_id', $ids)->groupBy('customer_id')
+            ->selectRaw('customer_id, SUM(total - paid + change_due) as b')->pluck('b', 'customer_id');
+        $credit = DB::table('sales_returns')->join('sales', 'sales.id', '=', 'sales_returns.sale_id')->whereIn('sales.customer_id', $ids)
+            ->where('refund_method', 'credit')->groupBy('sales.customer_id')->selectRaw('sales.customer_id as c, SUM(sales_returns.amount) as a')->pluck('a', 'c');
+        $out = [];
+        foreach ($ids as $id) {
+            $out[$id] = round((float) ($bills[$id] ?? 0) - (float) ($credit[$id] ?? 0), 2);
+        }
+
+        return $out;
+    }
+
+    private function customerOut(object $c, ?float $balance = null): array
     {
         return ['id' => $c->id, 'name' => $c->name, 'phone' => $c->phone, 'email' => $c->email, 'type' => $c->type,
             'priceTier' => $c->price_tier, 'creditLimit' => (float) $c->credit_limit, 'isActive' => (bool) $c->is_active,
             'paymentTermsDays' => (int) ($c->payment_terms_days ?? 0), 'address' => (string) ($c->address ?? ''), 'city' => (string) ($c->city ?? ''),
-            'balance' => WholesaleController::outstanding((int) $c->id)];
+            'balance' => $balance ?? WholesaleController::outstanding((int) $c->id)];
     }
 
     public function customers(Request $request): JsonResponse
@@ -461,8 +480,9 @@ class PosController extends Controller
             ->when($request->query('type'), fn ($w, $t) => $w->where('type', $t))
             ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('name', 'like', "%{$q}%")->orWhere('phone', 'like', "%{$q}%")))
             ->orderBy('name')->limit($all ? 500 : 50)->get();
+        $bal = self::balances($rows->pluck('id')->all());
 
-        return response()->json($rows->map(fn ($c) => $this->customerOut($c)));
+        return response()->json($rows->map(fn ($c) => $this->customerOut($c, $bal[$c->id] ?? 0.0)));
     }
 
     public function customer(int $id): JsonResponse

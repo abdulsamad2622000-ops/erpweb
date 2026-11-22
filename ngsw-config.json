@@ -3,7 +3,7 @@
   "index": "/index.html",
   "appData": {
     "name": "erp-web",
-    "note": "Scan PWA: app shell, all lazy chunks, translations and icon fonts are cached. API calls are NOT cached here (IndexedDB handles scan data)."
+    "note": "App shell prefetched (index, css, translations). JS chunks are cached the first time they load (lazy), so phones do not download barcode/Excel libraries until used. API calls are NOT cached (IndexedDB handles scan data)."
   },
   "assetGroups": [
     {
@@ -17,8 +17,17 @@
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
-          "/*.js",
           "/i18n/*.json"
+        ]
+      }
+    },
+    {
+      "name": "app-code",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/*.js"
         ]
       }
     },
@@ -28,9 +37,19 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
+          "/**/*.woff2"
+        ]
+      }
+    },
+    {
+      "name": "old-font-formats",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
           "/media/**",
           "/icons/**",
-          "/**/*.(woff|woff2|ttf|otf|eot)"
+          "/**/*.(woff|ttf|otf|eot)"
         ]
       }
     },

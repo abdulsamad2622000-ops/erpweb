@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Models\StockMovement;
 use App\Models\StockSerial;
@@ -37,7 +38,7 @@ class WholesaleController extends Controller
 
     private static function userName($id): string
     {
-        return (string) DB::table('users')->where('id', $id)->value('name');
+        return Memo::userName($id);
     }
 
     private static function customerBrief(int $id): array
@@ -332,7 +333,7 @@ class WholesaleController extends Controller
 
         return ['id' => $c->id, 'number' => $c->number, 'orderId' => (int) $o->id, 'orderNumber' => $o->number,
             'customer' => self::customerBrief((int) $o->customer_id), 'warehouseId' => (int) $c->warehouse_id,
-            'warehouseName' => (string) DB::table('warehouses')->where('id', $c->warehouse_id)->value('name'),
+            'warehouseName' => Memo::warehouseName($c->warehouse_id),
             'invoiceId' => $c->sale_id ? (int) $c->sale_id : null,
             'invoiceNumber' => $c->sale_id ? DB::table('sales')->where('id', $c->sale_id)->value('number') : null,
             'note' => $c->note, 'createdBy' => self::userName($c->created_by), 'createdAt' => self::iso($c->created_at), 'lines' => $lines];

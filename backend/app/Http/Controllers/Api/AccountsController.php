@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Services\NumberSeriesService;
 use App\Support\ApiQuery;
@@ -49,7 +50,7 @@ class AccountsController extends Controller
             'branchId' => $e->branch_id ? (int) $e->branch_id : null, 'amount' => (float) $e->amount, 'method' => $e->method,
             'paidTo' => $e->paid_to, 'reference' => $e->reference, 'note' => $e->note,
             'voided' => (bool) $e->voided_at, 'voidReason' => $e->void_reason,
-            'createdBy' => (string) DB::table('users')->where('id', $e->created_by)->value('name'),
+            'createdBy' => Memo::userName($e->created_by),
             'createdAt' => Carbon::parse($e->created_at)->toIso8601String()];
     }
 

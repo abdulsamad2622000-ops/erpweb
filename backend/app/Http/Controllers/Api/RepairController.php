@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Services\NumberSeriesService;
 use App\Models\StockMovement;
@@ -91,10 +92,10 @@ class RepairController extends Controller
                 'serial' => $p->serial])->all(),
             'partsTotal' => $partsTotal, 'total' => $total, 'paid' => (float) $j->paid, 'paidMethod' => $j->paid_method,
             'promisedOn' => $j->promised_on, 'deliveredAt' => self::iso($j->delivered_at),
-            'assignedTo' => $j->assigned_to ? ['id' => (int) $j->assigned_to, 'name' => (string) DB::table('users')->where('id', $j->assigned_to)->value('name')] : null,
-            'createdBy' => (string) DB::table('users')->where('id', $j->created_by)->value('name'), 'createdAt' => self::iso($j->created_at),
+            'assignedTo' => $j->assigned_to ? ['id' => (int) $j->assigned_to, 'name' => Memo::userName($j->assigned_to)] : null,
+            'createdBy' => Memo::userName($j->created_by), 'createdAt' => self::iso($j->created_at),
             'events' => DB::table('repair_events')->where('repair_job_id', $id)->orderBy('id')->get()->map(fn ($e) => ['status' => $e->status,
-                'note' => $e->note, 'at' => self::iso($e->at), 'by' => (string) DB::table('users')->where('id', $e->user_id)->value('name')])->all()];
+                'note' => $e->note, 'at' => self::iso($e->at), 'by' => Memo::userName($e->user_id)])->all()];
     }
 
     public function index(Request $request): JsonResponse
