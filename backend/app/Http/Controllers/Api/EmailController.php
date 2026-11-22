@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Services\EmailService;
 use App\Support\ApiQuery;
@@ -80,7 +81,7 @@ class EmailController extends Controller
 
         return response()->json(ApiQuery::page($q->paginate(ApiQuery::perPage($request, 20)), fn ($l) => ['id' => $l->id, 'templateKey' => $l->template_key,
             'to' => $l->to, 'subject' => $l->subject, 'status' => $l->status, 'error' => $l->error, 'ref' => $l->ref,
-            'by' => (string) DB::table('users')->where('id', $l->user_id)->value('name'), 'at' => Carbon::parse($l->at)->toIso8601String()]));
+            'by' => Memo::userName($l->user_id), 'at' => Carbon::parse($l->at)->toIso8601String()]));
     }
 
     private function toFor(Request $request, ?int $customerId): string

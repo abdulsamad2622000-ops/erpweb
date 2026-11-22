@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\Memo;
 use App\Models\AuditLog;
 use App\Services\NumberSeriesService;
 use Illuminate\Http\JsonResponse;
@@ -169,7 +170,7 @@ class CustomerLedgerController extends Controller
 
         return ['id' => $r->id, 'number' => $r->number, 'customerId' => (int) $r->customer_id, 'method' => $r->method, 'amount' => (float) $r->amount,
             'reference' => $r->reference, 'note' => $r->note, 'createdAt' => Carbon::parse($r->created_at)->toIso8601String(),
-            'createdBy' => (string) DB::table('users')->where('id', $r->created_by)->value('name'),
+            'createdBy' => Memo::userName($r->created_by),
             'allocations' => DB::table('sale_payments')->join('sales', 'sales.id', '=', 'sale_payments.sale_id')->where('customer_receipt_id', $id)
                 ->get(['sales.id', 'sales.number', 'sale_payments.amount'])->map(fn ($a) => ['invoiceId' => $a->id, 'number' => $a->number, 'amount' => (float) $a->amount])->all()];
     }
