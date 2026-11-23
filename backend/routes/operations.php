@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
+use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\PurchaseController;
+use App\Http\Controllers\Api\StockControlController;
 use Illuminate\Support\Facades\Route;
 
 // Purchase (Step 8), inventory (Step 9), labels (Step 7). api.php ke v1 group mein require hota hai.
@@ -58,6 +60,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware($p($perm));
     }
 
+    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware($p('inventory.putaway.create'));
+
+    // Counts, adjustments, reservations (Step 9b)
+    Route::get('inventory/counts', [StockControlController::class, 'counts'])->middleware($p('inventory.count.view'));
+    Route::get('inventory/counts/{id}', [StockControlController::class, 'count'])->whereNumber('id')->middleware($p('inventory.count.view'));
+    Route::post('inventory/counts', [StockControlController::class, 'storeCount'])->middleware($p('inventory.count.create'));
+    foreach (['submit' => 'inventory.count.create', 'approve' => 'inventory.count.approve', 'reject' => 'inventory.count.approve'] as $a => $perm) {
+        Route::post("inventory/counts/{id}/{$a}", [StockControlController::class, 'countAction'])->whereNumber('id')->defaults('action', $a)->middleware($p($perm));
+    }
+    Route::get('inventory/adjustments', [StockControlController::class, 'adjustments'])->middleware($p('inventory.adjustment.view'));
+    Route::get('inventory/adjustments/{id}', [StockControlController::class, 'adjustment'])->whereNumber('id')->middleware($p('inventory.adjustment.view'));
+    Route::post('inventory/adjustments', [StockControlController::class, 'storeAdjustment'])->middleware($p('inventory.adjustment.create'));
+    foreach (['approve', 'reject'] as $a) {
+        Route::post("inventory/adjustments/{id}/{$a}", [StockControlController::class, 'adjustmentAction'])->whereNumber('id')->defaults('action', $a)->middleware($p('inventory.adjustment.approve'));
+    }
+    Route::get('inventory/reservations', [StockControlController::class, 'reservations'])->middleware($p('inventory.reservation.view'));
+    Route::get('inventory/reservations/{id}', [StockControlController::class, 'reservation'])->whereNumber('id')->middleware($p('inventory.reservation.view'));
+    Route::post('inventory/reservations', [StockControlController::class, 'storeReservation'])->middleware($p('inventory.reservation.create'));
+    Route::post('inventory/reservations/{id}/release', [StockControlController::class, 'releaseReservation'])->whereNumber('id')->middleware($p('inventory.reservation.create'));
+
     // Labels
     Route::get('labels/templates', [LabelsController::class, 'templates'])->middleware($p('barcode.label.view'));
     Route::post('labels/templates', [LabelsController::class, 'storeTemplate'])->middleware($p('barcode.label.create'));
@@ -67,4 +89,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('labels/grns', [LabelsController::class, 'grns'])->middleware($p('barcode.label.view'));
     Route::get('labels/print-log', [LabelsController::class, 'log'])->middleware($p('barcode.label.view'));
     Route::post('labels/print-log', [LabelsController::class, 'record'])->middleware($p('barcode.label.print'));
+
+    // Retail POS (Step 12)
+    $sale = $p('pos.sale.create');
+    Route::get('pos/shift', [PosController::class, 'shift'])->middleware($sale);
+    Route::post('pos/shift/open', [PosController::class, 'openShiftAction'])->middleware($sale);
+    Route::post('pos/shift/close', [PosController::class, 'closeShift'])->middleware($sale);
+    Route::get('pos/scan/{code}', [PosController::class, 'scan'])->middleware($sale);
+    Route::get('pos/search', [PosController::class, 'search'])->middleware($sale);
+    Route::post('pos/sales', [PosController::class, 'storeSale'])->middleware($sale);
+    Route::get('pos/sales', [PosController::class, 'recentSales'])->middleware($sale);
+    Route::get('pos/sales/{id}', [PosController::class, 'sale'])->whereNumber('id')->middleware($p('sales.invoice.view'));
+    Route::get('pos/sales/find/{code}', [PosController::class, 'findSale'])->middleware($p('sales.return.view'));
+    Route::get('pos/holds', [PosController::class, 'holds'])->middleware($sale);
+    Route::post('pos/holds', [PosController::class, 'storeHold'])->middleware($sale);
+    Route::delete('pos/holds/{id}', [PosController::class, 'deleteHold'])->whereNumber('id')->middleware($sale);
+    Route::post('pos/returns', [PosController::class, 'storeReturn'])->middleware($p('sales.return.create'));
+    Route::get('customers', [PosController::class, 'customers'])->middleware($p('customers.customer.view'));
+    Route::post('customers', [PosController::class, 'storeCustomer'])->middleware($p('customers.customer.create'));
 });

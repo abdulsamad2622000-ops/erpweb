@@ -14,7 +14,7 @@ const branches: Branch[] = [
   { id: 3, code: 'ISB', name: 'Islamabad Branch', city: 'Islamabad', address: 'F-7 Markaz', phone: '+92 51 111 000 333', isActive: true },
 ];
 
-const warehouses: Warehouse[] = [
+export const warehouses: Warehouse[] = [
   { id: 1, branchId: 1, code: 'LHR-SELL', name: 'Lahore Main Store', type: 'sellable', isActive: true },
   { id: 2, branchId: 1, code: 'LHR-SHOW', name: 'Lahore Showroom', type: 'showroom', isActive: true },
   { id: 3, branchId: 1, code: 'LHR-DMG', name: 'Lahore Damaged', type: 'damaged', isActive: true },

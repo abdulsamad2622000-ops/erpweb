@@ -5,7 +5,9 @@ import { InspectionStatus } from '../../../features/purchase/models/purchase.mod
 import { FixtureHandler, fail, ok } from './fixture.types';
 import { returns } from './payables.fixtures';
 import { grns } from './purchase.fixtures';
-import { adjustmentEvents, reservationEvents, reservedRef, serialBin, serialWarehouse, statusOverride } from './stock-location';
+import {
+  adjustmentEvents, putawayEvents, reservationEvents, reservedRef, serialBin, serialWarehouse, statusOverride,
+} from './stock-location';
 
 const FROM_INSPECTION: Record<InspectionStatus, StockStatus> = {
   accepted: 'in_stock',
@@ -18,6 +20,12 @@ const lastSegment = (url: string): string => decodeURIComponent(url.split('?')[0
 
 function returnOf(serial: string) {
   return returns.find((r) => r.lines.some((l) => l.serial === serial));
+}
+
+/** Serial ka bin. Sirf tab jab serial abhi usi warehouse mein ho jahan bin hai (transfer ke baad bin khali). */
+function binOf(serial: string, warehouseId: number): { binId: number | null; binCode: string | null } {
+  const b = serialBin.get(serial);
+  return b && b.warehouseId === warehouseId ? { binId: b.binId, binCode: b.code } : { binId: null, binCode: null };
 }
 
 /** Stock posted GRNs aur returns se banta hai, alag store nahi. */
@@ -38,7 +46,7 @@ export function allSerials(): StockSerial[] {
           supplierName: g.supplierName,
           receivedAt: g.postedAt ?? g.createdAt,
           reservedRef: reservedRef(s.serial),
-          ...(serialBin.has(s.serial) ? { binCode: serialBin.get(s.serial) ?? null } : {}),
+          ...binOf(s.serial, serialWarehouse.get(s.serial) ?? g.warehouseId),
         });
       }
     }
@@ -52,6 +60,7 @@ function timelineOf(s: StockSerial): TimelineEvent[] {
   if (r) events.push({ at: `${r.date}T00:00:00.000Z`, type: 'returned', ref: r.number, note: r.reason });
   events.push(...(adjustmentEvents.get(s.serial) ?? []));
   events.push(...(reservationEvents.get(s.serial) ?? []));
+  events.push(...(putawayEvents.get(s.serial) ?? []));
   return events;
 }
 

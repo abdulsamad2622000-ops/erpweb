@@ -19,6 +19,7 @@ use App\Models\SupplierPayment;
 use App\Models\User;
 use App\Services\NumberSeriesService;
 use App\Services\ProductInfo;
+use App\Services\StockHolds;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -236,6 +237,9 @@ class PayablesController extends Controller
                 if ($r['stock']->status === 'returned' || isset($lines[$serial])) {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is already returned."]);
                 }
+                if ($held = StockHolds::reservedRef($serial)) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is reserved ({$held}). Release the reservation first."]);
+                }
                 if ($r['stock']->warehouse_id === null) {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is in transit between warehouses."]);
                 }
@@ -250,7 +254,7 @@ class PayablesController extends Controller
                 PurchaseReturnLine::create(['purchase_return_id' => $ret->id, 'serial' => $serial, 'product_id' => $r['stock']->product_id, 'unit_cost' => $r['stock']->unit_cost]);
                 StockMovement::create(['at' => now(), 'direction' => 'out', 'type' => 'return', 'serial' => $serial, 'product_id' => $r['stock']->product_id,
                     'warehouse_id' => $r['stock']->warehouse_id, 'ref' => $ret->number, 'note' => $ret->reason, 'user_id' => $actor->id]);
-                $r['stock']->update(['status' => 'returned']);
+                $r['stock']->update(['status' => 'returned', 'bin_id' => null]);
             }
             AuditLog::record($actor, 'purchase_return.created', null, ['number' => $ret->number, 'serials' => count($lines)]);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\Location;
 use App\Models\StockMovement;
 use App\Models\StockSerial;
 use App\Models\StockTransfer;
@@ -11,6 +12,7 @@ use App\Models\StockTransferLine;
 use App\Models\User;
 use App\Services\NumberSeriesService;
 use App\Services\ProductInfo;
+use App\Services\StockHolds;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,11 +45,19 @@ class InventoryController extends Controller
             if (! isset($rows[$key])) {
                 $p = ProductInfo::get($r->product_id);
                 $rows[$key] = ['productId' => $r->product_id, 'name' => $p['name'], 'sku' => $p['sku'], 'warehouseId' => $r->warehouse_id,
-                    'inStock' => 0, 'quarantine' => 0, 'rejected' => 0, 'returned' => 0];
+                    'inStock' => 0, 'reserved' => 0, 'quarantine' => 0, 'rejected' => 0, 'returned' => 0, 'damaged' => 0];
             }
-            $field = ['in_stock' => 'inStock', 'quarantine' => 'quarantine', 'rejected' => 'rejected', 'returned' => 'returned'][$r->status] ?? null;
+            $field = ['in_stock' => 'inStock', 'quarantine' => 'quarantine', 'rejected' => 'rejected', 'returned' => 'returned', 'damaged' => 'damaged'][$r->status] ?? null;
             if ($field) {
                 $rows[$key][$field] += (int) $r->c;
+            }
+        }
+        // In-stock mein se kitne reserved hain
+        $inStock = StockSerial::whereNotNull('warehouse_id')->where('status', 'in_stock')->when($wh = (int) $request->query('warehouseId'), fn ($q) => $q->where('warehouse_id', $wh))->get(['serial', 'product_id', 'warehouse_id']);
+        $held = StockHolds::reservedRefs($inStock->pluck('serial')->all());
+        foreach ($inStock as $x) {
+            if (isset($held[$x->serial], $rows["{$x->product_id}-{$x->warehouse_id}"])) {
+                $rows["{$x->product_id}-{$x->warehouse_id}"]['reserved']++;
             }
         }
         $rows = array_values($rows);
@@ -58,7 +68,7 @@ class InventoryController extends Controller
 
     public function serials(Request $request): JsonResponse
     {
-        $q = StockSerial::query()->with(['grn', 'supplier'])->orderByDesc('received_at');
+        $q = StockSerial::query()->with(['grn', 'supplier', 'bin'])->orderByDesc('received_at');
         if ($s = $request->query('status')) {
             $q->where('status', $s);
         }
@@ -69,24 +79,27 @@ class InventoryController extends Controller
                     ->orWhereHas('variants', fn ($v) => $v->where('sku', 'like', "%{$term}%"))));
         }
 
-        return response()->json($q->limit(1000)->get()->map(fn ($s) => $this->serialOut($s)));
+        $list = $q->limit(1000)->get();
+        $held = StockHolds::reservedRefs($list->pluck('serial')->all());
+
+        return response()->json($list->map(fn ($s) => $this->serialOut($s, $held[$s->serial] ?? null)));
     }
 
     public function serial(string $serial): JsonResponse
     {
-        $s = StockSerial::with(['grn', 'supplier'])->where('serial', PurchaseController::normalizeSerial(urldecode($serial)))->first();
+        $s = StockSerial::with(['grn', 'supplier', 'bin'])->where('serial', PurchaseController::normalizeSerial(urldecode($serial)))->first();
         abort_unless($s, 404, 'Serial not found.');
 
         $timeline = StockMovement::where('serial', $s->serial)->orderBy('at')->orderBy('id')->get()->map(fn ($m) => [
             'at' => $m->at->toIso8601String(),
-            'type' => ['grn' => 'received', 'return' => 'returned', 'transfer_out' => 'transferred_out', 'transfer_in' => 'transferred_in'][$m->type] ?? $m->type,
+            'type' => ['grn' => 'received', 'return' => 'returned', 'transfer_out' => 'transferred_out', 'transfer_in' => 'transferred_in'][$m->type] ?? $m->type, // adjusted | reserved | released | putaway
             'ref' => $m->ref, 'note' => $m->note,
         ])->values();
 
-        return response()->json($this->serialOut($s) + ['timeline' => $timeline]);
+        return response()->json($this->serialOut($s, StockHolds::reservedRef($s->serial)) + ['timeline' => $timeline]);
     }
 
-    private function serialOut(StockSerial $s): array
+    private function serialOut(StockSerial $s, ?string $reservedRef = null): array
     {
         $p = ProductInfo::get($s->product_id);
 
@@ -94,12 +107,16 @@ class InventoryController extends Controller
             'serial' => $s->serial, 'productId' => $s->product_id, 'name' => $p['name'], 'sku' => $p['sku'],
             'warehouseId' => (int) ($s->warehouse_id ?? 0), 'status' => $s->status, 'grnNumber' => (string) $s->grn?->number,
             'supplierName' => (string) $s->supplier?->name, 'receivedAt' => $s->received_at?->toIso8601String(),
+            'reservedRef' => $reservedRef,
+            'binId' => $s->bin_id,
+            'binCode' => $s->bin ? ($s->bin->barcode ?: $s->bin->code) : null,
         ];
     }
 
     public function ledger(Request $request): JsonResponse
     {
-        $q = StockMovement::query()->orderByDesc('at')->orderByDesc('id');
+        // Sirf asli aana-jaana (reserve/adjust timeline ke liye hain, ledger ke nahi)
+        $q = StockMovement::query()->whereIn('direction', ['in', 'out'])->orderByDesc('at')->orderByDesc('id');
         if ($wh = (int) $request->query('warehouseId')) {
             $q->where('warehouse_id', $wh);
         }
@@ -108,6 +125,57 @@ class InventoryController extends Controller
             'id' => (string) $m->id, 'at' => $m->at->toIso8601String(), 'direction' => $m->direction, 'serial' => $m->serial,
             'productName' => ProductInfo::get($m->product_id)['name'], 'ref' => $m->ref, 'warehouseId' => (int) $m->warehouse_id,
         ]));
+    }
+
+    // ---------- Put-away (Step 9c) ----------
+
+    /** Bin barcode + serials: serials us bin mein darj. Sirf usi warehouse ke serials. */
+    public function putaway(Request $request): JsonResponse
+    {
+        $d = $request->validate([
+            'binBarcode' => 'required|string|max:64',
+            'serials' => 'required|array|min:1|max:100',
+            'serials.*' => 'required|string|max:60',
+        ], ['serials.required' => 'Add at least one serial.', 'serials.max' => 'Too many serials (100 max).']);
+        $code = PurchaseController::normalizeSerial($d['binBarcode']);
+        $bin = Location::where('level', 'bin')->where('is_active', true)->whereRaw('UPPER(barcode) = ?', [$code])->first();
+        if (! $bin) {
+            throw ValidationException::withMessages(['binBarcode' => 'Bin not found.']);
+        }
+        $wanted = array_values(array_unique(array_filter(array_map([PurchaseController::class, 'normalizeSerial'], $d['serials']))));
+        $ref = $bin->barcode ?: $bin->code;
+        $actor = $request->user();
+
+        DB::transaction(function () use ($wanted, $bin, $ref, $actor) {
+            $rows = [];
+            foreach ($wanted as $serial) {
+                $s = StockSerial::where('serial', $serial)->lockForUpdate()->first();
+                if (! $s) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is not known."]);
+                }
+                if ($s->warehouse_id === null) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is in transit."]);
+                }
+                if ((int) $s->warehouse_id !== (int) $bin->warehouse_id) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is in another warehouse than this bin."]);
+                }
+                if (in_array($s->status, ['returned', 'rejected'], true)) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is not in the warehouse."]);
+                }
+                if ((int) $s->bin_id === (int) $bin->id) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is already in this bin."]);
+                }
+                $rows[] = $s;
+            }
+            foreach ($rows as $s) {
+                $s->update(['bin_id' => $bin->id]);
+                StockMovement::create(['at' => now(), 'direction' => '-', 'type' => 'putaway', 'serial' => $s->serial, 'product_id' => $s->product_id,
+                    'warehouse_id' => $s->warehouse_id, 'ref' => $ref, 'note' => null, 'user_id' => $actor->id]);
+            }
+            AuditLog::record($actor, 'stock.putaway', null, ['bin' => $ref, 'serials' => count($rows)]);
+        });
+
+        return response()->json(['moved' => count($wanted), 'bin' => $ref]);
     }
 
     // ---------- Transfers ----------
@@ -145,6 +213,9 @@ class InventoryController extends Controller
                 }
                 if ($s->status !== 'in_stock') {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is not available."]);
+                }
+                if ($held = StockHolds::reservedRef($serial)) {
+                    throw ValidationException::withMessages(['serials' => "Serial {$serial} is reserved ({$held}). Release the reservation first."]);
                 }
                 if ((int) $s->warehouse_id !== (int) $d['fromWarehouseId']) {
                     throw ValidationException::withMessages(['serials' => "Serial {$serial} is in another warehouse."]);
@@ -198,7 +269,7 @@ class InventoryController extends Controller
                     if (! $s || $s->status !== 'in_stock' || (int) $s->warehouse_id !== (int) $t->from_warehouse_id) {
                         throw ValidationException::withMessages(['serials' => "Serial {$l->serial} is no longer available in the source warehouse."]);
                     }
-                    $s->update(['warehouse_id' => null]);
+                    $s->update(['warehouse_id' => null, 'bin_id' => null]); // naye warehouse mein bin dobara put-away se
                     StockMovement::create(['at' => $now, 'direction' => 'out', 'type' => 'transfer_out', 'serial' => $l->serial, 'product_id' => $l->product_id,
                         'warehouse_id' => $t->from_warehouse_id, 'ref' => $t->number, 'note' => null, 'user_id' => $actor->id]);
                 }

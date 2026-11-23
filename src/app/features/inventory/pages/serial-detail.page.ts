@@ -37,6 +37,7 @@ import { STOCK_TONE } from '../utils/inventory-ui';
             <div><dt class="text-slate-600 dark:text-slate-400">SKU</dt><dd>{{ d.sku }}</dd></div>
             <div><dt class="text-slate-600 dark:text-slate-400">{{ 'purchase.orders.supplier' | transloco }}</dt><dd>{{ d.supplierName }}</dd></div>
             <div><dt class="text-slate-600 dark:text-slate-400">GRN</dt><dd>{{ d.grnNumber }}</dd></div>
+            <div><dt class="text-slate-600 dark:text-slate-400">{{ 'binsPage.bin' | transloco }}</dt><dd>@if (d.binCode) { <code dir="ltr">{{ d.binCode }}</code> } @else { - }</dd></div>
           </dl>
         </div>
 

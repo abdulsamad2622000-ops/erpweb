@@ -57,7 +57,7 @@ export const routes: Routes = [
       {
         path: 'putaway',
         canActivate: [permissionGuard],
-        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        data: { title: 'scan', permission: 'inventory.putaway.create' },
         loadComponent: () => import('./features/scan/pages/scan-putaway.page').then((m) => m.ScanPutAwayPage),
       },
       {
@@ -255,6 +255,20 @@ export const routes: Routes = [
         data: { title: 'reservations', permission: 'inventory.reservation.create' },
         loadComponent: () =>
           import('./features/inventory/pages/reservation-new.page').then((m) => m.ReservationNewPage),
+      },
+      {
+        path: 'inventory/locations',
+        canActivate: [permissionGuard],
+        data: { title: 'locations', permission: 'inventory.location.view' },
+        loadComponent: () =>
+          import('./features/inventory/pages/bins.page').then((m) => m.BinsPage),
+      },
+      {
+        path: 'inventory/putaway',
+        canActivate: [permissionGuard],
+        data: { title: 'putaway', permission: 'inventory.putaway.create' },
+        loadComponent: () =>
+          import('./features/inventory/pages/putaway.page').then((m) => m.PutawayPage),
       },
       {
         path: 'inventory/alerts',
@@ -466,6 +480,18 @@ export const routes: Routes = [
         data: { title: 'backup', permission: 'settings.manage' },
         loadComponent: () =>
           import('./features/settings/pages/backup.page').then((m) => m.BackupPage),
+      },
+      {
+        path: 'sales/pos',
+        canActivate: [permissionGuard],
+        data: { title: 'pos', permission: 'pos.sale.create' },
+        loadComponent: () => import('./features/pos/pages/pos.page').then((m) => m.PosPage),
+      },
+      {
+        path: 'sales/returns',
+        canActivate: [permissionGuard],
+        data: { title: 'salesReturns', permission: 'sales.return.view' },
+        loadComponent: () => import('./features/pos/pages/sales-return.page').then((m) => m.SalesReturnPage),
       },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
