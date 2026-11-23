@@ -48,6 +48,13 @@ export class PwaService {
     });
     if (this.sw?.isEnabled) {
       this.sw.versionUpdates.pipe(filter((e) => e.type === 'VERSION_READY')).subscribe(() => this.updateReady.set(true));
+      // Naya deploy jaldi pakro: shuru mein, har 10 minute, aur tab wapas aane par check.
+      const check = (): void => void this.sw?.checkForUpdate().catch(() => undefined);
+      check();
+      setInterval(check, 10 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') check();
+      });
     }
   }
 
