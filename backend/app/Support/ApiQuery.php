@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
 
 /**
@@ -20,7 +21,7 @@ class ApiQuery
     }
 
     /** @param array<string, string> $map frontend field => DB column (whitelist) */
-    public static function sort(Builder $query, Request $request, array $map, string $fallback): Builder
+    public static function sort(Builder|QueryBuilder $query, Request $request, array $map, string $fallback): Builder|QueryBuilder
     {
         [$field, $dir] = array_pad(explode(':', (string) $request->query('sort', '')), 2, 'asc');
         if (isset($map[$field])) {
