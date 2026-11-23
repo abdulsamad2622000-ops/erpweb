@@ -87,6 +87,14 @@ class WarehouseController extends Controller
         if (Location::where('warehouse_id', $warehouse->id)->exists()) {
             throw ValidationException::withMessages(['warehouse' => 'This warehouse still has locations.']);
         }
+        // Jis warehouse par kaam ho chuka (stock, sale, shift, purchase) use mitana hisaab tod deta hai: band (inactive) karo.
+        foreach (['stock_serials' => 'stock', 'stock_movements' => 'stock history', 'pos_shifts' => 'POS shifts', 'sales' => 'sales',
+            'purchase_orders' => 'purchase orders', 'challans' => 'delivery challans'] as $table => $what) {
+            if (\Illuminate\Support\Facades\Schema::hasColumn($table, 'warehouse_id')
+                && \Illuminate\Support\Facades\DB::table($table)->where('warehouse_id', $warehouse->id)->exists()) {
+                throw ValidationException::withMessages(['warehouse' => "This warehouse has {$what}, so it cannot be deleted. Mark it inactive instead."]);
+            }
+        }
 
         $code = $warehouse->code;
         $warehouse->delete();
