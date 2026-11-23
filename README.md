@@ -1,4 +1,4 @@
-# Laptop ERP - Web (Angular)
+﻿# Laptop ERP - Web (Angular)
 
 Frontend for the inventory-centric laptop/computer ERP (Novastack Hub).
 
@@ -82,6 +82,25 @@ Open questions for the backend (Step 9c):
 - `POST /inventory/putaway` with `{ binBarcode, serials[] }`.
 - A serial should carry `binId` and `binCode`.
 - An endpoint that lists the serials of one bin.
+## Scanning app (Step 10)
+Phone-first screens under `/scan` (own layout, large touch targets, works at 360px).
+- `/scan`: home with tiles (only the ones the user has permission for) and sync status.
+- `/scan/putaway` (`inventory.putaway.create`): scan the bin, then scan items. Continuous scan mode.
+- `/scan/transfers` and `/scan/transfers/:id` (`inventory.transfer.create`): dispatch and receive by scanning.
+- `/scan/counts` and `/scan/counts/:id` (`inventory.count.create`): stock count by scanning.
+- `/scan/lookup` (`inventory.serial.view`): quick serial lookup.
+- `/scan/sync`: waiting items, failed items and retry.
+
+How it works:
+- Camera scanning uses ZXing, with sound and vibration on success or error.
+- Installable PWA (Angular service worker, production build only). Install prompt, iOS hint and "new version ready" banner.
+- Offline queue in IndexedDB. Each action carries an `Idempotency-Key`, so retrying after a lost connection never doubles a put-away, transfer or count. A sync chip shows waiting, syncing and failed items.
+- Last successful `/me` is cached for 7 days, so a refresh with no internet keeps the user signed in. Cleared on logout or 401.
+- "No internet" toasts are hidden on `/scan` screens; the sync chip shows the state instead.
+
+Open questions for the backend:
+- Idempotency-Key support on put-away, transfer and count endpoints.
+- Conflict response (409) shape when a serial changed while the phone was offline.
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
 1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.
