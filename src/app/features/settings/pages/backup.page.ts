@@ -27,7 +27,7 @@ import { SettingsStore } from '../stores/settings.store';
             <dt class="text-xs text-slate-600 dark:text-slate-400">{{ 'settingsPage.backup.status' | transloco }}</dt>
             <dd
               class="text-sm font-medium"
-              [class.text-green-600]="b.status === 'ok'"
+              [class.text-green-700]="b.status === 'ok'"
               [class.text-red-600]="b.status === 'failed'"
             >
               {{ 'settingsPage.backup.statuses.' + b.status | transloco }}
