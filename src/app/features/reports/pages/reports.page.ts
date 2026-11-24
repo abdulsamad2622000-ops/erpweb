@@ -235,8 +235,8 @@ export class ReportsPage implements OnInit {
       csv = toCsv([t(`reportsPage.by.${r.groupBy}`), t('reportsPage.bills'), t('posPage.qty'), t('reportsPage.revenue'), ...(this.canCost() ? [t('reportsPage.cost'), t('reportsPage.profit'), '%'] : [])],
         r.rows.map((x) => [x.label, x.bills, x.qty, x.revenue, ...(this.canCost() ? [x.cost, x.profit, x.margin] : [])]));
     } else if (tab === 'stock' && this.stock()) {
-      csv = toCsv([t('posPage.item'), 'SKU', t('dashboardPage.units'), t('dashboardPage.atCost'), t('reportsPage.atRetail'), t('reportsPage.oldest')],
-        this.stock()!.rows.map((x) => [x.name, x.sku, x.units, x.value, x.retailValue, x.oldestDays]));
+      csv = toCsv([t('posPage.item'), 'SKU', t('dashboardPage.units'), ...(this.canCost() ? [t('dashboardPage.atCost')] : []), t('reportsPage.atRetail'), t('reportsPage.oldest')],
+        this.stock()!.rows.map((x) => [x.name, x.sku, x.units, ...(this.canCost() ? [x.value] : []), x.retailValue, x.oldestDays]));
     } else if (tab === 'purchases' && this.purchases()) {
       csv = toCsv([t('reportsPage.supplier'), t('reportsPage.bills'), t('reportsPage.billed'), t('reportsPage.paidOut'), t('dashboardPage.payable')],
         this.purchases()!.rows.map((x) => [x.name, x.bills, x.billed, x.paid, x.payable]));
