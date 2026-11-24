@@ -626,12 +626,6 @@ export const routes: Routes = [
         data: { title: 'supplierClaims', permission: 'warranty.claim.view' },
         loadComponent: () => import('./features/repairs/pages/supplier-claims.page').then((m) => m.SupplierClaimsPage),
       },
-      {
-        path: 'purchase/warranty-claims',
-        canActivate: [permissionGuard],
-        data: { title: 'supplierClaims', permission: 'warranty.claim.view' },
-        loadComponent: () => import('./features/repairs/pages/supplier-claims.page').then((m) => m.SupplierClaimsPage),
-      },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,
       {

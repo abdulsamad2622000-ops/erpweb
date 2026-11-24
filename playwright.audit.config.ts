@@ -1,24 +1,12 @@
-import { defineConfig, devices } from '@playwright/test';
+﻿import { defineConfig, devices } from '@playwright/test';
+import base from './playwright.config';
 
-// Responsive audit: normal e2e se alag (npx playwright test -c playwright.audit.config.ts)
 export default defineConfig({
-  testDir: './e2e/audit',
+  ...base,
   testMatch: '**/*.audit.ts',
-  timeout: 20 * 60_000,
-  workers: 1,
+  timeout: 600_000,
   fullyParallel: false,
-  retries: 0,
+  workers: 1,
   reporter: [['list']],
-  use: {
-    ...devices['Desktop Chrome'],
-    baseURL: 'http://localhost:4200',
-    actionTimeout: 10_000,
-    navigationTimeout: 20_000,
-  },
-  webServer: {
-    command: 'npm start',
-    url: 'http://localhost:4200',
-    reuseExistingServer: true,
-    timeout: 180_000,
-  },
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 });
