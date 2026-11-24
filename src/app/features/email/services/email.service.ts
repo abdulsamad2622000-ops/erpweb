@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config';
 import { ListQuery, Paged, qs } from '../../sales/services/sales.service';
-import { EmailLog, EmailSettings, EmailTemplate, SendResult } from '../models/email.models';
+import { EmailLog, EmailSettings, EmailTemplate, EmailTrigger, ScheduledReport, SendResult, SmtpInput, SmtpSettings } from '../models/email.models';
 
 @Injectable({ providedIn: 'root' })
 export class EmailService {
@@ -18,6 +18,30 @@ export class EmailService {
   }
   test(key: string, to: string): Observable<SendResult> {
     return this.http.post<SendResult>(`${this.base}/email/templates/${key}/test`, { to });
+  }
+  smtp(): Observable<SmtpSettings> {
+    return this.http.get<SmtpSettings>(`${this.base}/email/smtp`);
+  }
+  saveSmtp(b: SmtpInput): Observable<SmtpSettings> {
+    return this.http.put<SmtpSettings>(`${this.base}/email/smtp`, b);
+  }
+  testSmtp(to: string): Observable<SendResult> {
+    return this.http.post<SendResult>(`${this.base}/email/smtp/test`, { to });
+  }
+  triggers(): Observable<EmailTrigger[]> {
+    return this.http.get<EmailTrigger[]>(`${this.base}/email/triggers`);
+  }
+  saveTriggers(b: EmailTrigger[]): Observable<EmailTrigger[]> {
+    return this.http.put<EmailTrigger[]>(`${this.base}/email/triggers`, b);
+  }
+  schedules(): Observable<ScheduledReport[]> {
+    return this.http.get<ScheduledReport[]>(`${this.base}/email/schedules`);
+  }
+  saveSchedules(b: ScheduledReport[]): Observable<ScheduledReport[]> {
+    return this.http.put<ScheduledReport[]>(`${this.base}/email/schedules`, b);
+  }
+  resend(logId: number): Observable<SendResult> {
+    return this.http.post<SendResult>(`${this.base}/email/logs/${logId}/resend`, {});
   }
   logs(q: ListQuery = {}): Observable<Paged<EmailLog>> {
     return this.http.get<Paged<EmailLog>>(`${this.base}/email/logs${qs(q)}`);
