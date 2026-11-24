@@ -27,6 +27,15 @@ const templates: EmailTemplate[] = [
     isActive: true, variables: ['company', 'customer', 'number', 'device', 'total'], updatedAt: new Date().toISOString() },
 ];
 const logs: EmailLog[] = [];
+let smtpState = { host: 'smtp.example.com', port: 587, encryption: 'tls', username: '', fromName: 'Laptop ERP', fromEmail: 'no-reply@novastackhub.com', hasPassword: false };
+let triggerState = [
+  { event: 'invoice_created', label: 'Invoice created', recipients: 'customer', templateKey: 'invoice', enabled: true },
+  { event: 'statement_sent', label: 'Customer statement', recipients: 'customer', templateKey: 'statement', enabled: false },
+  { event: 'repair_ready', label: 'Repair ready for pickup', recipients: 'customer', templateKey: 'repair_ready', enabled: true },
+];
+let scheduleState = [
+  { id: 1, report: 'sales', frequency: 'daily', recipients: 'owner@example.com', enabled: false },
+];
 
 function saveExpense(b: ExpenseInput, id?: number): FixtureResponse {
   if (!b?.date || b.date > today()) return fail(422, 'Date cannot be in the future.');
@@ -135,6 +144,41 @@ export const ACCOUNT_FIXTURES: Record<string, FixtureHandler> = {
   },
   'POST /email/templates/:id/test': (req) => sent(segs(req.url).slice(-2)[0], (req.body as { to: string })?.to, 'test'),
   'GET /email/logs': () => ok({ data: logs, total: logs.length }),
+  'GET /email/smtp': () => ok({ ...smtpState }),
+  'PUT /email/smtp': (req) => {
+    const b = req.body as { host: string; port: number; encryption: string; username: string; fromName: string; fromEmail: string; password?: string };
+    if (!b.host?.trim()) return fail(422, 'Enter the SMTP host.');
+    if (!(b.port >= 1 && b.port <= 65535)) return fail(422, 'Port must be between 1 and 65535.');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(b.fromEmail ?? '')) return fail(422, 'Enter a valid from email.');
+    smtpState = { host: b.host, port: b.port, encryption: b.encryption, username: b.username ?? '', fromName: b.fromName ?? '', fromEmail: b.fromEmail,
+      hasPassword: b.password ? true : smtpState.hasPassword };
+    return ok({ ...smtpState });
+  },
+  'POST /email/smtp/test': (req) => {
+    const to = (req.body as { to?: string })?.to ?? '';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return fail(422, 'Enter a valid email.');
+    return ok({ status: 'sent', subject: 'SMTP test' });
+  },
+  'GET /email/triggers': () => ok(triggerState),
+  'PUT /email/triggers': (req) => {
+    triggerState = (req.body as typeof triggerState).map((t) => ({ ...t }));
+    return ok(triggerState);
+  },
+  'GET /email/schedules': () => ok(scheduleState),
+  'PUT /email/schedules': (req) => {
+    const rows = req.body as typeof scheduleState;
+    if (rows.some((r) => !r.recipients?.trim())) return fail(422, 'Every schedule needs a recipient.');
+    let next = Math.max(0, ...rows.map((r) => r.id)) + 1;
+    scheduleState = rows.map((r) => ({ ...r, id: r.id > 0 ? r.id : next++ }));
+    return ok(scheduleState);
+  },
+  'POST /email/logs/:id/resend': (req) => {
+    const id = Number(segs(req.url).slice(-2)[0]);
+    const l = logs.find((x) => x.id === id);
+    if (!l) return fail(404, 'Not found.');
+    logs.unshift({ ...l, id: Math.max(0, ...logs.map((x) => x.id)) + 1, status: 'sent', error: null, at: new Date().toISOString() });
+    return ok({ status: 'sent', subject: l.subject });
+  },
   'POST /sales/invoices/:id/email': (req) => sent('invoice', (req.body as { to?: string })?.to ?? '', null),
   'POST /customers/:id/statement-email': (req) => sent('statement', (req.body as { to?: string })?.to ?? '', null),
   'POST /warranty/jobs/:id/email': (req) => sent('repair_ready', (req.body as { to?: string })?.to ?? '', null),

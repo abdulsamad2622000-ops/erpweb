@@ -604,6 +604,7 @@
     }
   },
   "menu": {
+    "supplierClaims": "Supplier claims",
     "putaway": "Put-away",
     "users": "Users",
     "roles": "Roles",
@@ -672,7 +673,9 @@
     "allGrns": "All GRNs",
     "template": "Template",
     "print": "Print {{ count }} labels",
-    "pdfHint": "For a PDF, choose \"Save as PDF\" in the print dialog.",
+    "pdfHint": "Download PDF makes one page per label, sized like the template. Print uses your printer dialog.",
+    "downloadPdf": "Download PDF",
+    "pdfFailed": "The PDF could not be made. Try again.",
     "selectAll": "Select all",
     "code": "Code",
     "bin": "Bin",
@@ -1680,7 +1683,8 @@
       "sales": "Sales & profit",
       "stock": "Stock value",
       "purchases": "Purchases",
-      "repairs": "Repairs"
+      "repairs": "Repairs",
+      "prints": "Label prints"
     },
     "groupBy": "Group by",
     "by": {
@@ -1690,6 +1694,16 @@
       "channel": "Channel"
     },
     "csv": "Download CSV (Excel)",
+    "xlsx": "Download Excel (.xlsx)",
+    "prints": {
+      "total": "Print jobs",
+      "labels": "Labels printed",
+      "reprints": "Reprints",
+      "reprintsOnly": "Show reprints only",
+      "type": "Type",
+      "print": "Print",
+      "codes": "Codes"
+    },
     "revenue": "Sales",
     "cost": "Cost",
     "profit": "Profit",

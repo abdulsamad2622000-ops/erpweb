@@ -118,7 +118,8 @@ How it works:
 ## Not built yet
 - Website module (Step 17): hidden by the `website` feature flag until the client confirms the platform.
 - Urdu and RTL were removed; the app is English only. Ask before adding them back.
-- Step 18 (still open): accessibility pass, performance pass and Playwright critical flows.
+- Step 18: Playwright critical flows (login, GRN, transfer, wholesale, POS and return, warranty, cost hidden), responsive audit at 360/768/1280px (
+px playwright test -c playwright.audit.config.ts) and an axe accessibility scan are done.
 
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).

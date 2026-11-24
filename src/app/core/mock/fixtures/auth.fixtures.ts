@@ -153,6 +153,13 @@ const USERS: MockUser[] = [
     branches: [BRANCHES[0]],
     limits: { discountPercent: 2, adjustmentUnits: 3, maxSaleWithoutApproval: 100000 },
   },
+  {
+    email: 'accountant@demo.test', id: 4, name: 'Demo Accountant', role: 'accountant', type: 'staff',
+    twoFactor: false,
+    keys: ['dashboard.view.view', 'reports.report.view', 'accounts.expense.view', 'accounts.cashbook.view'],
+    branches: [BRANCHES[0]],
+    limits: { discountPercent: 0, adjustmentUnits: 0, maxSaleWithoutApproval: 0 },
+  },
 ];
 
 function read(key: string): string | null {
