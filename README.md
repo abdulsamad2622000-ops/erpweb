@@ -121,6 +121,13 @@ How it works:
 - Step 18: Playwright critical flows (login, GRN, transfer, wholesale, POS and return, warranty, cost hidden), responsive audit at 360/768/1280px (
 px playwright test -c playwright.audit.config.ts) and an axe accessibility scan are done.
 
+## Quality audits (Step 18)
+Audits live in `e2e/audit` and use `playwright.audit.config.ts` (long timeout, one worker).
+- Accessibility (axe): `npx playwright test -c playwright.audit.config.ts e2e/audit/a11y.audit.ts`
+- Responsive (360, 768, 1280 px): `npx playwright test -c playwright.audit.config.ts e2e/audit/responsive.audit.ts` (about 6 minutes)
+- Critical flows: `npm run e2e` (login, GRN, transfer, wholesale, POS, warranty, cost hidden for Store Keeper).
+- Status: axe and responsive audits pass. Lint, unit tests and production build pass. Initial bundle is under 1 MB.
+- Website module (Step 17) is hidden by a feature flag until the client confirms the platform.
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
 1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.
