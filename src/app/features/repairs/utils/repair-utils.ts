@@ -32,7 +32,7 @@ export function jobSlipHtml(j: {
   promised: string; estimate: string; terms: string }): string {
   const esc = (s: string): string =>
     s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
-  const row = (k: string, v: string): string => (v ? `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>` : '');
+  const row = (k: string, v: string): string => (v ? `<tr><th scope="col">${esc(k)}</th><td>${esc(v)}</td></tr>` : '');
   return `<style>.js{font:12px/1.4 system-ui,sans-serif;color:#000}.js h1{margin:0;color:#1E3A8A}.js h1 span{color:#00BCD4}
 .js table{width:100%;border-collapse:collapse;margin-top:8px}.js th{text-align:start;width:30%;padding:3px;vertical-align:top}.js td{padding:3px}</style>
 <div class="js"><h1>Novastack<span>hub</span></h1><p style="margin:0">Empowering Digital Vision</p>

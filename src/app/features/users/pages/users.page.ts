@@ -107,6 +107,24 @@ const INPUT = 'min-h-11 w-full rounded-lg border border-input bg-transparent px-
           <input id="user-email" type="email" dir="ltr" formControlName="email" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fEmail.describedBy()" />
         </app-form-field>
 
+        <app-form-field
+          #fPass
+          [label]="'users.password' | transloco"
+          inputId="user-password"
+          [control]="form.controls.password"
+          [required]="editingId() === null"
+          [hint]="(editingId() === null ? 'users.passwordHint' : 'users.passwordEditHint') | transloco">
+          <div class="flex gap-2">
+            <input id="user-password" [type]="showPw() ? 'text' : 'password'" dir="ltr" formControlName="password" autocomplete="new-password" class="${INPUT}" [attr.aria-describedby]="fPass.describedBy()" />
+            <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="showPw.set(!showPw())">
+              {{ (showPw() ? 'users.passwordHide' : 'users.passwordShow') | transloco }}
+            </button>
+            <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="generatePassword()">
+              {{ 'users.passwordGenerate' | transloco }}
+            </button>
+          </div>
+        </app-form-field>
+
         <app-form-field [label]="'users.type' | transloco" inputId="user-type" [control]="form.controls.type" [required]="true">
           <select id="user-type" formControlName="type" class="${INPUT}">
             @for (t of typeOptions(); track t) {
@@ -193,6 +211,7 @@ export class UsersPage implements OnInit {
   protected readonly submitted = signal(false);
   protected readonly editingId = signal<number | null>(null);
   protected readonly typeOptions = signal<UserType[]>([]);
+  protected readonly showPw = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
@@ -204,6 +223,7 @@ export class UsersPage implements OnInit {
     discountPercent: [null as number | null],
     adjustmentUnits: [null as number | null],
     accessExpiresAt: [null as string | null],
+    password: [''],
   });
 
   protected readonly columns: TableColumn<ManagedUser>[] = [
@@ -312,7 +332,13 @@ export class UsersPage implements OnInit {
       discountPercent: row?.discountPercent ?? null,
       adjustmentUnits: row?.adjustmentUnits ?? null,
       accessExpiresAt: row?.accessExpiresAt ?? null,
+      password: '',
     });
+    // Naye user ke liye password zaroori; edit mein khali = purana password rahega.
+    const pw = this.form.controls.password;
+    pw.setValidators(row ? [Validators.minLength(8)] : [Validators.required, Validators.minLength(8)]);
+    pw.updateValueAndValidity();
+    this.showPw.set(false);
     // SuperAdmin ka type badla nahi ja sakta.
     if (row?.type === 'super_admin') this.form.controls.type.disable();
     else this.form.controls.type.enable();
@@ -327,6 +353,14 @@ export class UsersPage implements OnInit {
     const on = (e.target as HTMLInputElement).checked;
     const cur = this.form.controls.branchIds.value;
     this.form.controls.branchIds.setValue(on ? [...new Set([...cur, id])] : cur.filter((x) => x !== id));
+  }
+
+  protected generatePassword(): void {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%';
+    const buf = new Uint32Array(12);
+    crypto.getRandomValues(buf);
+    this.form.controls.password.setValue(Array.from(buf, (n) => chars[n % chars.length]).join(''));
+    this.showPw.set(true);
   }
 
   protected missingRole(): boolean {
@@ -357,6 +391,7 @@ export class UsersPage implements OnInit {
       discountPercent: isSuper ? null : v.discountPercent,
       adjustmentUnits: isSuper ? null : v.adjustmentUnits,
       accessExpiresAt: isSuper ? null : v.accessExpiresAt,
+      ...(v.password ? { password: v.password } : {}),
     });
     this.saving.set(false);
     if (err) {

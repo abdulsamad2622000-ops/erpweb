@@ -42,6 +42,7 @@ export const MENU: MenuItem[] = [
       { key: 'grn', path: 'purchase/grn', icon: 'pi pi-inbox', permission: 'purchase.grn.view' },
       { key: 'purchaseReturns', path: 'purchase/returns', icon: 'pi pi-undo', permission: 'purchase.return.view' },
       { key: 'supplierPayments', path: 'purchase/payments', icon: 'pi pi-wallet', permission: 'purchase.payment.view' },
+      { key: 'supplierClaims', path: 'purchase/warranty-claims', icon: 'pi pi-shield', permission: 'warranty.claim.view' },
     ],
   },
   {

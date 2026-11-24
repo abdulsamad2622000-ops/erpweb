@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
@@ -11,14 +12,14 @@ import { EmailService } from '../services/email.service';
 /** Email: templates edit + test, aur bheje gaye emails ka log. */
 @Component({
   selector: 'app-email-page',
-  imports: [FormsModule, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent],
+  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, StatusBadgeComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-5xl space-y-4">
-      <h1 class="text-xl font-semibold">{{ 'emailPage.title' | transloco }}</h1>
-      @if (error(); as e) { <p role="alert" class="text-sm text-red-600">{{ e }}</p> }
+      <div class="flex flex-wrap items-center justify-between gap-3"><h1 class="text-xl font-semibold">{{ 'emailPage.title' | transloco }}</h1><a routerLink="/email/settings" [class]="ui.btn">SMTP, triggers and schedules</a></div>
+      @if (error(); as e) { <p role="alert" class="text-sm text-red-700">{{ e }}</p> }
       @if (settings(); as s) {
-        <p class="text-sm" [class.text-red-600]="s.mailer === 'log' || s.mailer === 'array'">
+        <p class="text-sm" [class.text-red-700]="s.mailer === 'log' || s.mailer === 'array'">
           {{ 'emailPage.mailer' | transloco: { mailer: s.mailer, from: s.from } }}
           @if (s.mailer === 'log' || s.mailer === 'array') { {{ 'emailPage.notSetUp' | transloco }} }
         </p>
@@ -37,7 +38,7 @@ import { EmailService } from '../services/email.service';
             <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'emailPage.vars' | transloco }}
               @for (v of t.variables; track v) { <code class="me-2" dir="ltr">{{ '{{' + v + '}}' }}</code> }</p>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="h-5 w-5" [(ngModel)]="t.isActive" /> {{ 'emailPage.active' | transloco }}</label>
-            @if (notice(); as n) { <p role="status" class="text-sm" [class.text-red-600]="!ok()" [class.text-green-700]="ok()">{{ n }}</p> }
+            @if (notice(); as n) { <p role="status" class="text-sm" [class.text-red-700]="!ok()" [class.text-green-700]="ok()">{{ n }}</p> }
             <div class="flex flex-wrap items-end justify-between gap-2">
               <div class="flex flex-wrap items-end gap-2" *hasPermission="'email.template.edit'">
                 <label class="text-sm font-medium">{{ 'emailPage.testTo' | transloco }}
@@ -63,8 +64,8 @@ import { EmailService } from '../services/email.service';
           <tbody>
             @for (l of logs(); track l.id) {
               <tr [class]="ui.tr"><td [class]="ui.td">{{ l.at.slice(0, 16).replace('T', ' ') }}</td><td [class]="ui.td" dir="ltr">{{ l.to }}</td>
-                <td [class]="ui.td">{{ l.subject }} @if (l.error) { <div class="text-xs text-red-600">{{ l.error }}</div> }</td>
-                <td [class]="ui.td"><app-status-badge [label]="'emailPage.st.' + l.status | transloco" [tone]="l.status === 'sent' ? 'success' : 'danger'" /></td></tr>
+                <td [class]="ui.td">{{ l.subject }} @if (l.error) { <div class="text-xs text-red-700">{{ l.error }}</div> }</td>
+                <td [class]="ui.td"><app-status-badge [label]="'emailPage.st.' + l.status | transloco" [tone]="l.status === 'sent' ? 'success' : 'danger'" /> @if (l.status === 'failed') { <button *hasPermission="'email.template.edit'" type="button" [class]="ui.btn + ' ms-2'" [disabled]="busy()" (click)="resend(l)">Resend</button> }</td></tr>
             } @empty { <tr><td colspan="4" class="px-4 py-6 text-center text-slate-500">{{ 'common.empty' | transloco }}</td></tr> }
           </tbody>
         </table></div>
@@ -103,6 +104,14 @@ export class EmailPage implements OnInit {
   protected pick(t: EmailTemplate): void {
     this.sel.set({ ...t });
     this.notice.set(null);
+  }
+
+  protected async resend(l: EmailLog): Promise<void> {
+    await this.run(async () => {
+      await firstValueFrom(this.api.resend(l.id));
+      await this.loadLogs();
+      return `Email to ${l.to} sent again.`;
+    });
   }
 
   protected async loadLogs(): Promise<void> {

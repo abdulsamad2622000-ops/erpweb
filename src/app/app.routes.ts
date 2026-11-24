@@ -1,4 +1,4 @@
-import { isDevMode } from '@angular/core';
+﻿import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, permissionGuard } from './core/auth/guards';
 import { FEATURE_FLAGS } from './core/config/feature-flags';
@@ -28,6 +28,10 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'warranty-check',
+    loadComponent: () => import('./features/repairs/pages/warranty-public.page').then((m) => m.WarrantyPublicPage),
   },
   {
     path: 'forgot-password',
@@ -190,27 +194,6 @@ export const routes: Routes = [
         data: { title: 'transfers', permission: 'inventory.transfer.view' },
         loadComponent: () =>
           import('./features/inventory/pages/transfers.page').then((m) => m.TransfersPage),
-      },
-      {
-        path: 'inventory/adjustments/new',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.create' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments/:id',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
       },
       {
         path: 'inventory/adjustments/new',
@@ -624,6 +607,24 @@ export const routes: Routes = [
         canActivate: [permissionGuard],
         data: { title: 'email', permission: 'email.template.view' },
         loadComponent: () => import('./features/email/pages/email.page').then((m) => m.EmailPage),
+      },
+      {
+        path: 'reports/more',
+        canActivate: [permissionGuard],
+        data: { title: 'reports', permission: 'reports.report.view' },
+        loadComponent: () => import('./features/reports/pages/reports-more.page').then((m) => m.ReportsMorePage),
+      },
+      {
+        path: 'email/settings',
+        canActivate: [permissionGuard],
+        data: { title: 'email', permission: 'email.template.view' },
+        loadComponent: () => import('./features/email/pages/email-settings.page').then((m) => m.EmailSettingsPage),
+      },
+      {
+        path: 'purchase/warranty-claims',
+        canActivate: [permissionGuard],
+        data: { title: 'supplierClaims', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/supplier-claims.page').then((m) => m.SupplierClaimsPage),
       },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,

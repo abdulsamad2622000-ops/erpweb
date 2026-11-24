@@ -19,7 +19,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies": ["jsbarcode", "qrcode", "dijkstrajs"],
+            "allowedCommonJsDependencies": ["jsbarcode", "qrcode", "dijkstrajs", "core-js", "canvg", "html2canvas", "raf", "rgbcolor", "svg-pathdata", "fflate"],
             "assets": [
               {
                 "glob": "**/*",

@@ -51,6 +51,11 @@ const idOf = (url: string): number => {
 };
 const nextId = (): number => Math.max(0, ...users.map((u) => u.id)) + 1;
 const roleName = (id: number | null): string | null => ROLES.find((r) => r.id === id)?.name ?? null;
+const omitPw = <T extends object>(b: T): Omit<T, 'password'> => {
+  const c = { ...b } as Record<string, unknown>;
+  delete c['password'];
+  return c as Omit<T, 'password'>;
+};
 const emailTaken = (email: string, ignoreId: number): boolean =>
   users.some((u) => u.id !== ignoreId && u.email.toLowerCase() === email.trim().toLowerCase());
 const supers = (): ManagedUser[] => users.filter((u) => u.type === 'super_admin');
@@ -100,7 +105,8 @@ export const USER_FIXTURES: Record<string, FixtureHandler> = {
       return fail(403, 'You are not allowed to create this user type.');
     }
     if (emailTaken(b.email, 0)) return fail(422, 'This email is already used.');
-    const row: ManagedUser = { ...b, email: b.email.trim().toLowerCase(), id: nextId(), roleName: roleName(b.roleId) };
+    if (!b.password || b.password.length < 8) return fail(422, 'Password must be at least 8 characters.');
+    const row: ManagedUser = { ...omitPw(b), email: b.email.trim().toLowerCase(), id: nextId(), roleName: roleName(b.roleId) };
     users.push(row);
     return ok(row);
   },
@@ -115,7 +121,7 @@ export const USER_FIXTURES: Record<string, FixtureHandler> = {
     if (emailTaken(b.email, row.id)) return fail(422, 'This email is already used.');
     const type = row.type === 'super_admin' ? 'super_admin' : b.type;
     if (type !== row.type && !creatableTypes(actor).includes(type)) return forbidden();
-    Object.assign(row, { ...b, type, email: b.email.trim().toLowerCase(), roleName: roleName(b.roleId) });
+    Object.assign(row, { ...omitPw(b), type, email: b.email.trim().toLowerCase(), roleName: roleName(b.roleId) });
     return ok(row);
   },
 

@@ -125,11 +125,11 @@ const PREVIEW_LIMIT = 50;
               <table class="w-full min-w-max text-sm">
                 <thead class="bg-page text-start text-xs text-muted">
                   <tr>
-                    <th class="px-3 py-2 text-start">Line</th>
+                    <th scope="col" class="px-3 py-2 text-start">Line</th>
                     @for (f of fields(); track f.key) {
-                      <th class="px-3 py-2 text-start">{{ f.label }}</th>
+                      <th scope="col" class="px-3 py-2 text-start">{{ f.label }}</th>
                     }
-                    <th class="px-3 py-2 text-start">Status</th>
+                    <th scope="col" class="px-3 py-2 text-start">Status</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-border">

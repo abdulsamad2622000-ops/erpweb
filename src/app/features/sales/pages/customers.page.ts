@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { money } from '../../pos/utils/pos-utils';
 import { UI, errorMessage } from '../../purchase/utils/ui';
 import { CustomerForm, WholesaleCustomer } from '../models/sales.models';
@@ -17,7 +18,7 @@ const EMPTY: CustomerForm = {
 /** Customers: list, naya/edit, credit limit, payment terms, udhaar baqi. */
 @Component({
   selector: 'app-customers-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective],
+  imports: [FormsModule, RouterLink, TranslocoPipe, HasPermissionDirective, ModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-6xl space-y-4">
@@ -74,8 +75,8 @@ const EMPTY: CustomerForm = {
     </section>
 
     @if (form(); as f) {
-      <div class="fixed inset-0 z-40 flex items-start justify-center overflow-auto bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="cf-t">
-        <div [class]="ui.card + ' grid w-full max-w-xl gap-3 sm:grid-cols-2'">
+      <app-modal labelledBy="cf-t" size="lg" (closed)="closeForm()">
+        <div class="grid gap-3 sm:grid-cols-2">
           <h2 id="cf-t" class="font-semibold sm:col-span-2">{{ (editId ? 'customersPage.editTitle' : 'customersPage.add') | transloco }}</h2>
           <label class="text-sm font-medium">{{ 'customersPage.name' | transloco }}
             <input [class]="ui.input + ' mt-1'" [(ngModel)]="f.name" /></label>
@@ -110,7 +111,7 @@ const EMPTY: CustomerForm = {
             <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save(f)">{{ 'common.save' | transloco }}</button>
           </div>
         </div>
-      </div>
+      </app-modal>
     }
   `,
 })
@@ -152,6 +153,11 @@ export class CustomersPage implements OnInit {
     } catch (e) {
       this.error.set(errorMessage(e, this.i18n.translate('errors.generic')));
     }
+  }
+
+  /** Esc par band; save chal raha ho to band nahi hota. */
+  protected closeForm(): void {
+    if (!this.busy()) this.form.set(null);
   }
 
   protected openNew(): void {
