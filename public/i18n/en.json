@@ -189,6 +189,12 @@
     "deleteMessage": "Delete this product? This cannot be undone."
   },
   "users": {
+    "password": "Password",
+    "passwordHint": "At least 8 characters. Give this to the user so they can sign in.",
+    "passwordEditHint": "Leave empty to keep the current password.",
+    "passwordShow": "Show",
+    "passwordHide": "Hide",
+    "passwordGenerate": "Generate",
     "title": "Users",
     "add": "Add user",
     "edit": "Edit user",
