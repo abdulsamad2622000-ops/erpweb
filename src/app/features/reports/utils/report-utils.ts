@@ -24,6 +24,47 @@ export function barHeights(values: number[]): number[] {
   return values.map((v) => (max > 0 ? Math.round((v / max) * 100) : 0));
 }
 
+export type Cell = string | number | null;
+
+/** Excel sheet ka naam: 31 se zyada harf aur : \ / ? * [ ] nahi chalte. */
+export function safeSheetName(name: string): string {
+  const s = name.replace(/[:\\/?*[\]]/g, ' ').trim().slice(0, 31);
+  return s || 'Sheet1';
+}
+
+/** Har column ki chaurai (characters mein), header aur data dono dekh kar. */
+export function colWidths(headers: string[], rows: Cell[][]): number[] {
+  return headers.map((h, i) => Math.min(60, Math.max(h.length, ...rows.map((r) => String(r[i] ?? '').length)) + 2));
+}
+
+/** ISO waqt ki local tareekh (YYYY-MM-DD). */
+export function isoToLocalDate(iso: string): string {
+  const d = new Date(iso);
+  const p = (n: number): string => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+/** Tareekh from..to (dono shamil) ke andar hai? Khali from/to ka matlab koi hadd nahi. */
+export function inDateRange(iso: string, from: string, to: string): boolean {
+  const d = isoToLocalDate(iso);
+  return (!from || d >= from) && (!to || d <= to);
+}
+
+/** Asli Excel workbook (.xlsx). Library pehli dafa par lazy load hoti hai. Text hamesha text rehta hai, formula nahi banta. */
+export async function buildWorkbook(sheet: string, headers: string[], rows: Cell[][]) {
+  const XLSX = await import('xlsx');
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  ws['!cols'] = colWidths(headers, rows).map((wch) => ({ wch }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, safeSheetName(sheet));
+  return wb;
+}
+
+export async function downloadXlsx(name: string, sheet: string, headers: string[], rows: Cell[][]): Promise<void> {
+  const XLSX = await import('xlsx');
+  XLSX.writeFile(await buildWorkbook(sheet, headers, rows), name);
+}
+
 /** Mahine ki pehli tareekh aur aaj (YYYY-MM-DD). */
 export function monthRange(d = new Date()): { from: string; to: string } {
   const pad = (n: number): string => String(n).padStart(2, '0');
