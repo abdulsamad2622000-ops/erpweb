@@ -60,3 +60,5 @@ STEP9C_CONTEXT.txt
 /playwright-report
 
 audit-output/
+
+context-report.txt
