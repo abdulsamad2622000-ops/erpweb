@@ -1,3 +1,4 @@
+import { CLAIM_HANDLERS } from './supplier-claims.fixtures';
 import { PayMethod } from '../../../features/pos/models/pos.models';
 import { normalizeSerial } from '../../../features/purchase/utils/purchase-utils';
 import { JobInput, JobStatus, JobUpdate, RepairJob, WarrantyCheck } from '../../../features/repairs/models/repair.models';
@@ -81,6 +82,12 @@ function save(j: RepairJob): RepairJob {
 
 export const REPAIR_FIXTURES: Record<string, FixtureHandler> = {
   'GET /warranty/check/:id': (req) => ok(warrantyFor(decodeURIComponent(segs(req.url).pop() ?? ''))),
+  'GET /public/warranty/:id': (req) => {
+    const w = warrantyFor(decodeURIComponent(segs(req.url).pop() ?? ''));
+    return ok({ serial: w.serial, productName: w.productName, warranty: w.warranty, warrantyUntil: w.warrantyUntil });
+  },
+  ...CLAIM_HANDLERS,
+
   'GET /warranty/jobs': (req) => {
     const st = qp(req.url, 'status');
     const q = qp(req.url, 'search').toLowerCase();
