@@ -213,27 +213,6 @@ export const routes: Routes = [
           import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
       },
       {
-        path: 'inventory/adjustments/new',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.create' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments/:id',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
-      },
-      {
         path: 'inventory/counts/new',
         canActivate: [permissionGuard],
         data: { title: 'counts', permission: 'inventory.count.create' },

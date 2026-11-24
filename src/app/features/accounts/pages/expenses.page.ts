@@ -4,6 +4,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
 import { ConfirmDialogService } from '../../../shared/ui/confirm-dialog/confirm-dialog.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { PAY_METHODS } from '../../pos/models/pos.models';
 import { money } from '../../pos/utils/pos-utils';
 import { UI, errorMessage } from '../../purchase/utils/ui';
@@ -16,7 +17,7 @@ import { expenseProblem } from '../utils/accounts-utils';
 /** Kharche: list (dates, category), naya/edit, void (wajah ke saath), nayi category. */
 @Component({
   selector: 'app-expenses-page',
-  imports: [FormsModule, TranslocoPipe, HasPermissionDirective],
+  imports: [FormsModule, TranslocoPipe, HasPermissionDirective, ModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-6xl space-y-4">
@@ -69,8 +70,8 @@ import { expenseProblem } from '../utils/accounts-utils';
     </section>
 
     @if (form(); as f) {
-      <div class="fixed inset-0 z-40 flex items-start justify-center overflow-auto bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="ex-t">
-        <div [class]="ui.card + ' grid w-full max-w-lg gap-3 sm:grid-cols-2'">
+      <app-modal labelledBy="ex-t" size="md" (closed)="closeForm()">
+        <div class="grid gap-3 sm:grid-cols-2">
           <h2 id="ex-t" class="font-semibold sm:col-span-2">{{ (editId ? 'expensesPage.edit' : 'expensesPage.add') | transloco }}</h2>
           <label class="text-sm font-medium">{{ 'salesDocs.date' | transloco }}<input type="date" [max]="today" [class]="ui.input + ' mt-1'" [(ngModel)]="f.date" /></label>
           <label class="text-sm font-medium">{{ 'posPage.amount' | transloco }}<input type="number" min="1" [class]="ui.input + ' mt-1'" [(ngModel)]="f.amount" /></label>
@@ -96,7 +97,7 @@ import { expenseProblem } from '../utils/accounts-utils';
             <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save(f)">{{ 'common.save' | transloco }}</button>
           </div>
         </div>
-      </div>
+      </app-modal>
     }
   `,
 })
@@ -147,6 +148,11 @@ export class ExpensesPage implements OnInit {
     } catch (e) {
       this.error.set(this.fail(e));
     }
+  }
+
+  /** Esc par band; save chal raha ho to band nahi hota. */
+  protected closeForm(): void {
+    if (!this.busy()) this.form.set(null);
   }
 
   protected openNew(): void {

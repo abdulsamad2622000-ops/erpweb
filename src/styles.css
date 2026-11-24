@@ -101,9 +101,23 @@ select option:checked {
 /* ---- Dialogs: screen ke beech mein, chhoti card jaisi (x aur y dono) ---- */
 dialog:modal {
   margin: auto;
-  width: min(26rem, calc(100vw - 2rem));
+  width: min(var(--dialog-w, 26rem), calc(100vw - 2rem));
   height: fit-content;
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 2rem);
   overflow: auto;
+}
+
+/* escapes-scroller-fix: scroll wrapper ke andar ka absolute element (jaise sr-only) wrapper ki hadd mein rahe.
+   Warna wo wrapper se bahar nikal kar poore page ko sideways scroll karwa deta hai. */
+@layer base {
+  .overflow-x-auto,
+  .overflow-x-scroll {
+    position: relative;
+  }
+}
+
+/* Dialog khula ho to peeche ka page scroll na ho. */
+body:has(dialog:modal) {
+  overflow: hidden;
 }

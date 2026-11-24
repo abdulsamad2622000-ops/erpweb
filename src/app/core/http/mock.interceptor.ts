@@ -24,6 +24,16 @@ function matchIdRoute(all: Fixtures, method: string, path: string): FixtureHandl
   return key ? all[key] : undefined;
 }
 
+// Asal API ki tarah har jawab nayi copy ho. Warna mock ka data badalte hi page ka apna object
+// bhi (jawab aane se pehle) badal jata hai aur UI/tests aage nikal jate hain.
+function cloneBody<T>(body: T): T {
+  try {
+    return structuredClone(body);
+  } catch {
+    return body;
+  }
+}
+
 export const mockInterceptor: HttpInterceptorFn = (req, next) => {
   const mocked = MOCKED_PREFIXES.some((p) => req.url.startsWith(p));
   if (!inject(MockModeService).enabled() || !mocked) {
@@ -44,8 +54,8 @@ export const mockInterceptor: HttpInterceptorFn = (req, next) => {
       const res = handler({ method: req.method, url: req.url, body: req.body });
       const out$: Observable<HttpEvent<unknown>> =
         res.status >= 400
-          ? throwError(() => new HttpErrorResponse({ status: res.status, error: res.body, url: req.url }))
-          : of(new HttpResponse({ status: res.status, body: res.body }));
+          ? throwError(() => new HttpErrorResponse({ status: res.status, error: cloneBody(res.body), url: req.url }))
+          : of(new HttpResponse({ status: res.status, body: cloneBody(res.body) }));
       return out$.pipe(delay(200));
     }),
   );

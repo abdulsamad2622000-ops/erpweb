@@ -107,7 +107,7 @@ export class CashbookPage implements OnInit {
 .cb td,.cb th{border-bottom:1px solid #ccc;padding:3px;text-align:start}.cb .r{text-align:end}</style><div class="cb"><h1>Novastack<span>hub</span></h1>
 <h2 style="margin:8px 0 2px">${esc(t('cashbookPage.title'))} · ${esc(c.method === 'all' ? t('salesDocs.all') : t('posPage.methods.' + c.method))}</h2>
 <p style="margin:0">${esc(c.from)} – ${esc(c.to)} · ${esc(t('ledgerPage.opening'))}: ${money(c.opening)}</p>
-<table><thead><tr><th>${esc(t('cashbookPage.time'))}</th><th>${esc(t('ledgerPage.details'))}</th><th class="r">${esc(t('cashbookPage.in'))}</th><th class="r">${esc(t('cashbookPage.out'))}</th><th class="r">${esc(t('ledgerPage.balance'))}</th></tr></thead>
+<table><thead><tr><th scope="col">${esc(t('cashbookPage.time'))}</th><th scope="col">${esc(t('ledgerPage.details'))}</th><th scope="col" class="r">${esc(t('cashbookPage.in'))}</th><th scope="col" class="r">${esc(t('cashbookPage.out'))}</th><th scope="col" class="r">${esc(t('ledgerPage.balance'))}</th></tr></thead>
 <tbody>${rows}</tbody></table><p><b>${esc(t('ledgerPage.closing'))}: ${money(c.closing)}</b></p></div>`,
     });
   }

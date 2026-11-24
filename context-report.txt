@@ -1,0 +1,1483 @@
+﻿node: v24.16.0
+npm: 11.13.0
+ng: Angular CLI       : 22.2.7
+branch: chore/step-18-cleanup
+--- last 40 commits ---
+c46efb8 Merge pull request #43 from abdulsamad2622000-ops/fix/app-updates
+0f8c248 App updates reach users: index.html always from network (freshness), check for new version on start/every 10 min/tab focus, 'Reload now' banner in main app
+db288c0 Merge pull request #42 from abdulsamad2622000-ops/fix/ui-polish
+e5eaf41 style: centered card-style confirm dialog, reservation form spacing, reject document numbers as serials
+1108a4e Merge pull request #41 from abdulsamad2622000-ops/test/full-smoke
+e476bc3 2FA resend/verify: no 500 when request has no session (returns 401 Login expired)
+c9fc160 Smoke test: every API route with bad id/body/query must not return 5xx (super admin + cashier)
+bc77976 Merge pull request #40 from abdulsamad2622000-ops/fix/server-errors
+f8dee52 Fix server errors: quotations list 500 (ApiQuery::sort accepts query builder), used warehouse delete gives clear message, foreign-key errors return 409; smoke test over all GET routes
+2546c8e style: thin scrollbars without arrows
+acec008 Merge pull request #39 from abdulsamad2622000-ops/docs/step-10-readme
+ec29577 docs: README scanning app section (step 10)
+810a583 Merge pull request #37 from abdulsamad2622000-ops/perf/speed-pass
+e6f2892 Speed pass: request memo for product/user/warehouse lookups, customers balance in 2 queries, service worker no longer prefetches all JS/fonts, perf:probe command and perf-check script
+01e3e3d Merge pull request #36 from abdulsamad2622000-ops/feature/expenses-email-parts
+313daf8 Frontend: expenses, cash book, email templates + send buttons, P&L tab, dashboard net/cash, repair parts from stock
+8557aa4 Backend: expenses + cash book + P&L, email templates/log/send, repair parts from stock
+851d014 Merge pull request #35 from abdulsamad2622000-ops/feature/step-15-reports
+4333c8b Step 15 frontend: dashboard with today/month/profit/receivables/stock and 14-day chart; reports page with sales/profit, stock value, purchases, repairs and CSV export
+57d5760 Step 15 backend: dashboard numbers and reports (sales/profit, stock value, purchases, repairs)
+892eff3 Merge pull request #34 from abdulsamad2622000-ops/feature/step-14-repairs
+39a8b5f Step 14 frontend: job card list, intake with warranty check, job detail (status, parts, charges, delivery, slip); fix customer rule
+4135b5f Step 14 backend: warranty check, repair job cards, status flow, parts, delivery; technician role
+ecaf26a Merge pull request #33 from abdulsamad2622000-ops/feature/step-13-ledger
+8aa48ac Step 13 frontend: customer ledger/statement, receipts with allocation, aging report
+bdd176e Step 13 backend: customer ledger, receipts with FIFO/manual allocation, aging
+5341087 Merge pull request #32 from abdulsamad2622000-ops/feature/step-11-wholesale
+8c54a0c Step 11 wholesale frontend: customers, quotations, orders with serial delivery, challans, invoices with credit check and payments
+7063a0f Step 11: unpaid filter counts credit returns; frontend models, service, utils, fixtures
+654ffbd Step 11 wholesale backend: quotations, orders, challans, credit invoices, receipts, customer edit, credit returns
+de43760 Merge pull request #31 from abdulsamad2622000-ops/review/step-10
+6e562b4 Backend for scan app: single-serial putaway + Idempotency-Key on putaway, transfer and count actions
+5defdcd Merge step-10 scanning PWA; keep 9c putaway contract and accept scan app single-serial form in mock
+a4890de feat(step-10): offline session cache, scan-screen offline toast, PWA banner (10B-5)
+3862ed0 feat(step-10): scanning PWA (10A to 10B-4)
+d009566 Merge pull request #30 from abdulsamad2622000-ops/feature/step-12-pos
+ba89378 Step 12 POS frontend: full-screen POS, split pay, hold/recall, receipt, shift close, returns
+8c5bec5 Step 12 POS backend: shift, scan, sale, holds, returns, quick customers
+2204f16 Merge pull request #29 from abdulsamad2622000-ops/feature/backend-putaway
+1dacbda feat(api): put-away into bins (step 9c backend)
+--- status ---
+ M .gitignore
+ M README.md
+ M package-lock.json
+ M package.json
+ M src/app/app.routes.ts
+ M src/app/core/http/mock.interceptor.ts
+ M src/app/core/mock/fixtures/auth.fixtures.ts
+ M src/app/features/accounts/pages/cashbook.page.ts
+ M src/app/features/accounts/pages/expenses.page.ts
+ M src/app/features/dev/components-showcase.page.ts
+ M src/app/features/pos/pages/pos.page.ts
+ M src/app/features/repairs/utils/repair-utils.ts
+ M src/app/features/sales/pages/customer-ledger.page.ts
+ M src/app/features/sales/pages/customers.page.ts
+ M src/app/features/sales/utils/sales-utils.ts
+ M src/app/shared/ui/import-wizard/import-wizard.component.ts
+ M src/app/shared/ui/index.ts
+ M src/styles.css
+?? e2e/
+?? playwright.audit.config.ts
+?? playwright.config.ts
+?? src/app/shared/ui/modal/
+script  ng = ng
+script  start = ng serve
+script  build = ng build
+script  watch = ng build --watch --configuration development
+script  test = ng test
+script  lint = ng lint
+script  e2e = playwright test
+script  e2e:ui = playwright test --ui
+dep     @angular/common ^22.2.0
+dep     @angular/compiler ^22.2.0
+dep     @angular/core ^22.2.0
+dep     @angular/forms ^22.2.0
+dep     @angular/platform-browser ^22.2.0
+dep     @angular/router ^22.2.0
+dep     @angular/service-worker 22.2.6
+dep     @jsverse/transloco ^8.4.0
+dep     @ngrx/signals ^22.0.1
+dep     @primeuix/themes ^3.1.1
+dep     @tailwindcss/postcss ^4.3.5
+dep     @types/qrcode ^1.5.6
+dep     @zxing/browser ^0.2.1
+dep     @zxing/library ^0.23.0
+dep     jsbarcode ^3.12.3
+dep     postcss ^8.5.33
+dep     primeicons ^8.0.2
+dep     primeng ^22.1.5
+dep     qrcode ^1.5.4
+dep     rxjs ~7.8.0
+dep     tailwindcss ^4.3.5
+dep     tslib ^2.3.0
+dep     xlsx https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz
+devdep  @angular/build ^22.2.6
+devdep  @angular/cli ^22.2.6
+devdep  @angular/compiler-cli ^22.2.0
+devdep  @eslint/js ^10.0.1
+devdep  @playwright/test ^1.65.1
+devdep  @types/jsbarcode ^3.11.4
+devdep  angular-eslint 22.7.0
+devdep  eslint ^10.14.0
+devdep  jsdom ^30.0.0
+devdep  prettier ^3.8.1
+devdep  typescript ~6.0.2
+devdep  typescript-eslint 8.72.1
+devdep  vitest ^5.0.0
+accounts               files=5    lines=428    specs=1
+auth                   files=5    lines=492    specs=0
+dev                    files=1    lines=401    specs=0
+email                  files=4    lines=258    specs=0
+errors                 files=2    lines=32     specs=0
+inventory              files=35   lines=3066   specs=10
+labels                 files=8    lines=740    specs=2
+placeholder            files=1    lines=18     specs=0
+pos                    files=5    lines=1071   specs=1
+products               files=16   lines=1888   specs=9
+purchase               files=17   lines=2161   specs=2
+repairs                files=6    lines=615    specs=1
+reports                files=5    lines=468    specs=1
+sales                  files=14   lines=2011   specs=2
+scan                   files=20   lines=1767   specs=5
+settings               files=18   lines=1991   specs=3
+users                  files=13   lines=1349   specs=2
+src\app\app.config.ts  (46 lines)
+src\app\app.routes.ts  (617 lines)
+src\app\app.ts  (16 lines)
+src\app\core\auth\auth.models.ts  (56 lines)
+src\app\core\auth\auth.service.ts  (47 lines)
+src\app\core\auth\auth.store.challenge.spec.ts  (42 lines)
+src\app\core\auth\auth.store.offline.spec.ts  (61 lines)
+src\app\core\auth\auth.store.spec.ts  (96 lines)
+src\app\core\auth\auth.store.ts  (173 lines)
+src\app\core\auth\can.ts  (7 lines)
+src\app\core\auth\guards.spec.ts  (57 lines)
+src\app\core\auth\guards.ts  (27 lines)
+src\app\core\auth\has-permission.directive.spec.ts  (42 lines)
+src\app\core\auth\has-permission.directive.ts  (30 lines)
+src\app\core\auth\return-url.spec.ts  (18 lines)
+src\app\core\auth\return-url.ts  (7 lines)
+src\app\core\auth\session-cache.spec.ts  (32 lines)
+src\app\core\auth\session-cache.ts  (49 lines)
+src\app\core\config\.gitkeep  (0 lines)
+src\app\core\config\app-config.ts  (4 lines)
+src\app\core\config\feature-flags.ts  (4 lines)
+src\app\core\config\primeui-license.example.ts  (2 lines)
+src\app\core\config\primeui-license.ts  (2 lines)
+src\app\core\http\.gitkeep  (0 lines)
+src\app\core\http\api-base.interceptor.ts  (9 lines)
+src\app\core\http\branch.interceptor.ts  (11 lines)
+src\app\core\http\envelope.interceptor.spec.ts  (17 lines)
+src\app\core\http\envelope.interceptor.ts  (20 lines)
+src\app\core\http\error.interceptor.spec.ts  (27 lines)
+src\app\core\http\error.interceptor.ts  (50 lines)
+src\app\core\http\mock.interceptor.spec.ts  (35 lines)
+src\app\core\http\mock.interceptor.ts  (54 lines)
+src\app\core\i18n\.gitkeep  (0 lines)
+src\app\core\i18n\transloco-loader.ts  (10 lines)
+src\app\core\mock\mock-mode.service.ts  (18 lines)
+src\app\core\mock\fixtures\.gitkeep  (0 lines)
+src\app\core\mock\fixtures\accounts.fixtures.spec.ts  (21 lines)
+src\app\core\mock\fixtures\accounts.fixtures.ts  (134 lines)
+src\app\core\mock\fixtures\adjustments.fixtures.spec.ts  (58 lines)
+src\app\core\mock\fixtures\adjustments.fixtures.ts  (89 lines)
+src\app\core\mock\fixtures\auth.fixtures.ts  (217 lines)
+src\app\core\mock\fixtures\categories.fixtures.spec.ts  (35 lines)
+src\app\core\mock\fixtures\counts.fixtures.spec.ts  (43 lines)
+src\app\core\mock\fixtures\counts.fixtures.ts  (87 lines)
+src\app\core\mock\fixtures\fixture.types.ts  (12 lines)
+src\app\core\mock\fixtures\index.ts  (48 lines)
+src\app\core\mock\fixtures\labels.fixtures.spec.ts  (26 lines)
+src\app\core\mock\fixtures\labels.fixtures.ts  (98 lines)
+src\app\core\mock\fixtures\locations.fixtures.spec.ts  (33 lines)
+src\app\core\mock\fixtures\org.fixtures.spec.ts  (39 lines)
+src\app\core\mock\fixtures\org.fixtures.ts  (140 lines)
+src\app\core\mock\fixtures\payables.fixtures.spec.ts  (41 lines)
+src\app\core\mock\fixtures\payables.fixtures.ts  (182 lines)
+src\app\core\mock\fixtures\payables.flow.spec.ts  (49 lines)
+src\app\core\mock\fixtures\permissions.fixtures.spec.ts  (57 lines)
+src\app\core\mock\fixtures\permissions.fixtures.ts  (123 lines)
+src\app\core\mock\fixtures\pos.fixtures.spec.ts  (56 lines)
+src\app\core\mock\fixtures\pos.fixtures.ts  (237 lines)
+src\app\core\mock\fixtures\price-history.fixtures.spec.ts  (21 lines)
+src\app\core\mock\fixtures\price-history.fixtures.ts  (43 lines)
+src\app\core\mock\fixtures\products.fixtures.spec.ts  (41 lines)
+src\app\core\mock\fixtures\products.fixtures.ts  (124 lines)
+src\app\core\mock\fixtures\purchase.fixtures.spec.ts  (43 lines)
+src\app\core\mock\fixtures\purchase.fixtures.ts  (212 lines)
+src\app\core\mock\fixtures\putaway.fixtures.spec.ts  (20 lines)
+src\app\core\mock\fixtures\putaway.fixtures.ts  (56 lines)
+src\app\core\mock\fixtures\recovery.fixtures.ts  (7 lines)
+src\app\core\mock\fixtures\repairs.fixtures.spec.ts  (26 lines)
+src\app\core\mock\fixtures\repairs.fixtures.ts  (135 lines)
+src\app\core\mock\fixtures\reports.fixtures.spec.ts  (13 lines)
+src\app\core\mock\fixtures\reports.fixtures.ts  (87 lines)
+src\app\core\mock\fixtures\reservations.fixtures.spec.ts  (58 lines)
+src\app\core\mock\fixtures\reservations.fixtures.ts  (97 lines)
+src\app\core\mock\fixtures\sales.fixtures.spec.ts  (63 lines)
+src\app\core\mock\fixtures\sales.fixtures.ts  (432 lines)
+src\app\core\mock\fixtures\settings.fixtures.spec.ts  (67 lines)
+src\app\core\mock\fixtures\settings.fixtures.ts  (104 lines)
+src\app\core\mock\fixtures\stock-location.ts  (31 lines)
+src\app\core\mock\fixtures\stock.fixtures.spec.ts  (38 lines)
+src\app\core\mock\fixtures\stock.fixtures.ts  (110 lines)
+src\app\core\mock\fixtures\transfers.fixtures.spec.ts  (43 lines)
+src\app\core\mock\fixtures\transfers.fixtures.ts  (96 lines)
+src\app\core\mock\fixtures\users.fixtures.ts  (221 lines)
+src\app\core\nav\.gitkeep  (0 lines)
+src\app\core\nav\menu.config.spec.ts  (17 lines)
+src\app\core\nav\menu.config.ts  (100 lines)
+src\app\core\nav\visible-menu.spec.ts  (15 lines)
+src\app\core\pwa\pwa-banner.component.ts  (41 lines)
+src\app\core\pwa\pwa-utils.spec.ts  (19 lines)
+src\app\core\pwa\pwa-utils.ts  (13 lines)
+src\app\core\pwa\pwa.service.spec.ts  (34 lines)
+src\app\core\pwa\pwa.service.ts  (75 lines)
+src\app\core\theme\.gitkeep  (0 lines)
+src\app\core\theme\theme.service.spec.ts  (22 lines)
+src\app\core\theme\theme.service.ts  (25 lines)
+src\app\features\accounts\models\accounts.models.ts  (67 lines)
+src\app\features\accounts\pages\cashbook.page.ts  (109 lines)
+src\app\features\accounts\pages\expenses.page.ts  (200 lines)
+src\app\features\accounts\services\accounts.service.ts  (34 lines)
+src\app\features\accounts\utils\accounts-utils.spec.ts  (18 lines)
+src\app\features\accounts\utils\accounts-utils.ts  (18 lines)
+src\app\features\auth\auth-card.component.ts  (34 lines)
+src\app\features\auth\forgot-password.page.ts  (70 lines)
+src\app\features\auth\login.page.ts  (218 lines)
+src\app\features\auth\recover-email.page.ts  (70 lines)
+src\app\features\auth\reset-password.page.ts  (100 lines)
+src\app\features\dev\components-showcase.page.ts  (401 lines)
+src\app\features\email\models\email.models.ts  (29 lines)
+src\app\features\email\pages\email.page.ts  (137 lines)
+src\app\features\email\services\email.service.ts  (32 lines)
+src\app\features\email\ui\send-email.component.ts  (60 lines)
+src\app\features\errors\.gitkeep  (0 lines)
+src\app\features\errors\forbidden.page.ts  (16 lines)
+src\app\features\errors\not-found.page.ts  (16 lines)
+src\app\features\inventory\models\adjustment.models.ts  (28 lines)
+src\app\features\inventory\models\count.models.ts  (28 lines)
+src\app\features\inventory\models\inventory.models.ts  (57 lines)
+src\app\features\inventory\models\putaway.models.ts  (8 lines)
+src\app\features\inventory\models\reservation.models.ts  (25 lines)
+src\app\features\inventory\models\transfer.models.ts  (30 lines)
+src\app\features\inventory\pages\adjustment.page.ts  (271 lines)
+src\app\features\inventory\pages\adjustments.page.ts  (82 lines)
+src\app\features\inventory\pages\alerts.page.spec.ts  (84 lines)
+src\app\features\inventory\pages\alerts.page.ts  (230 lines)
+src\app\features\inventory\pages\bins.page.spec.ts  (90 lines)
+src\app\features\inventory\pages\bins.page.ts  (182 lines)
+src\app\features\inventory\pages\count.page.ts  (281 lines)
+src\app\features\inventory\pages\counts.page.ts  (112 lines)
+src\app\features\inventory\pages\ledger.page.ts  (122 lines)
+src\app\features\inventory\pages\putaway.page.ts  (183 lines)
+src\app\features\inventory\pages\reservation-new.page.spec.ts  (100 lines)
+src\app\features\inventory\pages\reservation-new.page.ts  (154 lines)
+src\app\features\inventory\pages\reservations.page.spec.ts  (99 lines)
+src\app\features\inventory\pages\reservations.page.ts  (132 lines)
+src\app\features\inventory\pages\serial-detail.page.ts  (81 lines)
+src\app\features\inventory\pages\serials.page.ts  (95 lines)
+src\app\features\inventory\pages\stock.page.ts  (113 lines)
+src\app\features\inventory\pages\transfer.page.ts  (337 lines)
+src\app\features\inventory\pages\transfers.page.ts  (108 lines)
+src\app\features\inventory\services\adjustments.service.ts  (23 lines)
+src\app\features\inventory\services\counts.service.ts  (30 lines)
+src\app\features\inventory\services\inventory.service.ts  (24 lines)
+src\app\features\inventory\services\putaway.service.ts  (13 lines)
+src\app\features\inventory\services\reservations.service.ts  (19 lines)
+src\app\features\inventory\services\transfers.service.ts  (30 lines)
+src\app\features\inventory\utils\adjustment-utils.spec.ts  (22 lines)
+src\app\features\inventory\utils\adjustment-utils.ts  (29 lines)
+src\app\features\inventory\utils\alert-utils.spec.ts  (104 lines)
+src\app\features\inventory\utils\alert-utils.ts  (123 lines)
+src\app\features\inventory\utils\bin-utils.spec.ts  (19 lines)
+src\app\features\inventory\utils\bin-utils.ts  (15 lines)
+src\app\features\inventory\utils\count-utils.spec.ts  (22 lines)
+src\app\features\inventory\utils\count-utils.ts  (31 lines)
+src\app\features\inventory\utils\inventory-ui.ts  (12 lines)
+src\app\features\inventory\utils\load-all.ts  (13 lines)
+src\app\features\inventory\utils\reservation-utils.spec.ts  (28 lines)
+src\app\features\inventory\utils\reservation-utils.ts  (21 lines)
+src\app\features\inventory\utils\transfer-utils.spec.ts  (19 lines)
+src\app\features\inventory\utils\transfer-utils.ts  (24 lines)
+src\app\features\labels\models\label.models.ts  (46 lines)
+src\app\features\labels\pages\label-templates.page.ts  (207 lines)
+src\app\features\labels\pages\labels.page.ts  (313 lines)
+src\app\features\labels\services\labels.service.ts  (40 lines)
+src\app\features\labels\utils\barcode-render.ts  (27 lines)
+src\app\features\labels\utils\label-render.spec.ts  (23 lines)
+src\app\features\labels\utils\label-render.ts  (13 lines)
+src\app\features\labels\utils\label-utils.spec.ts  (43 lines)
+src\app\features\labels\utils\label-utils.ts  (78 lines)
+src\app\features\labels\utils\sample-items.ts  (16 lines)
+src\app\features\placeholder\placeholder.page.ts  (18 lines)
+src\app\features\pos\models\pos.models.ts  (116 lines)
+src\app\features\pos\pages\pos.page.ts  (639 lines)
+src\app\features\pos\pages\sales-return.page.ts  (151 lines)
+src\app\features\pos\services\pos.service.ts  (55 lines)
+src\app\features\pos\utils\pos-utils.spec.ts  (50 lines)
+src\app\features\pos\utils\pos-utils.ts  (110 lines)
+src\app\features\products\models\index.ts  (1 lines)
+src\app\features\products\models\product.models.ts  (66 lines)
+src\app\features\products\pages\brands.page.spec.ts  (160 lines)
+src\app\features\products\pages\brands.page.ts  (161 lines)
+src\app\features\products\pages\categories.page.spec.ts  (160 lines)
+src\app\features\products\pages\categories.page.ts  (161 lines)
+src\app\features\products\pages\product-form.page.spec.ts  (363 lines)
+src\app\features\products\pages\product-form.page.ts  (824 lines)
+src\app\features\products\pages\product-import.page.ts  (128 lines)
+src\app\features\products\pages\products.page.spec.ts  (143 lines)
+src\app\features\products\pages\products.page.ts  (186 lines)
+src\app\features\products\services\branch-lookup.service.ts  (8 lines)
+src\app\features\products\services\price-history.service.ts  (22 lines)
+src\app\features\products\services\products.service.ts  (53 lines)
+src\app\features\products\stores\products.stores.spec.ts  (69 lines)
+src\app\features\products\stores\products.stores.ts  (66 lines)
+src\app\features\products\utils\category-path.ts  (16 lines)
+src\app\features\products\utils\category-tree.spec.ts  (23 lines)
+src\app\features\products\utils\category-tree.ts  (51 lines)
+src\app\features\products\utils\image-utils.spec.ts  (39 lines)
+src\app\features\products\utils\image-utils.ts  (31 lines)
+src\app\features\products\utils\import-utils.spec.ts  (39 lines)
+src\app\features\products\utils\import-utils.ts  (70 lines)
+src\app\features\products\utils\product-utils.spec.ts  (62 lines)
+src\app\features\products\utils\product-utils.ts  (44 lines)
+src\app\features\purchase\models\payables.models.ts  (106 lines)
+src\app\features\purchase\models\purchase.models.ts  (83 lines)
+src\app\features\purchase\pages\grn-landed-cost.page.ts  (186 lines)
+src\app\features\purchase\pages\grn-receive.page.ts  (294 lines)
+src\app\features\purchase\pages\grns.page.ts  (64 lines)
+src\app\features\purchase\pages\po-matching.page.ts  (183 lines)
+src\app\features\purchase\pages\purchase-order.page.ts  (290 lines)
+src\app\features\purchase\pages\purchase-orders.page.ts  (74 lines)
+src\app\features\purchase\pages\purchase-returns.page.ts  (191 lines)
+src\app\features\purchase\pages\supplier-ledger.page.ts  (106 lines)
+src\app\features\purchase\pages\supplier-payments.page.ts  (208 lines)
+src\app\features\purchase\pages\suppliers.page.ts  (141 lines)
+src\app\features\purchase\services\payables.service.ts  (45 lines)
+src\app\features\purchase\services\purchase.service.ts  (58 lines)
+src\app\features\purchase\utils\payables-utils.spec.ts  (61 lines)
+src\app\features\purchase\utils\payables-utils.ts  (62 lines)
+src\app\features\purchase\utils\purchase-utils.spec.ts  (39 lines)
+src\app\features\purchase\utils\purchase-utils.ts  (46 lines)
+src\app\features\purchase\utils\ui.ts  (24 lines)
+src\app\features\repairs\models\repair.models.ts  (73 lines)
+src\app\features\repairs\pages\repair-job.page.ts  (243 lines)
+src\app\features\repairs\pages\repair-new.page.ts  (113 lines)
+src\app\features\repairs\pages\repairs.page.ts  (115 lines)
+src\app\features\repairs\services\repairs.service.ts  (33 lines)
+src\app\features\repairs\utils\repair-utils.spec.ts  (26 lines)
+src\app\features\repairs\utils\repair-utils.ts  (38 lines)
+src\app\features\reports\models\report.models.ts  (79 lines)
+src\app\features\reports\pages\dashboard.page.ts  (100 lines)
+src\app\features\reports\pages\reports.page.ts  (235 lines)
+src\app\features\reports\services\reports.service.ts  (26 lines)
+src\app\features\reports\utils\report-utils.spec.ts  (15 lines)
+src\app\features\reports\utils\report-utils.ts  (28 lines)
+src\app\features\sales\models\sales.models.ts  (190 lines)
+src\app\features\sales\pages\aging.page.ts  (72 lines)
+src\app\features\sales\pages\challan.page.ts  (158 lines)
+src\app\features\sales\pages\customer-ledger.page.ts  (228 lines)
+src\app\features\sales\pages\customers.page.ts  (180 lines)
+src\app\features\sales\pages\invoice.page.ts  (166 lines)
+src\app\features\sales\pages\quotation.page.ts  (125 lines)
+src\app\features\sales\pages\sales-doc-form.page.ts  (243 lines)
+src\app\features\sales\pages\sales-list.page.ts  (170 lines)
+src\app\features\sales\pages\sales-order.page.ts  (249 lines)
+src\app\features\sales\services\sales.service.ts  (103 lines)
+src\app\features\sales\utils\ledger-utils.spec.ts  (24 lines)
+src\app\features\sales\utils\ledger-utils.ts  (33 lines)
+src\app\features\sales\utils\sales-print.ts  (21 lines)
+src\app\features\sales\utils\sales-utils.spec.ts  (28 lines)
+src\app\features\sales\utils\sales-utils.ts  (73 lines)
+src\app\features\scan\scan-layout.component.ts  (72 lines)
+src\app\features\scan\models\offline.models.ts  (21 lines)
+src\app\features\scan\models\putaway.models.ts  (21 lines)
+src\app\features\scan\pages\scan-count.page.ts  (295 lines)
+src\app\features\scan\pages\scan-counts.page.ts  (99 lines)
+src\app\features\scan\pages\scan-home.page.ts  (60 lines)
+src\app\features\scan\pages\scan-lookup.page.ts  (174 lines)
+src\app\features\scan\pages\scan-putaway.page.ts  (197 lines)
+src\app\features\scan\pages\scan-sync.page.ts  (83 lines)
+src\app\features\scan\pages\scan-transfer.page.ts  (258 lines)
+src\app\features\scan\pages\scan-transfers.page.ts  (101 lines)
+src\app\features\scan\services\offline-cache.service.ts  (50 lines)
+src\app\features\scan\services\offline-queue.service.spec.ts  (105 lines)
+src\app\features\scan\services\offline-queue.service.ts  (119 lines)
+src\app\features\scan\services\offline-store.spec.ts  (24 lines)
+src\app\features\scan\services\offline-store.ts  (97 lines)
+src\app\features\scan\services\putaway.service.ts  (37 lines)
+src\app\features\scan\utils\haptics.spec.ts  (19 lines)
+src\app\features\scan\utils\haptics.ts  (12 lines)
+src\app\features\scan\utils\idempotency.ts  (10 lines)
+src\app\features\scan\utils\offline-utils.ts  (6 lines)
+src\app\features\scan\utils\putaway-utils.spec.ts  (33 lines)
+src\app\features\scan\utils\putaway-utils.ts  (22 lines)
+src\app\features\scan\utils\scan-checklist.spec.ts  (23 lines)
+src\app\features\scan\utils\scan-checklist.ts  (33 lines)
+src\app\features\settings\models\location.models.ts  (14 lines)
+src\app\features\settings\models\org.models.ts  (29 lines)
+src\app\features\settings\models\settings.models.ts  (48 lines)
+src\app\features\settings\pages\backup.page.ts  (85 lines)
+src\app\features\settings\pages\branches.page.ts  (222 lines)
+src\app\features\settings\pages\company.page.ts  (283 lines)
+src\app\features\settings\pages\costing.page.ts  (122 lines)
+src\app\features\settings\pages\locations.page.ts  (370 lines)
+src\app\features\settings\pages\number-series.page.ts  (182 lines)
+src\app\features\settings\pages\price-tiers.page.ts  (145 lines)
+src\app\features\settings\pages\warehouses.page.ts  (242 lines)
+src\app\features\settings\services\org.service.ts  (16 lines)
+src\app\features\settings\services\settings.service.ts  (45 lines)
+src\app\features\settings\stores\org.stores.ts  (17 lines)
+src\app\features\settings\stores\settings.store.spec.ts  (60 lines)
+src\app\features\settings\stores\settings.store.ts  (76 lines)
+src\app\features\settings\utils\barcode-svg.ts  (20 lines)
+src\app\features\settings\utils\bin-label.spec.ts  (10 lines)
+src\app\features\settings\utils\bin-label.ts  (23 lines)
+src\app\features\settings\utils\location-utils.spec.ts  (27 lines)
+src\app\features\settings\utils\location-utils.ts  (52 lines)
+src\app\features\users\permission-registry.spec.ts  (21 lines)
+src\app\features\users\permission-registry.ts  (145 lines)
+src\app\features\users\users.rules.spec.ts  (24 lines)
+src\app\features\users\users.rules.ts  (14 lines)
+src\app\features\users\models\permissions.models.ts  (19 lines)
+src\app\features\users\models\roles.models.ts  (21 lines)
+src\app\features\users\models\users.models.ts  (20 lines)
+src\app\features\users\pages\audit.page.ts  (54 lines)
+src\app\features\users\pages\role-form.page.ts  (228 lines)
+src\app\features\users\pages\roles.page.ts  (94 lines)
+src\app\features\users\pages\user-permissions.page.ts  (193 lines)
+src\app\features\users\pages\users.page.ts  (369 lines)
+src\app\features\users\stores\permissions.store.ts  (54 lines)
+src\app\features\users\stores\roles.store.ts  (61 lines)
+src\app\features\users\stores\users.store.ts  (77 lines)
+src\app\layout\.gitkeep  (0 lines)
+src\app\layout\breadcrumbs.component.ts  (61 lines)
+src\app\layout\shell.component.ts  (35 lines)
+src\app\layout\sidebar.component.ts  (69 lines)
+src\app\layout\topbar.component.ts  (53 lines)
+src\app\shared\ui\.gitkeep  (0 lines)
+src\app\shared\ui\empty-state.component.ts  (20 lines)
+src\app\shared\ui\error-state.component.ts  (21 lines)
+src\app\shared\ui\index.ts  (19 lines)
+src\app\shared\ui\page-header.component.ts  (22 lines)
+src\app\shared\ui\skeleton.component.ts  (18 lines)
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.spec.ts  (55 lines)
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.ts  (177 lines)
+src\app\shared\ui\confirm-dialog\confirm-dialog.reason.spec.ts  (98 lines)
+src\app\shared\ui\confirm-dialog\confirm-dialog.service.ts  (64 lines)
+src\app\shared\ui\crud-dialog\crud-dialog.component.spec.ts  (71 lines)
+src\app\shared\ui\crud-dialog\crud-dialog.component.ts  (68 lines)
+src\app\shared\ui\data-table\data-table.component.spec.ts  (94 lines)
+src\app\shared\ui\data-table\data-table.component.ts  (239 lines)
+src\app\shared\ui\data-table\data-table.models.ts  (39 lines)
+src\app\shared\ui\date-input\date-input.component.spec.ts  (49 lines)
+src\app\shared\ui\date-input\date-input.component.ts  (67 lines)
+src\app\shared\ui\form-field\form-field.component.spec.ts  (52 lines)
+src\app\shared\ui\form-field\form-field.component.ts  (74 lines)
+src\app\shared\ui\import-wizard\import-utils.spec.ts  (43 lines)
+src\app\shared\ui\import-wizard\import-utils.ts  (112 lines)
+src\app\shared\ui\import-wizard\import-wizard.component.ts  (260 lines)
+src\app\shared\ui\list-page\list-page.component.spec.ts  (98 lines)
+src\app\shared\ui\list-page\list-page.component.ts  (81 lines)
+src\app\shared\ui\modal\modal.component.spec.ts  (98 lines)
+src\app\shared\ui\modal\modal.component.ts  (83 lines)
+src\app\shared\ui\number-input\number-input.component.spec.ts  (63 lines)
+src\app\shared\ui\number-input\number-input.component.ts  (117 lines)
+src\app\shared\ui\number-input\number-utils.spec.ts  (25 lines)
+src\app\shared\ui\number-input\number-utils.ts  (17 lines)
+src\app\shared\ui\page-toolbar\page-toolbar.component.spec.ts  (34 lines)
+src\app\shared\ui\page-toolbar\page-toolbar.component.ts  (49 lines)
+src\app\shared\ui\print\print-utils.spec.ts  (24 lines)
+src\app\shared\ui\print\print-utils.ts  (47 lines)
+src\app\shared\ui\print\print.service.ts  (42 lines)
+src\app\shared\ui\scan-input\scan-camera.component.spec.ts  (133 lines)
+src\app\shared\ui\scan-input\scan-camera.component.ts  (245 lines)
+src\app\shared\ui\scan-input\scan-camera.continuous.spec.ts  (72 lines)
+src\app\shared\ui\scan-input\scan-input.component.spec.ts  (113 lines)
+src\app\shared\ui\scan-input\scan-input.component.ts  (133 lines)
+src\app\shared\ui\scan-input\scan-sound.service.spec.ts  (69 lines)
+src\app\shared\ui\scan-input\scan-sound.service.ts  (66 lines)
+src\app\shared\ui\scan-input\scan-utils.spec.ts  (43 lines)
+src\app\shared\ui\scan-input\scan-utils.ts  (36 lines)
+src\app\shared\ui\search-select\search-select.component.spec.ts  (145 lines)
+src\app\shared\ui\search-select\search-select.component.ts  (239 lines)
+src\app\shared\ui\status-badge\status-badge.component.spec.ts  (23 lines)
+src\app\shared\ui\status-badge\status-badge.component.ts  (36 lines)
+--- src\app\app.routes.ts ---
+import { isDevMode } from '@angular/core';
+import { Routes } from '@angular/router';
+import { authGuard, guestGuard, permissionGuard } from './core/auth/guards';
+import { FEATURE_FLAGS } from './core/config/feature-flags';
+import { flattenMenu } from './core/nav/menu.config';
+
+const placeholderRoutes: Routes = flattenMenu()
+  .filter((i) => i.flag !== 'website' || FEATURE_FLAGS.website)
+  .map((i) => ({
+    path: i.path,
+    canActivate: [permissionGuard],
+    data: { title: i.key, permission: i.permission },
+    loadComponent: () =>
+      import('./features/placeholder/placeholder.page').then((m) => m.PlaceholderPage),
+  }));
+
+// Sirf ng serve mein. Production build mein ye route register nahi hota.
+const devRoutes: Routes = [
+  {
+    path: 'dev/components',
+    loadComponent: () =>
+      import('./features/dev/components-showcase.page').then((m) => m.ComponentsShowcasePage),
+  },
+];
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'forgot-password',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/forgot-password.page').then((m) => m.ForgotPasswordPage),
+  },
+  {
+    path: 'reset-password',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/reset-password.page').then((m) => m.ResetPasswordPage),
+  },
+  {
+    path: 'recover-email',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/recover-email.page').then((m) => m.RecoverEmailPage),
+  },
+  {
+    path: 'scan',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/scan/scan-layout.component').then((m) => m.ScanLayoutComponent),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () => import('./features/scan/pages/scan-home.page').then((m) => m.ScanHomePage),
+      },
+      {
+        path: 'putaway',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-putaway.page').then((m) => m.ScanPutAwayPage),
+      },
+      {
+        path: 'transfers',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-transfers.page').then((m) => m.ScanTransfersPage),
+      },
+      {
+        path: 'transfers/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        loadComponent: () => import('./features/scan/pages/scan-transfer.page').then((m) => m.ScanTransferPage),
+      },
+      {
+        path: 'counts',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.count.create' },
+        loadComponent: () => import('./features/scan/pages/scan-counts.page').then((m) => m.ScanCountsPage),
+      },
+      {
+        path: 'counts/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.count.create' },
+        loadComponent: () => import('./features/scan/pages/scan-count.page').then((m) => m.ScanCountPage),
+      },
+      {
+        path: 'sync',
+        loadComponent: () => import('./features/scan/pages/scan-sync.page').then((m) => m.ScanSyncPage),
+      },
+      {
+        path: 'lookup',
+        canActivate: [permissionGuard],
+        data: { title: 'scan', permission: 'inventory.serial.view' },
+        loadComponent: () => import('./features/scan/pages/scan-lookup.page').then((m) => m.ScanLookupPage),
+      },
+    ],
+  },
+  {
+    path: '',
+    canActivate: [authGuard],
+    loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'dashboard',
+        canActivate: [permissionGuard],
+        data: { title: 'dashboard', permission: 'dashboard.view.view' },
+        loadComponent: () => import('./features/reports/pages/dashboard.page').then((m) => m.DashboardPage),
+      },
+      {
+        path: 'reports',
+        canActivate: [permissionGuard],
+        data: { title: 'reports', permission: 'reports.report.view' },
+        loadComponent: () => import('./features/reports/pages/reports.page').then((m) => m.ReportsPage),
+      },
+      {
+        path: 'products/brands',
+        canActivate: [permissionGuard],
+        data: { title: 'brands', permission: 'products.brand.view' },
+        loadComponent: () =>
+          import('./features/products/pages/brands.page').then((m) => m.BrandsPage),
+      },
+      {
+        path: 'products/categories',
+        canActivate: [permissionGuard],
+        data: { title: 'categories', permission: 'products.category.view' },
+        loadComponent: () =>
+          import('./features/products/pages/categories.page').then((m) => m.CategoriesPage),
+      },
+      {
+        path: 'products/list',
+        canActivate: [permissionGuard],
+        data: { title: 'productList', permission: 'products.product.view' },
+        loadComponent: () =>
+          import('./features/products/pages/products.page').then((m) => m.ProductsPage),
+      },
+      {
+        path: 'purchase/payments',
+        canActivate: [permissionGuard],
+        data: { title: 'supplierPayments', permission: 'purchase.payment.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/supplier-payments.page').then((m) => m.SupplierPaymentsPage),
+      },
+      {
+        path: 'purchase/suppliers/:id/ledger',
+        canActivate: [permissionGuard],
+        data: { title: 'suppliers', permission: 'purchase.supplier.view' },
+        loadComponent: () =>
+          import('./features/purchase/pages/supplier-ledger.page').then((m) => m.SupplierLedgerPage),
+--- menu.config.ts ---
+import { FEATURE_FLAGS } from '../config/feature-flags';
+export interface MenuItem {
+  key: string;            // translation key suffix + route id
+  path: string;           // full route path
+  icon: string;           // primeicons class
+  permission: string;     // module.resource.action (Step 2 mein enforce hoga)
+  children?: MenuItem[];
+  flag?: 'website';       // feature flag (module on/off)
+}
+
+export const MENU: MenuItem[] = [
+  { key: 'dashboard', path: 'dashboard', icon: 'pi pi-home', permission: 'dashboard.view.view' },
+  {
+    key: 'inventory', path: 'inventory', icon: 'pi pi-box', permission: 'inventory.stock.view',
+    children: [
+      { key: 'stock', path: 'inventory/stock', icon: 'pi pi-list', permission: 'inventory.stock.view' },
+      { key: 'alerts', path: 'inventory/alerts', icon: 'pi pi-bell', permission: 'inventory.stock.view' },
+      { key: 'serials', path: 'inventory/serials', icon: 'pi pi-hashtag', permission: 'inventory.serial.view' },
+      { key: 'locations', path: 'inventory/locations', icon: 'pi pi-map-marker', permission: 'inventory.location.view' },
+      { key: 'putaway', path: 'inventory/putaway', icon: 'pi pi-download', permission: 'inventory.putaway.create' },
+      { key: 'ledger', path: 'inventory/ledger', icon: 'pi pi-book', permission: 'inventory.ledger.view' },
+      { key: 'transfers', path: 'inventory/transfers', icon: 'pi pi-arrow-right-arrow-left', permission: 'inventory.transfer.view' },
+      { key: 'counts', path: 'inventory/counts', icon: 'pi pi-check-square', permission: 'inventory.count.view' },
+      { key: 'adjustments', path: 'inventory/adjustments', icon: 'pi pi-sliders-h', permission: 'inventory.adjustment.view' },
+      { key: 'reservations', path: 'inventory/reservations', icon: 'pi pi-lock', permission: 'inventory.reservation.view' },
+    ],
+  },
+  {
+    key: 'products', path: 'products', icon: 'pi pi-desktop', permission: 'products.product.view',
+    children: [
+      { key: 'productList', path: 'products/list', icon: 'pi pi-list', permission: 'products.product.view' },
+      { key: 'brands', path: 'products/brands', icon: 'pi pi-tag', permission: 'products.brand.view' },
+      { key: 'categories', path: 'products/categories', icon: 'pi pi-sitemap', permission: 'products.category.view' },
+      { key: 'barcodes', path: 'products/barcodes', icon: 'pi pi-qrcode', permission: 'barcode.label.view' },
+    ],
+  },
+  {
+    key: 'purchase', path: 'purchase', icon: 'pi pi-shopping-bag', permission: 'purchase.order.view',
+    children: [
+      { key: 'suppliers', path: 'purchase/suppliers', icon: 'pi pi-truck', permission: 'purchase.supplier.view' },
+      { key: 'orders', path: 'purchase/orders', icon: 'pi pi-file', permission: 'purchase.order.view' },
+      { key: 'grn', path: 'purchase/grn', icon: 'pi pi-inbox', permission: 'purchase.grn.view' },
+      { key: 'purchaseReturns', path: 'purchase/returns', icon: 'pi pi-undo', permission: 'purchase.return.view' },
+      { key: 'supplierPayments', path: 'purchase/payments', icon: 'pi pi-wallet', permission: 'purchase.payment.view' },
+    ],
+  },
+  {
+    key: 'sales', path: 'sales', icon: 'pi pi-shopping-cart', permission: 'sales.invoice.view',
+    children: [
+      { key: 'quotations', path: 'sales/quotations', icon: 'pi pi-file-edit', permission: 'sales.quotation.view' },
+      { key: 'salesOrders', path: 'sales/orders', icon: 'pi pi-file', permission: 'sales.order.view' },
+      { key: 'invoices', path: 'sales/invoices', icon: 'pi pi-receipt', permission: 'sales.invoice.view' },
+      { key: 'challans', path: 'sales/challans', icon: 'pi pi-truck', permission: 'sales.challan.view' },
+      { key: 'pos', path: 'sales/pos', icon: 'pi pi-calculator', permission: 'pos.sale.create' },
+      { key: 'salesReturns', path: 'sales/returns', icon: 'pi pi-undo', permission: 'sales.return.view' },
+    ],
+  },
+  { key: 'customers', path: 'customers', icon: 'pi pi-users', permission: 'customers.customer.view' },
+  { key: 'warranty', path: 'warranty', icon: 'pi pi-shield', permission: 'warranty.claim.view' },
+  { key: 'reports', path: 'reports', icon: 'pi pi-chart-bar', permission: 'reports.report.view' },
+  {
+    key: 'accounts', path: 'accounts', icon: 'pi pi-wallet', permission: 'accounts.expense.view',
+    children: [
+      { key: 'expenses', path: 'accounts/expenses', icon: 'pi pi-money-bill', permission: 'accounts.expense.view' },
+      { key: 'cashbook', path: 'accounts/cashbook', icon: 'pi pi-book', permission: 'accounts.cashbook.view' },
+    ],
+  },
+  { key: 'email', path: 'email', icon: 'pi pi-envelope', permission: 'email.template.view' },
+  { key: 'website', path: 'website', icon: 'pi pi-globe', permission: 'web.order.view', flag: 'website' },
+  {
+    key: 'usersRoles', path: 'users-roles', icon: 'pi pi-user-edit', permission: 'users.user.view',
+    children: [
+      { key: 'users', path: 'users-roles/users', icon: 'pi pi-users', permission: 'users.user.view' },
+      { key: 'roles', path: 'users-roles/roles', icon: 'pi pi-id-card', permission: 'users.role.view' },
+      { key: 'audit', path: 'users-roles/audit', icon: 'pi pi-history', permission: 'users.audit.view' },
+    ],
+  },
+  {
+    key: 'settings', path: 'settings', icon: 'pi pi-cog', permission: 'settings.manage',
+    children: [
+      { key: 'companyProfile', path: 'settings/company', icon: 'pi pi-building', permission: 'settings.manage' },
+      { key: 'branches', path: 'settings/branches', icon: 'pi pi-sitemap', permission: 'settings.manage' },
+      { key: 'warehouses', path: 'settings/warehouses', icon: 'pi pi-box', permission: 'settings.manage' },
+      { key: 'locationTree', path: 'settings/locations', icon: 'pi pi-map', permission: 'settings.manage' },
+      { key: 'numberSeries', path: 'settings/number-series', icon: 'pi pi-hashtag', permission: 'settings.manage' },
+      { key: 'priceTiers', path: 'settings/price-tiers', icon: 'pi pi-tags', permission: 'settings.manage' },
+      { key: 'costing', path: 'settings/costing', icon: 'pi pi-calculator', permission: 'settings.manage' },
+      { key: 'backup', path: 'settings/backup', icon: 'pi pi-database', permission: 'settings.manage' },
+    ],
+  },
+];
+
+/** Sirf leaf items (jin ke liye route banega) */
+export function flattenMenu(items: MenuItem[] = MENU): MenuItem[] {
+  return items.flatMap((i) => (i.children ? flattenMenu(i.children) : [i]));
+}
+/** Sirf wohi items jin ki permission ho. Khali group chhup jata hai. Website flag off to chhupa. */
+export function visibleMenu(can: (key: string) => boolean): MenuItem[] {
+  return MENU.filter((i) => i.flag !== 'website' || FEATURE_FLAGS.website)
+    .map((i) => (i.children ? { ...i, children: i.children.filter((c) => can(c.permission)) } : i))
+    .filter((i) => (i.children ? i.children.length > 0 : can(i.permission)));
+}
+--- has-permission.directive.ts ---
+import { Directive, TemplateRef, ViewContainerRef, effect, inject, input } from '@angular/core';
+import { AuthStore } from './auth.store';
+
+/**
+ * <button *hasPermission="'pos.sale.create'">...</button>
+ * <div *hasPermission="['a.b.view','c.d.view']">  (koi bhi ek kafi hai)
+ * Sirf UI hide/show. Backend enforcement alag hai.
+ */
+// eslint-disable-next-line @angular-eslint/directive-selector -- handover mein naam *hasPermission fix hai (bina prefix)
+@Directive({ selector: '[hasPermission]' })
+export class HasPermissionDirective {
+  readonly hasPermission = input.required<string | string[]>();
+
+  private readonly store = inject(AuthStore);
+  private readonly tpl = inject(TemplateRef<unknown>);
+  private readonly vcr = inject(ViewContainerRef);
+  private shown = false;
+
+  constructor() {
+    effect(() => {
+      const raw = this.hasPermission();
+      const keys = Array.isArray(raw) ? raw : [raw];
+      const allowed = keys.some((k) => this.store.can(k));
+      if (allowed && !this.shown) {
+        this.vcr.createEmbeddedView(this.tpl);
+        this.shown = true;
+      } else if (!allowed && this.shown) {
+        this.vcr.clear();
+        this.shown = false;
+      }
+    });
+  }
+}
+--- permissions.fixtures.ts ---
+import { AuditEntry, OverridesBody } from '../../../features/users/models/permissions.models';
+import { ManagedUser } from '../../../features/users/models/users.models';
+import { canManageUser } from '../../../features/users/users.rules';
+import { FixtureHandler, FixtureRequest, fail, ok } from './fixture.types';
+import { ROLES, actorType, users } from './users.fixtures';
+
+// ---------- change log ----------
+const AUDIT: AuditEntry[] = [];
+let seq = 0;
+const ACTOR_NAMES: Record<string, string> = {
+  'super@demo.test': 'Demo Super Admin',
+  'admin@demo.test': 'Demo Admin',
+  'keeper@demo.test': 'Demo Store Keeper',
+};
+
+function actorName(): string {
+  try {
+    return ACTOR_NAMES[sessionStorage.getItem('erp.mock.session') ?? ''] ?? 'System';
+  } catch {
+    return 'System';
+  }
+}
+
+function log(action: string, target: string, detail = ''): void {
+  AUDIT.unshift({ id: ++seq, at: new Date().toISOString(), actor: actorName(), action, target, detail });
+}
+
+const urlId = (url: string, segment: string): number => {
+  const parts = url.split('?')[0].split('/');
+  return Number(parts[parts.indexOf(segment) + 1]);
+};
+const userName = (id: number): string => users.find((u) => u.id === id)?.name ?? `#${id}`;
+const roleName = (id: number): string => ROLES.find((r) => r.id === id)?.name ?? `#${id}`;
+const body = <T>(req: FixtureRequest): T => req.body as T;
+
+type Rule = (req: FixtureRequest) => [string, string, string?];
+
+const RULES: Record<string, Rule> = {
+  'POST /users': (r) => ['user.created', body<{ name: string }>(r).name],
+  'PUT /users/:id': (r) => ['user.updated', userName(urlId(r.url, 'users'))],
+  'DELETE /users/:id': (r) => ['user.deleted', userName(urlId(r.url, 'users'))],
+  'POST /users/:id/active': (r) => [
+    body<{ isActive?: boolean }>(r).isActive ? 'user.enabled' : 'user.disabled',
+    userName(urlId(r.url, 'users')),
+  ],
+  'POST /users/:id/force-logout': (r) => ['user.forceLogout', userName(urlId(r.url, 'users'))],
+  'POST /users/:id/reset-password': (r) => ['user.passwordReset', userName(urlId(r.url, 'users'))],
+  'PUT /users/:id/permissions': (r) => {
+    const b = body<OverridesBody>(r);
+    return ['user.permissions', userName(urlId(r.url, 'users')), `${b.allow.length} allow, ${b.deny.length} deny`];
+  },
+  'POST /roles': (r) => ['role.created', body<{ name: string }>(r).name],
+  'PUT /roles/:id': (r) => [
+    'role.updated',
+    roleName(urlId(r.url, 'roles')),
+    `${body<{ permissions: string[] }>(r).permissions.length} permissions`,
+  ],
+  'DELETE /roles/:id': (r) => ['role.deleted', roleName(urlId(r.url, 'roles'))],
+};
+
+/** Kamyab (status < 400) tabdeeli par change log mein entry likhta hai. */
+export function auditWrap(handlers: Record<string, FixtureHandler>): Record<string, FixtureHandler> {
+  const out: Record<string, FixtureHandler> = {};
+  for (const [key, handler] of Object.entries(handlers)) {
+    const rule = RULES[key];
+    out[key] = rule
+      ? (req) => {
+          const entry = rule(req); // naam pehle pakar lete hain (delete ke baad nahi milta)
+          const res = handler(req);
+          if (res.status < 400) log(...entry);
+          return res;
+        }
+      : handler;
+  }
+  return out;
+}
+
+// ---------- per-user overrides ----------
+const overrides = new Map<number, OverridesBody>();
+const userOf = (url: string): ManagedUser | undefined => users.find((u) => u.id === urlId(url, 'users'));
+const blocked = (u: ManagedUser): boolean => u.type === 'super_admin' || !canManageUser(actorType(), u.type);
+const NOT_ALLOWED = 'You are not allowed to manage this user.';
+
+export const OVERRIDE_FIXTURES: Record<string, FixtureHandler> = {
+  'GET /users/:id/permissions': (req) => {
+    const u = userOf(req.url);
+    if (!u) return fail(404, 'Not found.');
+    if (blocked(u)) return fail(403, NOT_ALLOWED);
+    const o = overrides.get(u.id) ?? { allow: [], deny: [] };
+    return ok({
+      userId: u.id,
+      userName: u.name,
+      roleName: u.roleName,
+      rolePermissions: ROLES.find((r) => r.id === u.roleId)?.permissions ?? [],
+      ...o,
+    });
+  },
+
+  'PUT /users/:id/permissions': (req) => {
+    const u = userOf(req.url);
+    if (!u) return fail(404, 'Not found.');
+    if (blocked(u)) return fail(403, NOT_ALLOWED);
+    const b = body<OverridesBody>(req);
+    // Mock mein Admin ke paas sirf settings.manage nahi hota. Asli backend har key check karega.
+    if (actorType() === 'admin' && b.allow.includes('settings.manage')) {
+      return fail(403, 'You cannot grant a permission you do not hold.');
+    }
+    overrides.set(u.id, { allow: [...b.allow], deny: [...b.deny] });
+    return ok();
+  },
+};
+
+// ---------- change log list ----------
+export const AUDIT_FIXTURES: Record<string, FixtureHandler> = {
+  'GET /audit': (req) => {
+    const a = actorType();
+    if (a !== 'super_admin' && a !== 'admin') return fail(403, 'You are not allowed to view the change log.');
+    const q = new URL(req.url, 'http://mock').searchParams;
+    const search = (q.get('search') ?? '').trim().toLowerCase();
+    let rows = AUDIT.filter((e) => `${e.actor} ${e.action} ${e.target} ${e.detail}`.toLowerCase().includes(search));
+--- permissions.models.ts ---
+export type OverrideMode = 'default' | 'allow' | 'deny';
+
+export interface OverridesBody {
+  allow: string[];
+  deny: string[];
+}
+
+export interface UserPermissions extends OverridesBody {
+  userId: number;
+  userName: string;
+  roleName: string | null;
+  rolePermissions: string[];
+}
+
+export interface AuditEntry {
+  id: number;
+  at: string;
+  actor: string;
+  action: string;
+  target: string;
+  detail: string;
+}
+--- user-permissions.page.ts ---
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { AuthStore } from '../../../core/auth/auth.store';
+import { PageToolbarComponent } from '../../../shared/ui/page-toolbar/page-toolbar.component';
+import { OverrideMode, UserPermissions } from '../models/permissions.models';
+import { PERMISSION_MODULES, PermissionModule, grantableKeys, moduleKeys } from '../permission-registry';
+import { UserPermissionsStore } from '../stores/permissions.store';
+
+@Component({
+  selector: 'app-user-permissions-page',
+  imports: [RouterLink, TranslocoPipe, PageToolbarComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <app-page-toolbar
+      [title]="'overrides.title' | transloco"
+      [subtitle]="info()?.userName ?? ''"
+      [breadcrumbs]="[{ label: 'menu.users' | transloco, link: '/users-roles/users' }, { label: 'overrides.title' | transloco }]" />
+
+    @if (loading()) {
+      <div class="space-y-2" role="status">
+        <span class="sr-only">{{ 'common.loading' | transloco }}</span>
+        @for (i of [1, 2, 3]; track i) {
+          <div class="h-14 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800"></div>
+        }
+      </div>
+    } @else if (loadError(); as le) {
+      <div class="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-8 text-center" role="alert">
+        <i class="pi pi-exclamation-triangle text-3xl text-red-600" aria-hidden="true"></i>
+        <p class="text-sm">{{ le }}</p>
+        <a routerLink="/users-roles/users" class="inline-flex min-h-12 items-center rounded-lg border border-input px-5 font-medium">
+          {{ 'overrides.back' | transloco }}
+        </a>
+      </div>
+    } @else {
+      <div class="space-y-4">
+        <p class="text-sm text-muted">{{ 'overrides.intro' | transloco }}</p>
+        <p class="text-sm">
+          <span class="font-medium">{{ 'overrides.role' | transloco }}:</span>
+          {{ info()?.roleName ?? ('overrides.noRole' | transloco) }}
+          <span class="ms-3" aria-live="polite">{{ 'overrides.count' | transloco: { count: overrideCount() } }}</span>
+        </p>
+        @if (!isSuper()) {
+          <p class="text-xs text-muted">{{ 'overrides.notGrantable' | transloco }}</p>
+        }
+
+        @if (notice(); as n) {
+          <p role="status" class="rounded-lg bg-green-100 p-3 text-sm text-green-800 dark:bg-green-900/40 dark:text-green-300">{{ n }}</p>
+        }
+        @if (formError(); as fe) {
+          <p role="alert" class="rounded-lg border border-red-600 p-3 text-sm text-red-600">{{ fe }}</p>
+        }
+
+        @for (m of modules; track m.key) {
+          <details class="rounded-xl border border-border bg-card" open>
+            <summary class="flex min-h-12 cursor-pointer items-center justify-between gap-3 px-4">
+              <span class="font-semibold">{{ m.label }}</span>
+              <span class="text-xs text-muted">{{ moduleOverrides(m) }} / {{ moduleTotal(m) }}</span>
+            </summary>
+            <div class="space-y-1 border-t border-border p-2">
+              @for (r of m.rows; track r.prefix) {
+                @for (p of r.perms; track p.key) {
+                  <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg px-2 py-1 hover:bg-page">
+                    <div class="min-w-0 text-sm">
+                      <span>{{ r.label }}</span>
+                      <span class="ms-1 capitalize text-muted">{{ p.action }}</span>
+                      <span class="ms-2 text-xs text-muted">{{ (roleHas(p.key) ? 'overrides.roleHas' : 'overrides.roleHasNot') | transloco }}</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                      <span class="text-xs" [class]="effective(p.key) ? 'text-green-600 dark:text-green-400' : 'text-muted'">
+                        {{ (effective(p.key) ? 'overrides.granted' : 'overrides.notGranted') | transloco }}
+                      </span>
+                      <div role="group" [attr.aria-label]="r.label + ' ' + p.action" class="inline-flex overflow-hidden rounded-lg border border-input">
+                        @for (mode of modes; track mode) {
+                          <button
+                            type="button"
+                            class="min-h-11 px-3 text-sm disabled:opacity-60"
+                            [class]="btnClass(p.key, mode)"
+                            [attr.aria-pressed]="modeOf(p.key) === mode"
+                            [disabled]="!canSet(p.key, mode)"
+                            (click)="setMode(p.key, mode)">
+                            {{ 'overrides.mode.' + mode | transloco }}
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </details>
+        }
+
+        <div class="sticky bottom-0 flex flex-wrap gap-2 border-t border-border bg-page py-3">
+          <button type="button" class="min-h-12 rounded-lg bg-accent px-6 font-medium text-white disabled:opacity-50" [disabled]="saving()" (click)="save()">
+            {{ 'overrides.save' | transloco }}
+          </button>
+          <button type="button" class="min-h-12 rounded-lg border border-input px-6 font-medium" (click)="clearAll()">
+            {{ 'overrides.clear' | transloco }}
+          </button>
+          <a routerLink="/users-roles/users" class="inline-flex min-h-12 items-center rounded-lg border border-input px-6 font-medium">
+            {{ 'overrides.back' | transloco }}
+          </a>
+        </div>
+      </div>
+    }
+  `,
+})
+export class UserPermissionsPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly store = inject(UserPermissionsStore);
+  private readonly auth = inject(AuthStore);
+  private readonly i18n = inject(TranslocoService);
+
+  protected readonly modules = PERMISSION_MODULES;
+  protected readonly modes: OverrideMode[] = ['default', 'allow', 'deny'];
+  private readonly userId = Number(this.route.snapshot.paramMap.get('id'));
+
+  protected readonly loading = signal(true);
+  protected readonly loadError = signal<string | null>(null);
+--- permissions.store.ts ---
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { APP_CONFIG } from '../../../core/config/app-config';
+import { DEFAULT_TABLE_QUERY, TableQuery } from '../../../shared/ui/data-table/data-table.models';
+import { AuditEntry, OverridesBody, UserPermissions } from '../models/permissions.models';
+
+function messageOf(e: unknown): string {
+  const m = (e as HttpErrorResponse | null)?.error?.message;
+  return typeof m === 'string' ? m : 'Something went wrong.';
+}
+
+@Injectable({ providedIn: 'root' })
+export class UserPermissionsStore {
+  private readonly http = inject(HttpClient);
+  private readonly base = APP_CONFIG.apiBase;
+
+  /** Error par throw karta hai (page loadError dikhata hai). */
+  get(userId: number): Promise<UserPermissions> {
+    return firstValueFrom(this.http.get<UserPermissions>(`${this.base}/users/${userId}/permissions`));
+  }
+
+  /** Kamyabi par null, warna error message. */
+  async save(userId: number, body: OverridesBody): Promise<string | null> {
+    try {
+      await firstValueFrom(this.http.put(`${this.base}/users/${userId}/permissions`, body));
+      return null;
+    } catch (e) {
+      return messageOf(e);
+    }
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuditStore {
+  private readonly http = inject(HttpClient);
+  private readonly base = APP_CONFIG.apiBase;
+
+  readonly rows = signal<AuditEntry[]>([]);
+  readonly total = signal(0);
+  readonly loading = signal(false);
+  readonly query = signal<TableQuery>({ ...DEFAULT_TABLE_QUERY });
+
+  /** Error par throw karta hai (page loadError dikhata hai). */
+  async load(q: TableQuery = this.query()): Promise<void> {
+    this.query.set(q);
+    this.loading.set(true);
+    try {
+      const p = new URLSearchParams({ page: String(q.page), pageSize: String(q.pageSize) });
+      if (q.search) p.set('search', q.search);
+      if (q.sort) p.set('sort', `${q.sort.field}:${q.sort.direction}`);
+      const res = await firstValueFrom(
+        this.http.get<{ data: AuditEntry[]; total: number }>(`${this.base}/audit?${p.toString()}`),
+      );
+      this.rows.set(res.data);
+      this.total.set(res.total);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+}
+--- permission-registry.ts ---
+import { UserType } from '../../core/auth/auth.models';
+
+export interface PermissionItem {
+  action: string;
+  key: string;
+}
+export interface PermissionRow {
+  label: string;
+  prefix: string;
+  perms: PermissionItem[];
+}
+export interface PermissionModule {
+  key: string;
+  label: string;
+  rows: PermissionRow[];
+}
+
+const row = (label: string, prefix: string, actions: string[]): PermissionRow => ({
+  label,
+  prefix,
+  perms: actions.map((action) => ({ action, key: `${prefix}.${action}` })),
+});
+const CRUD = ['view', 'create', 'edit', 'delete'];
+
+/** Frontend ka permission registry. Asli list backend ke registry API se aayegi. */
+export const PERMISSION_MODULES: PermissionModule[] = [
+  { key: 'dashboard', label: 'Dashboard', rows: [row('Dashboard', 'dashboard.view', ['view'])] },
+  {
+    key: 'inventory',
+    label: 'Inventory',
+    rows: [
+      row('Stock', 'inventory.stock', ['view']),
+      row('Serials', 'inventory.serial', ['view']),
+      row('Locations', 'inventory.location', ['view']),
+      row('Put-away', 'inventory.putaway', ['create']),
+      row('Stock ledger', 'inventory.ledger', ['view']),
+      row('Transfers', 'inventory.transfer', ['view', 'create', 'approve']),
+      row('Stock counts', 'inventory.count', ['view', 'create', 'approve']),
+      row('Adjustments', 'inventory.adjustment', ['view', 'create', 'approve']),
+      row('Reservations', 'inventory.reservation', ['view', 'create']),
+    ],
+  },
+  {
+    key: 'products',
+    label: 'Products',
+    rows: [
+      row('Products', 'products.product', CRUD),
+      row('Cost price', 'products.cost', ['view']),
+      row('Brands', 'products.brand', CRUD),
+      row('Categories', 'products.category', CRUD),
+      row('Barcodes & labels', 'barcode.label', ['view', 'create', 'print', 'reprint']),
+    ],
+  },
+  {
+    key: 'purchase',
+    label: 'Purchase',
+    rows: [
+      row('Suppliers', 'purchase.supplier', ['view', 'create', 'edit']),
+      row('Purchase orders', 'purchase.order', ['view', 'create', 'edit', 'approve']),
+      row('Receive stock (GRN)', 'purchase.grn', ['view', 'create']),
+      row('Purchase returns', 'purchase.return', ['view', 'create']),
+      row('Supplier payments', 'purchase.payment', ['view', 'create']),
+    ],
+  },
+  {
+    key: 'sales',
+    label: 'Sales',
+    rows: [
+      row('Quotations', 'sales.quotation', ['view', 'create', 'edit']),
+      row('Sales orders', 'sales.order', ['view', 'create', 'edit']),
+      row('Invoices', 'sales.invoice', ['view', 'create', 'edit']),
+      row('Delivery challans', 'sales.challan', ['view', 'create']),
+      row('Sales returns', 'sales.return', ['view', 'create']),
+      row('Retail POS', 'pos.sale', ['create']),
+    ],
+  },
+  { key: 'customers', label: 'Customers', rows: [row('Customers', 'customers.customer', ['view', 'create', 'edit'])] },
+  { key: 'warranty', label: 'Warranty', rows: [row('Warranty claims', 'warranty.claim', ['view', 'create', 'edit'])] },
+  { key: 'reports', label: 'Reports', rows: [row('Reports', 'reports.report', ['view'])] },
+  {
+    key: 'accounts',
+    label: 'Accounts',
+    rows: [row('Expenses', 'accounts.expense', ['view', 'create', 'edit']), row('Cash book', 'accounts.cashbook', ['view'])],
+  },
+  { key: 'email', label: 'Email', rows: [row('Email templates', 'email.template', ['view', 'edit']), row('Send email', 'email.message', ['send'])] },
+  {
+    key: 'users',
+    label: 'Users & roles',
+    rows: [row('Users', 'users.user', CRUD), row('Roles', 'users.role', CRUD), row('Audit log', 'users.audit', ['view'])],
+  },
+  { key: 'settings', label: 'Settings', rows: [row('Settings', 'settings', ['manage'])] },
+];
+
+export function moduleKeys(m: PermissionModule): string[] {
+  return m.rows.flatMap((r) => r.perms.map((p) => p.key));
+}
+
+export function allPermissionKeys(): string[] {
+  return PERMISSION_MODULES.flatMap(moduleKeys);
+}
+
+/**
+ * Kaun si permissions dene ki ijazat hai. SuperAdmin sab de sakta hai,
+ * baaqi sirf wohi jo unke paas khud hain.
+ */
+export function grantableKeys(actor: UserType | null | undefined, held: ReadonlySet<string>): Set<string> {
+  const all = allPermissionKeys();
+  return new Set(actor === 'super_admin' ? all : all.filter((k) => held.has(k)));
+}
+
+export interface RoleTemplate {
+  name: string;
+  description: string;
+  permissions: string[];
+}
+
+export const ROLE_TEMPLATES: RoleTemplate[] = [
+  {
+    name: 'Store Keeper',
+    description: 'Stock, transfers and counts.',
+src\app\core\auth\auth.service.ts
+src\app\core\auth\auth.store.ts
+src\app\core\http\mock.interceptor.ts
+src\app\core\mock\mock-mode.service.ts
+src\app\core\mock\fixtures\accounts.fixtures.ts
+src\app\core\mock\fixtures\adjustments.fixtures.ts
+src\app\core\mock\fixtures\auth.fixtures.ts
+src\app\core\mock\fixtures\counts.fixtures.ts
+src\app\core\mock\fixtures\fixture.types.ts
+src\app\core\mock\fixtures\labels.fixtures.ts
+src\app\core\mock\fixtures\org.fixtures.ts
+src\app\core\mock\fixtures\payables.fixtures.ts
+src\app\core\mock\fixtures\permissions.fixtures.ts
+src\app\core\mock\fixtures\pos.fixtures.ts
+src\app\core\mock\fixtures\price-history.fixtures.ts
+src\app\core\mock\fixtures\products.fixtures.ts
+src\app\core\mock\fixtures\purchase.fixtures.ts
+src\app\core\mock\fixtures\putaway.fixtures.ts
+src\app\core\mock\fixtures\recovery.fixtures.ts
+src\app\core\mock\fixtures\repairs.fixtures.ts
+src\app\core\mock\fixtures\reports.fixtures.ts
+src\app\core\mock\fixtures\reservations.fixtures.ts
+src\app\core\mock\fixtures\sales.fixtures.ts
+src\app\core\mock\fixtures\settings.fixtures.ts
+src\app\core\mock\fixtures\stock.fixtures.ts
+src\app\core\mock\fixtures\transfers.fixtures.ts
+src\app\core\mock\fixtures\users.fixtures.ts
+src\app\core\pwa\pwa.service.ts
+src\app\core\theme\theme.service.ts
+src\app\features\accounts\services\accounts.service.ts
+src\app\features\email\services\email.service.ts
+src\app\features\inventory\services\adjustments.service.ts
+src\app\features\inventory\services\counts.service.ts
+src\app\features\inventory\services\inventory.service.ts
+src\app\features\inventory\services\putaway.service.ts
+src\app\features\inventory\services\reservations.service.ts
+src\app\features\inventory\services\transfers.service.ts
+src\app\features\labels\services\labels.service.ts
+src\app\features\pos\services\pos.service.ts
+src\app\features\products\services\branch-lookup.service.ts
+src\app\features\products\services\price-history.service.ts
+src\app\features\products\services\products.service.ts
+src\app\features\purchase\services\payables.service.ts
+src\app\features\purchase\services\purchase.service.ts
+src\app\features\repairs\services\repairs.service.ts
+src\app\features\reports\services\reports.service.ts
+src\app\features\sales\services\sales.service.ts
+src\app\features\scan\services\offline-cache.service.ts
+src\app\features\scan\services\offline-queue.service.ts
+src\app\features\scan\services\putaway.service.ts
+src\app\features\settings\services\org.service.ts
+src\app\features\settings\services\settings.service.ts
+src\app\features\settings\stores\settings.store.ts
+src\app\features\users\stores\permissions.store.ts
+src\app\features\users\stores\roles.store.ts
+src\app\features\users\stores\users.store.ts
+src\app\shared\ui\confirm-dialog\confirm-dialog.service.ts
+src\app\shared\ui\print\print.service.ts
+src\app\shared\ui\scan-input\scan-sound.service.ts
+src\app\shared\ui\empty-state.component.ts
+src\app\shared\ui\error-state.component.ts
+src\app\shared\ui\index.ts
+src\app\shared\ui\page-header.component.ts
+src\app\shared\ui\skeleton.component.ts
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.ts
+src\app\shared\ui\confirm-dialog\confirm-dialog.service.ts
+src\app\shared\ui\crud-dialog\crud-dialog.component.ts
+src\app\shared\ui\data-table\data-table.component.ts
+src\app\shared\ui\data-table\data-table.models.ts
+src\app\shared\ui\date-input\date-input.component.ts
+src\app\shared\ui\form-field\form-field.component.ts
+src\app\shared\ui\import-wizard\import-utils.ts
+src\app\shared\ui\import-wizard\import-wizard.component.ts
+src\app\shared\ui\list-page\list-page.component.ts
+src\app\shared\ui\modal\modal.component.ts
+src\app\shared\ui\number-input\number-input.component.ts
+src\app\shared\ui\number-input\number-utils.ts
+src\app\shared\ui\page-toolbar\page-toolbar.component.ts
+src\app\shared\ui\print\print-utils.ts
+src\app\shared\ui\print\print.service.ts
+src\app\shared\ui\scan-input\scan-camera.component.ts
+src\app\shared\ui\scan-input\scan-input.component.ts
+src\app\shared\ui\scan-input\scan-sound.service.ts
+src\app\shared\ui\scan-input\scan-utils.ts
+src\app\shared\ui\search-select\search-select.component.ts
+src\app\shared\ui\status-badge\status-badge.component.ts
+src\app\features\placeholder\placeholder.page.ts:17: export class PlaceholderPage {
+src\app\features\scan\pages\scan-transfer.page.ts:60: {{ 'scanApp.transfer.nothingToDo' | transloco }}
+src\app\app.routes.ts:14: import('./features/placeholder/placeholder.page').then((m) => m.PlaceholderPage),
+e2e\grn.e2e.ts
+e2e\login.e2e.ts
+e2e\pos.e2e.ts
+e2e\transfer.e2e.ts
+e2e\warranty.e2e.ts
+e2e\wholesale.e2e.ts
+spec files total: 96
+# Laptop ERP - Web (Angular)
+
+Frontend for the inventory-centric laptop/computer ERP (Novastack Hub).
+
+## Stack
+Angular 22 (standalone, Signals), PrimeNG, Tailwind v4, NgRx Signals, Transloco (English only; Urdu and RTL were removed), Vitest.
+
+## Commands
+- `npm start` : dev server
+- `npx ng build` : production build
+- `npx ng test --watch=false` : unit tests
+- `npx ng lint` : ESLint
+
+## Structure
+- `src/app/core` : config, http (interceptors), mock (fixtures), i18n, theme, nav
+- `src/app/shared/ui` : reusable UI (page-header, empty/error state, skeleton)
+- `src/app/layout` : shell, sidebar, topbar, breadcrumbs
+- `src/app/features` : one folder per module (products, users, settings built; the rest are placeholders)
+
+## Mock mode
+Default on (`APP_CONFIG.mockDefault`). Override in browser console:
+`localStorage.setItem('erp.mock','false')` then reload.
+Fixtures live only in `src/app/core/mock/fixtures`.
+
+## Decisions (Step 1)
+- Initial bundle warning 760 kB (PrimeNG toast); error limit 1 MB.
+- Permission keys in `menu.config.ts` are drafts; backend owns the final list.
+- Website module hidden by feature flag.
+
+## Products (Step 6)
+Routes (permission in brackets):
+- `/products/brands` (`products.brand.view`), `/products/categories` (`products.category.view`, tree)
+- `/products/list` (`products.product.view`): list with SKU, name, brand, category path, specs, barcode, retail price, cost price (only with `products.cost.view`), tracking, active
+- `/products/list/new` (`products.product.create`) and `/products/list/:id/edit` (`products.product.edit`): form tabs Basics, Specs, Variants, Pricing, Warranty and stock, Images
+- `/products/list/import` (`products.product.create`): Excel/CSV import with validation preview
+
+Rules:
+- Item types are only Serialized and Batch/Lot. No accessories, bundles or service items.
+- A variant has its own SKU. A variant SKU cannot equal the product SKU or another variant SKU.
+- No price tier can be lower than the minimum price (floor).
+- Cost price is shown and sent only with `products.cost.view`, so an old value is never overwritten.
+- Barcodes: no spaces or special characters, and no duplicates between a product and its variants.
+- Images: JPG, PNG or WebP, up to 2 MB each, up to 8, exactly one main image.
+- Price history (edit page, under the Pricing tab) is recorded on every price change.
+- Import: columns SKU, Name, Barcode, Brand, Category, Tracking, Warranty months, Retail price, Wholesale price, Dealer price. Brand and category are matched by name. Rows are saved one by one and failures are listed.
+
+Open questions for the backend:
+- Images are sent inside the product JSON (data URLs in mock). An upload endpoint returning URLs is better.
+- Price tiers are per product. Ask whether a price per variant is needed.
+- Price history endpoint: `GET /products/{id}/history`.
+- A bulk import endpoint (frontend sends one `POST /products` per row now).
+## Labels (Step 7)
+- `/products/barcodes` (`barcode.label.view`): list of serials, SKUs and bins; pick items, pick a template, print. Scan a serial to find it for reprint.
+- `/products/barcodes/templates` (`barcode.label.create`): label template designer with live preview.
+- Reprinting a label that was printed before needs the `barcode.label.reprint` permission and a reason (10 characters or more). Every print is saved in the history table.
+- Not done yet: PDF output (browser print only).
+
+## Purchase (Step 8)
+- `/purchase/suppliers`, `/purchase/orders` (draft, approval, receive), `/purchase/grn` (scan, paste or CSV serials, accept, reject or quarantine, post).
+- `/purchase/suppliers/:id/ledger`: running balance (opening balance, goods received, returns, payments).
+- `/purchase/payments`: supplier payments. The amount cannot be above what is owed.
+- `/purchase/grn/:id/landed-cost`: freight and other costs, shared across items by value. Only after the GRN is posted.
+- `/purchase/orders/:id/matching`: compares ordered, received and the supplier invoice (matched, does not match, waiting for invoice, nothing received).
+- `/purchase/returns`: return by scanning serials. One supplier per return, reason of 10 characters or more. A serial can be returned once.
+
+Open questions for the backend (Step 8b):
+- Paths and shapes of ledger, payments, landed-cost, matching/bill and returns (see `payables.service.ts`).
+- Does landed cost go into the supplier ledger, or only into item cost?
+- How does stock change on a purchase return (serial status "returned to supplier")?
+
+## Inventory (Step 9)
+- `/inventory/stock` (`inventory.stock.view`) and `/inventory/alerts`: stock by model and warehouse, low-stock and aging alerts.
+- `/inventory/serials` and `/inventory/serials/:serial` (`inventory.serial.view`): serial list and detail with a history timeline (received, returned, adjusted, reserved, released, put away, transferred out and in).
+- `/inventory/locations` (`inventory.location.view`): what is inside each bin. `/inventory/putaway` (`inventory.putaway.create`): scan a bin, then scan the serials to put away.
+- `/inventory/ledger` (`inventory.ledger.view`): stock ledger.
+- `/inventory/transfers` (`inventory.transfer.view`): request, approve, dispatch, receive, with discrepancy highlight.
+- `/inventory/counts` (`inventory.count.view`): stock count sessions with variance review and approval.
+- `/inventory/adjustments` (`inventory.adjustment.view`): adjustments with reason and approval.
+- `/inventory/reservations` (`inventory.reservation.view`): reservations.
+
+Open questions for the backend (Step 9c):
+- `POST /inventory/putaway` with `{ binBarcode, serials[] }`.
+- A serial should carry `binId` and `binCode`.
+- An endpoint that lists the serials of one bin.
+## Scanning app (Step 10)
+Phone-first screens under `/scan` (own layout, large touch targets, works at 360px).
+- `/scan`: home with tiles (only the ones the user has permission for) and sync status.
+- `/scan/putaway` (`inventory.putaway.create`): scan the bin, then scan items. Continuous scan mode.
+- `/scan/transfers` and `/scan/transfers/:id` (`inventory.transfer.create`): dispatch and receive by scanning.
+- `/scan/counts` and `/scan/counts/:id` (`inventory.count.create`): stock count by scanning.
+- `/scan/lookup` (`inventory.serial.view`): quick serial lookup.
+- `/scan/sync`: waiting items, failed items and retry.
+
+How it works:
+- Camera scanning uses ZXing, with sound and vibration on success or error.
+- Installable PWA (Angular service worker, production build only). Install prompt, iOS hint and "new version ready" banner.
+- Offline queue in IndexedDB. Each action carries an `Idempotency-Key`, so retrying after a lost connection never doubles a put-away, transfer or count. A sync chip shows waiting, syncing and failed items.
+- Last successful `/me` is cached for 7 days, so a refresh with no internet keeps the user signed in. Cleared on logout or 401.
+- "No internet" toasts are hidden on `/scan` screens; the sync chip shows the state instead.
+## Sales (Steps 11 to 13)
+- `/sales/quotations`, `/sales/orders`, `/sales/challans`, `/sales/invoices` (`sales.quotation.view`, `sales.order.view`, `sales.challan.view`, `sales.invoice.view`): wholesale flow. A quotation can be sent, edited, cancelled or converted to an order. Prices follow the customer's price tier. Create and edit need `sales.quotation.create` / `sales.quotation.edit` and `sales.order.create`.
+- Challans are made from an order by scanning serials (partial delivery is allowed). An invoice is made from the delivered challans.
+- `/sales/pos` (`pos.sale.create`): retail counter. Open and close a shift, scan or search items, hold and recall bills, split payment, discount limits per user, walk-in or saved customer.
+- `/sales/returns` (`sales.return.view`): sales returns by serial.
+- `/customers` (`customers.customer.view`): customers with type, price tier, credit limit and terms. `/customers/:id/ledger` is the ledger and `/customers/aging` is receivable aging.
+
+## Warranty and service (Step 14)
+- `/warranty` (`warranty.claim.view`), `/warranty/new` (`warranty.claim.create`) and `/warranty/:id`: repair jobs and warranty claims, including parts taken from stock.
+
+## Reports and dashboard (Step 15)
+- `/dashboard` (`dashboard.view.view`): today and month sales, profit, receivable, payable, stock value, open repairs and orders, last 14 days chart, top items.
+- `/reports` (`reports.report.view`): tabbed reports with group-by and CSV export, including the profit and loss tab. Cost and profit figures depend on the user's permissions.
+
+## Accounts and email (Step 16)
+- `/accounts/expenses` (`accounts.expense.view`): expenses with categories and void. `/accounts/cashbook` (`accounts.cashbook.view`): cash book by payment method.
+- `/email` (`email.template.view`): email templates, test send and send log. Mailer status is shown when it is not set up.
+
+## Not built yet
+- Website module (Step 17): hidden by the `website` feature flag until the client confirms the platform.
+- Urdu and RTL were removed; the app is English only. Ask before adding them back.
+- Step 18 (still open): accessibility pass, performance pass and Playwright critical flows.
+
+## PrimeUI license key (required before first run)
+PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
+1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.
+2. Replace `PASTE_YOUR_KEY_HERE` with your own key from PrimeStore (primeui.store).
+3. Never commit `primeui-license.ts` (it is gitignored). Never share the key in chats or screenshots.
+Without a key the app still runs but shows an "Invalid PrimeUI License" badge.
+Community keys are valid for 12 months and need yearly eligibility renewal.
+--- lint ---
+> erp-web@0.0.0 lint
+> ng lint
+
+
+Linting "erp-web"...
+
+All files pass linting.
+
+--- unit tests ---
+
+> erp-web@0.0.0 test
+> ng test --run
+
+--- build ---
+chunk-CY38_04R.js   | pos-page                 |  31.66 kB |                 7.73 kB
+chunk-R2-K9b50.js   | browser                  |  24.33 kB |                 8.31 kB
+chunk-CfQIHvrk.js   | components-showcase-page |  19.73 kB |                 6.32 kB
+chunk-_Jwre7x3.js   | reports-page             |  18.04 kB |                 4.29 kB
+chunk-kZcXdnIw.js   | users-page               |  17.71 kB |                 4.95 kB
+chunk-BOpftjTO.js   | repair-job-page          |  16.48 kB |                 4.71 kB
+chunk-DqYwXBfB.js   | transfer-page            |  16.22 kB |                 4.41 kB
+chunk-DlQeDOC0.js   | customer-ledger-page     |  15.43 kB |                 4.74 kB
+chunk-yU9DD0tj.js   | locations-page           |  15.22 kB |                 4.47 kB
+...and 141 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [8.680 seconds] - 2026-11-24T08:20:39.220Z
+
+Output location: D:\Working_Data\Projects\Angular\AngularProjects\erpweb-fresh\dist\erp-web
+

@@ -72,8 +72,8 @@ export function docPrintHtml(o: {
 .doc .r{text-align:end}.doc .t td{font-weight:bold;font-size:14px;border:0}</style><div class="doc">
 <h1>Novastack<span>hub</span></h1><p style="margin:0">Empowering Digital Vision</p>
 <h2 style="margin:12px 0 4px">${esc(o.title)} ${esc(o.number)}</h2><p style="margin:0">${esc(o.date)}<br>${esc(o.party)}</p>
-<table><thead><tr><th>${esc(o.labels.item)}</th><th class="r">${esc(o.labels.qty)}</th>${
-    showPrice ? `<th class="r">${esc(o.labels.price)}</th><th class="r">${esc(o.labels.amount)}</th>` : ''
+<table><thead><tr><th scope="col">${esc(o.labels.item)}</th><th scope="col" class="r">${esc(o.labels.qty)}</th>${
+    showPrice ? `<th scope="col" class="r">${esc(o.labels.price)}</th><th scope="col" class="r">${esc(o.labels.amount)}</th>` : ''
   }</tr></thead><tbody>${body}</tbody>${
     o.total !== null ? `<tfoot><tr class="t"><td colspan="${showPrice ? 3 : 1}" class="r">${esc(o.labels.total)}</td><td class="r">${fmt(o.total)}</td></tr></tfoot>` : ''
   }</table><p style="margin-top:24px">${esc(o.footer)}</p></div>`;

@@ -232,7 +232,7 @@ export class CustomerLedgerPage implements OnInit {
 <h1>Novastack<span>hub</span></h1><p style="margin:0">Empowering Digital Vision</p>
 <h2 style="margin:10px 0 2px">${esc(t('ledgerPage.statement'))}: ${esc(l.customer.name)} ${esc(l.customer.phone)}</h2>
 <p style="margin:0">${esc(l.from ?? '')} – ${esc(l.to ?? new Date().toISOString().slice(0, 10))}</p>
-<table><thead><tr><th>${esc(t('salesDocs.date'))}</th><th>${esc(t('ledgerPage.details'))}</th><th class="r">${esc(t('ledgerPage.debit'))}</th><th class="r">${esc(t('ledgerPage.credit'))}</th><th class="r">${esc(t('ledgerPage.balance'))}</th></tr></thead><tbody>
+<table><thead><tr><th scope="col">${esc(t('salesDocs.date'))}</th><th scope="col">${esc(t('ledgerPage.details'))}</th><th scope="col" class="r">${esc(t('ledgerPage.debit'))}</th><th scope="col" class="r">${esc(t('ledgerPage.credit'))}</th><th scope="col" class="r">${esc(t('ledgerPage.balance'))}</th></tr></thead><tbody>
 ${row({ date: l.from ?? '', text: t('ledgerPage.opening'), debit: 0, credit: 0, balance: l.opening })}
 ${l.entries.map((e) => row({ ...e, text: `${t('ledgerPage.types.' + e.type)} ${e.ref}` })).join('')}
 </tbody></table><p style="margin-top:12px"><b>${esc(t('ledgerPage.closing'))}: ${money(l.closing)}</b></p></div>`;

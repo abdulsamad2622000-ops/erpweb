@@ -54,3 +54,9 @@ PROJECT_CONTEXT.txt
 STEP9C_CONTEXT.txt
 .env
 *.license
+
+# Playwright
+/test-results
+/playwright-report
+
+audit-output/

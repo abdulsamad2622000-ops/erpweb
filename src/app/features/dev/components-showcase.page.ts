@@ -425,7 +425,7 @@ export class ComponentsShowcasePage {
       '<p class="muted">Laptop ERP, Karachi Main</p><br>' +
       '<p><span class="b">Customer:</span> Ali Traders</p>' +
       '<p><span class="b">Date:</span> ' + escapeHtml(new Date().toLocaleDateString()) + '</p><br>' +
-      '<table><thead><tr><th>Item / Serials</th><th class="r">Qty</th><th class="r">Price</th></tr></thead><tbody>' + rows + '</tbody></table><br>' +
+      '<table><thead><tr><th scope="col">Item / Serials</th><th scope="col" class="r">Qty</th><th scope="col" class="r">Price</th></tr></thead><tbody>' + rows + '</tbody></table><br>' +
       '<p class="r b">Total: Rs 530,000.00</p>';
     void this.printer.print({ title: 'Invoice INV-000045', body, paper: 'a4' });
   }
