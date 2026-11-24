@@ -49,6 +49,15 @@ function fieldValue(item: LabelItem, field: LabelField, company: string, money: 
   }
 }
 
+/** Label ki text lines (HTML aur PDF dono ke liye): sirf wohi fields jin ki value ho. Code line sirf QR par. */
+export function labelLines(template: LabelTemplate, item: LabelItem, opts: LabelSheetOptions): string[] {
+  const qr = effectiveSymbology(template.symbology, item.code) === 'qr';
+  return template.fields
+    .filter((f) => f !== 'code' || qr)
+    .map((f) => fieldValue(item, f, opts.company, opts.money))
+    .filter((v): v is string => !!v);
+}
+
 export interface LabelSheetOptions {
   company: string;
   logoUrl: string | null;

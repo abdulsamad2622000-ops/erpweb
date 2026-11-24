@@ -14,6 +14,8 @@ import { LabelItem, LabelKind, LabelTemplate, PrintLogEntry } from '../models/la
 import { LabelsService } from '../services/labels.service';
 import { moneyPkr, renderLabelSheet } from '../utils/label-render';
 import { needsReprintReason } from '../utils/label-utils';
+import { buildLabelPdf } from '../utils/label-pdf';
+import { labelPdfName } from '../utils/label-pdf-layout';
 
 const KINDS: LabelKind[] = ['serial', 'sku', 'bin'];
 const PREVIEW_MAX = 6;
@@ -78,6 +80,11 @@ const PREVIEW_MAX = 6;
                 class="min-h-11 rounded-lg bg-[#1E3A8A] px-5 text-sm text-white disabled:opacity-50"
                 [disabled]="selectedItems().length === 0 || printing()" (click)="print()">
           {{ 'labels.print' | transloco: { count: selectedItems().length } }}
+        </button>
+        <button *hasPermission="'barcode.label.print'" type="button"
+                class="min-h-11 rounded-lg border border-[#1E3A8A] px-5 text-sm text-[#1E3A8A] disabled:opacity-50 dark:text-slate-100"
+                [disabled]="selectedItems().length === 0 || printing()" (click)="downloadPdf()">
+          {{ 'labels.downloadPdf' | transloco }}
         </button>
       </div>
       <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'labels.pdfHint' | transloco }}</p>
@@ -283,6 +290,14 @@ export class LabelsPage implements OnInit {
   }
 
   async print(): Promise<void> {
+    await this.output('print');
+  }
+
+  async downloadPdf(): Promise<void> {
+    await this.output('pdf');
+  }
+
+  private async output(mode: 'print' | 'pdf'): Promise<void> {
     const template = this.template();
     const items = this.selectedItems();
     if (!template || items.length === 0) return;
@@ -305,14 +320,20 @@ export class LabelsPage implements OnInit {
 
     this.printing.set(true);
     try {
+      // PDF pehle banta hai: fail ho to print log mein entry nahi jati.
+      const pdf = mode === 'pdf' ? await buildLabelPdf(template, items, this.sheetOptions()) : null;
       await firstValueFrom(this.api.record({ templateId: template.id, codes: items.map((i) => i.code), reason }));
-      const body = await renderLabelSheet(template, items, this.sheetOptions());
-      await this.printer.print({ title: this.i18n.translate('labels.title'), body, paper: 'a4', dir: 'ltr' });
+      if (pdf) {
+        pdf.save(labelPdfName(template.kind, new Date()));
+      } else {
+        const body = await renderLabelSheet(template, items, this.sheetOptions());
+        await this.printer.print({ title: this.i18n.translate('labels.title'), body, paper: 'a4', dir: 'ltr' });
+      }
       this.selected.set(new Set());
       this.extra.set([]);
       await Promise.all([this.reload(), this.loadHistory()]);
     } catch {
-      this.actionError.set(this.i18n.translate('labels.printFailed'));
+      this.actionError.set(this.i18n.translate(mode === 'pdf' ? 'labels.pdfFailed' : 'labels.printFailed'));
     } finally {
       this.printing.set(false);
     }
