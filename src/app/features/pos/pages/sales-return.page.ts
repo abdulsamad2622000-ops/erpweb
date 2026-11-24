@@ -7,12 +7,13 @@ import { ScanEvent, ScanInputComponent } from '../../../shared/ui/scan-input/sca
 import { UI, errorMessage } from '../../purchase/utils/ui';
 import { PAY_METHODS, RefundMethod, ReturnResult, Sale, SaleLine } from '../models/pos.models';
 import { PosService } from '../services/pos.service';
+import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
 import { money, refundFor } from '../utils/pos-utils';
 
 /** Step 12: receipt number ya serial scan kar ke return / exchange. Serial wapas stock mein. */
 @Component({
   selector: 'app-sales-return-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, ScanInputComponent],
+  imports: [FormsModule, RouterLink, TranslocoPipe, ScanInputComponent, HasPermissionDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto max-w-3xl space-y-4 p-1">
@@ -72,7 +73,7 @@ import { money, refundFor } from '../utils/pos-utils';
           <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'salesReturnPage.reasonHint' | transloco }}</p>
           <div class="flex items-center justify-between">
             <span class="text-base font-semibold">{{ 'salesReturnPage.amount' | transloco }}: {{ fmt(amount()) }}</span>
-            <button type="button" [class]="ui.primary" [disabled]="!picked().size || reason.trim().length < 10 || busy()" (click)="submit(s)">
+            <button *hasPermission="'sales.return.create'" type="button" [class]="ui.primary" [disabled]="!picked().size || reason.trim().length < 10 || busy()" (click)="submit(s)">
               {{ 'salesReturnPage.submit' | transloco }}
             </button>
           </div>
