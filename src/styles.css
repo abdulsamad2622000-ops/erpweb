@@ -347,6 +347,42 @@ html:not(.dark) .auth-glass a:hover { color: #1E3A8A !important; }
 app-sidebar nav ul i.pi { color: #CBD5E1; }
 app-sidebar nav ul a.bg-accent i.pi { color: #FFFFFF; }
 app-sidebar nav > div:first-child i.pi { color: #60A5FA; }
+/* === Form spacing: fields aur submit button === */
+form .field,
+form .form-field,
+form .p-field {
+  margin-bottom: 1rem;
+}
+
+form button[type="submit"],
+form .form-actions button {
+  margin-top: 1.5rem;
+}
+
+form .form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+/* === end form spacing === */
+
+
+/* ===== Dark tiles final ===== */
+html.dark .auth-tile {
+  background: linear-gradient(145deg, #0F1D4A 0%, #1B2C7A 100%) !important;
+  border: 1px solid rgba(143, 168, 255, .45) !important;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, .55) !important;
+}
+html.dark .auth-tile i {
+  color: #8FB0FF !important;
+}
+
+
+/* ===== Auth logo final ===== */
+.auth-scope .brand-logo { display: inline-block; flex: none; width: 1.15em; height: 1.15em; vertical-align: middle; }
+.auth-glass .brand-logo { width: 1.7em; height: 1.7em; }
+.auth-scope :has(> .brand-logo) { display: flex; align-items: center; gap: .4em; }
+.auth-scope aside :has(> .brand-logo) { justify-content: center; }
 
 /* ===== Form spacing fixes ===== */
 
@@ -623,25 +659,6 @@ input[type="date"]:not(.auth-scope *) {
 }
 
 
-/* ===== Auth brand logo ===== */
-.auth-scope .brand-logo {
-  display: inline-block;
-  flex: none;
-  width: 1em;
-  height: 1em;
-  object-fit: contain;
-  vertical-align: -0.12em;
-}
-.auth-scope :has(> .brand-logo) {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-}
-.auth-scope aside :has(> .brand-logo) {
-  justify-content: center;
-}
-
-
 /* ===== Auth brand logo size ===== */
 .auth-scope .brand-logo {
   width: 1.15em;
@@ -888,3 +905,162 @@ main, main section { min-width: 0; max-width: 100%; }
     margin-inline-start: auto;
   }
 }
+
+
+/* ===== Dialog footer alignment fix ===== */
+/* Form ke submit-button wali margin dialogs mein na lage */
+dialog form button[type="submit"],
+dialog form .form-actions button,
+dialog button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Cancel + Save ka row: ek line, beech mein aligned, right par */
+dialog form div:has(> button[type="submit"]),
+dialog div:has(> button + button[type="submit"]),
+dialog :is(footer, [class*="footer"], [class*="actions"]) {
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem !important;
+}
+
+/* Dono buttons ki height, width aur font barabar */
+dialog :is(footer, [class*="footer"], [class*="actions"], form div:has(> button[type="submit"])) > button {
+  height: 48px;
+  min-height: 48px;
+  min-width: 104px;
+  padding-inline: 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1;
+  align-self: center;
+}
+
+/* Hover par button upar na uthe (misalignment jaisa na lage) */
+dialog :is(footer, [class*="footer"], [class*="actions"]) > button:hover:not(:disabled) {
+  transform: none;
+}
+/* ===== end dialog footer fix ===== */
+
+
+/* ===== Global form footer fix (Cancel + Save aligned) ===== */
+/* Jis row mein submit button ho, uske buttons ka extra margin hatao */
+form div:has(> button[type="submit"]) > button,
+form div:has(> button[type="submit"]) > a,
+form .form-actions > button,
+form div:has(> button[type="submit"]) > p-button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: center;
+}
+
+/* Row: ek line, beech mein aligned, right par */
+form div:has(> button[type="submit"]) {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Dono buttons barabar size ke */
+form div:has(> button[type="submit"]) > button {
+  height: 48px;
+  min-height: 48px;
+  min-width: 104px;
+  padding-inline: 1.5rem;
+  line-height: 1;
+}
+
+/* Cancel + Save jo form ke bahar div mein (click) se bane hon */
+:is(main, section) div:has(> button + button.bg-accent),
+:is(main, section) div:has(> button + button[class~="bg-[#1E3A8A]"]),
+:is(main, section) div:has(> button + button[class~="bg-[#2563EB]"]) {
+  align-items: center !important;
+}
+:is(main, section) div:has(> button + button.bg-accent) > button,
+:is(main, section) div:has(> button + button[class~="bg-[#1E3A8A]"]) > button,
+:is(main, section) div:has(> button + button[class~="bg-[#2563EB]"]) > button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: center;
+}
+/* ===== end global form footer fix ===== */
+
+
+/* ===== Topbar branch selector: ek line, ellipsis, responsive ===== */
+html body app-topbar select:not([multiple], [size]) {
+  height: 38px;
+  min-height: 38px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-block: 0;
+  padding-inline: .85rem 2rem;
+  font-size: .875rem;
+  flex-wrap: nowrap;
+}
+html body app-topbar select:not([multiple], [size])::picker-icon {
+  flex: none;
+  font-size: .7rem;
+}
+html body app-topbar select:not([multiple], [size]) selectedcontent {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    width: 9.5rem;
+    min-width: 0;
+    max-width: 46vw;
+    font-size: .8125rem;
+    padding-inline: .7rem 1.75rem;
+  }
+}
+/* ===== end topbar branch selector ===== */
+
+
+/* ===== Topbar branch selector: width text ke hisab se ===== */
+html body app-topbar select:not([multiple], [size]) {
+  field-sizing: content;
+  width: auto;
+  min-width: 0;
+  max-width: 14rem;
+  padding-inline: .9rem 1.9rem;
+}
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    width: auto;
+    min-width: 0;
+    max-width: 46vw;
+    padding-inline: .75rem 1.75rem;
+  }
+}
+/* ===== end topbar branch selector auto width ===== */
+
+
+/* ===== Topbar branch selector: right extra space hatao ===== */
+html body app-topbar select:not([multiple], [size]) {
+  justify-content: flex-start;
+  gap: .45rem;
+  padding-inline: .9rem .8rem;
+  width: fit-content;
+}
+html body app-topbar select:not([multiple], [size])::picker-icon {
+  margin-inline-start: 0;
+  font-size: .65rem;
+}
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    padding-inline: .75rem .65rem;
+  }
+}
+/* ===== end right space fix ===== */
