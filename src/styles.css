@@ -365,3 +365,23 @@ form .form-actions {
   margin-top: 1.5rem;
 }
 /* === end form spacing === */
+
+/* === Save row alignment === */
+form .form-actions,
+form .actions,
+form .save-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+form .form-actions p,
+form .form-actions span,
+form .actions p,
+form .actions span,
+form .save-row p,
+form .save-row span {
+  margin: 0;
+  line-height: 1;
+}
+/* === end save row alignment === */
