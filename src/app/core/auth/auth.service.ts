@@ -48,6 +48,13 @@ export class AuthService {
     );
   }
 
+  /** Email par aaya 6 digit code check karta hai. Sahi ho to reset token deta hai. */
+  verifyResetCode(email: string, code: string): Observable<{ token: string }> {
+    return this.csrf().pipe(
+      switchMap(() => this.http.post<{ token: string }>(`${this.base}/auth/forgot-password/verify`, { email, code })),
+    );
+  }
+
   /** SMS registered phone par jata hai (masked email ke saath). Jawab hamesha generic. */
   recoverEmail(phone: string): Observable<void> {
     return this.csrf().pipe(

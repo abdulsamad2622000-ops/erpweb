@@ -121,3 +121,229 @@ dialog:modal {
 body:has(dialog:modal) {
   overflow: hidden;
 }
+
+/* ---- Auth pages (login, forgot, reset): royal blue glass, light + dark ---- */
+.auth-scope {
+  --text: #0F172A; --muted: #475569; --card: rgba(255, 255, 255, .9);
+  --border: #C7D2FE; --input-border: #94A3B8;
+  --auth-link: #1D4ED8; --auth-royal: #1F6BFF; --auth-royal-hover: #0F55E0; --auth-line: #CBD5E1;
+  color: var(--text);
+}
+.auth-bg { background: linear-gradient(135deg, #E6EEFF 0%, #F4F7FF 55%, #D9E5FF 100%); }
+.auth-waves { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .35; }
+.auth-glass {
+  background: rgba(255, 255, 255, .85); border: 1px solid #B9C8F5;
+  box-shadow: 0 20px 50px rgba(37, 66, 180, .15); backdrop-filter: blur(16px);
+}
+.auth-erp { color: #1F6BFF; }
+.auth-tile {
+  position: absolute; z-index: 1; display: flex; width: 3.6rem; height: 3.6rem; align-items: center; justify-content: center;
+  border-radius: 1rem; font-size: 1.5rem; color: #8FA8FF; background: rgba(40, 70, 170, .35);
+  border: 1px solid rgba(143, 168, 255, .35); backdrop-filter: blur(6px);
+  animation: authFloat 5s ease-in-out infinite;
+}
+.dark .auth-scope {
+  --text: #F8FAFC; --muted: #B4C2EA; --card: rgba(255, 255, 255, .06);
+  --border: rgba(143, 168, 255, .35); --input-border: rgba(143, 168, 255, .4);
+  --danger: #FCA5A5; --success: #86EFAC; --auth-link: #BFD1FF; --auth-line: rgba(143, 168, 255, .35);
+}
+.dark .auth-bg { background: linear-gradient(135deg, #030A24 0%, #0A1F6B 55%, #2B2FD6 100%); }
+.dark .auth-waves { opacity: 1; }
+.dark .auth-glass {
+  background: rgba(20, 36, 100, .45); border: 1px solid rgba(143, 168, 255, .4);
+  box-shadow: 0 24px 60px rgba(2, 6, 23, .55), inset 0 0 40px rgba(79, 123, 255, .08);
+}
+.dark .auth-erp { color: #3B82F6; }
+
+.auth-scope a.text-accent { color: var(--auth-link); }
+.auth-scope :focus-visible { outline-color: var(--auth-link); }
+.auth-scope .auth-toggle:hover { background: rgba(127, 127, 127, .22); }
+.auth-scope input::placeholder { color: var(--muted); opacity: .8; }
+.auth-scope button.bg-accent {
+  background: var(--auth-royal); border-radius: 9999px;
+  transition: background-color .2s, transform .15s, box-shadow .2s;
+}
+.auth-scope button.bg-accent:hover:not(:disabled) { background: var(--auth-royal-hover); box-shadow: 0 8px 24px rgba(31, 107, 255, .45); }
+.auth-scope button.bg-accent:active:not(:disabled) { transform: scale(.98); }
+.auth-scope input:not([type="checkbox"]) { border-radius: 12px; transition: border-color .2s, box-shadow .2s; }
+.auth-scope input:focus { border-color: var(--auth-royal); box-shadow: 0 0 0 3px rgba(31, 107, 255, .3); }
+
+/* lock icon inside email/password inputs */
+.auth-scope input#email, .auth-scope input#password, .auth-scope input#confirm {
+  background-repeat: no-repeat; background-position: 12px center; background-size: 18px 18px; padding-left: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238FA8F5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
+}
+
+@keyframes authRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes authFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes authPulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.auth-glass { animation: authRise .55s cubic-bezier(.2, .8, .2, 1) both; }
+.auth-scope aside > * { animation: authRise .6s ease both; }
+.auth-scope aside svg { animation: authFloat 5s ease-in-out infinite; }
+.auth-scope aside svg ellipse { animation: authPulse 3s ease-in-out infinite; }
+.auth-scope form, .auth-scope [role="status"] { animation: authRise .45s ease both; }
+.auth-scope form > * { animation: authRise .5s ease both; }
+.auth-scope form > *:nth-child(1) { animation-delay: .08s; }
+.auth-scope form > *:nth-child(2) { animation-delay: .16s; }
+.auth-scope form > *:nth-child(3) { animation-delay: .24s; }
+.auth-scope form > *:nth-child(4) { animation-delay: .32s; }
+.auth-scope form > *:nth-child(5) { animation-delay: .4s; }
+@media (prefers-reduced-motion: reduce) {
+  .auth-scope *, .auth-glass { animation: none !important; transition: none !important; }
+}
+
+/* auth-tile light override */
+html:not(.dark) .auth-tile {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, .18);
+  opacity: 1;
+}
+html:not(.dark) .auth-tile i {
+  color: #2563EB;
+  opacity: 1;
+  font-size: 1.35rem;
+}
+
+/* royal theme v1 */
+/* Tiles: light aur dark dono mein safed tile, gehra neela icon */
+.auth-tile {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, .25) !important;
+  opacity: 1 !important;
+}
+.auth-tile i { color: #2563EB !important; opacity: 1 !important; font-size: 1.35rem; }
+
+/* Tagline ke neeche ki line: royal blue gradient */
+.auth-scope aside .bg-gradient-to-r {
+  background-image: linear-gradient(90deg, #1D4ED8, #3B82F6, #38BDF8) !important;
+  height: 5px;
+}
+
+/* Neele buttons: navy se royal blue gradient */
+.bg-accent,
+[class~="bg-[#2563EB]"],
+[class~="bg-[#1E3A8A]"] {
+  background-image: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 55%, #2563EB 100%);
+  background-color: #1D4ED8;
+  color: #FFFFFF;
+}
+.bg-accent:hover:not(:disabled),
+[class~="bg-[#2563EB]"]:hover:not(:disabled),
+[class~="bg-[#1E3A8A]"]:hover:not(:disabled) {
+  background-image: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+}
+
+/* royal theme v2 */
+/* Sidebar: navy se royal blue gradient, dono themes mein */
+app-sidebar nav.bg-nav {
+  background-image: linear-gradient(180deg, #0B1230 0%, #0F1F5C 55%, #1E3A8A 100%);
+  background-color: #0F172A;
+  color: #CBD5E1;
+}
+app-sidebar nav.bg-nav a:hover,
+app-sidebar nav.bg-nav button:hover {
+  background-color: rgba(255, 255, 255, .12);
+}
+/* Active menu item: royal gradient, safed text */
+app-sidebar nav a.bg-accent {
+  background-image: linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%);
+  background-color: #1D4ED8;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, .45);
+}
+/* Sidebar ka brand icon */
+app-sidebar nav .pi-box { color: #60A5FA; }
+
+/* royal theme v3 */
+/* Topbar: navy se royal blue gradient, dono themes mein */
+app-topbar > div {
+  background-image: linear-gradient(90deg, #0B1230 0%, #0F1F5C 50%, #1E3A8A 100%);
+  background-color: #0F172A;
+  border-bottom-color: rgba(255, 255, 255, .12);
+  color: #FFFFFF;
+}
+/* Topbar ke andar ka text aur icons safed */
+app-topbar > div,
+app-topbar > div span,
+app-topbar > div i,
+app-topbar > div a,
+app-topbar > div label {
+  color: #FFFFFF;
+}
+app-topbar > div button:hover {
+  background-color: rgba(255, 255, 255, .15);
+}
+/* Branch selector: gehra glass, safed text */
+app-topbar select {
+  background-color: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .35);
+  color: #FFFFFF;
+}
+app-topbar select option {
+  background-color: #0F172A;
+  color: #FFFFFF;
+}
+/* Breadcrumbs ka separator halka */
+app-topbar app-breadcrumbs li,
+app-topbar app-breadcrumbs span {
+  color: #E2E8F0;
+}
+
+/* royal theme v4 */
+/* Breadcrumbs: topbar ke gradient par saaf nazar aayein */
+app-topbar app-breadcrumbs nav ol,
+app-topbar app-breadcrumbs nav ol li,
+app-topbar app-breadcrumbs nav ol li a,
+app-topbar app-breadcrumbs nav ol li span,
+app-topbar app-breadcrumbs nav ol li i {
+  color: #CBD5E1;
+}
+app-topbar app-breadcrumbs nav ol li a:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, .12);
+}
+/* Aakhri (current) page: safed aur bold */
+app-topbar app-breadcrumbs nav ol li span[aria-current="page"] {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+/* Keyboard focus ring safed */
+app-topbar a:focus-visible,
+app-topbar button:focus-visible,
+app-topbar select:focus-visible {
+  outline: 2px solid #93C5FD;
+  outline-offset: 2px;
+}
+
+/* auth links v1 */
+.auth-glass a,
+.auth-glass button.text-accent,
+.auth-glass .text-accent {
+  color: #BFDBFE !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.auth-glass a:hover,
+.auth-glass button.text-accent:hover { color: #FFFFFF !important; }
+.auth-glass input::placeholder { color: #94A3B8; opacity: 1; }
+html:not(.dark) .auth-glass a,
+html:not(.dark) .auth-glass .text-accent { color: #1D4ED8 !important; }
+html:not(.dark) .auth-glass a:hover { color: #1E3A8A !important; }
+
+/* royal theme v6 */
+/* Sirf dark theme: content background navy blue */
+.dark {
+  --bg: #0A1433;
+  --card: #0F1D4A;
+  --border: #1E3A8A;
+  --input-border: #3B5BB5;
+}
+.dark body { background-color: #0A1433; }
+
+/* Sidebar ke menu icons sab ek rang (Inventory ka icon alag na dikhe) */
+app-sidebar nav ul i.pi { color: #CBD5E1; }
+app-sidebar nav ul a.bg-accent i.pi { color: #FFFFFF; }
+app-sidebar nav > div:first-child i.pi { color: #60A5FA; }

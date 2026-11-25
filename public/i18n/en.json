@@ -77,6 +77,12 @@
     "loading": "Loading"
   },
   "auth": {
+    "fpSendCode": "Send code",
+    "fpChangeEmail": "Use a different email",
+    "fpCodeTitle": "Enter the code",
+    "fpCodeInvalid": "That code is not correct or has expired.",
+    "fpNewTitle": "Set a new password",
+    "fpDoneTitle": "Password changed",
     "title": "Sign in",
     "subtitle": "Use your work email and password.",
     "email": "Email",

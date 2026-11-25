@@ -26,8 +26,8 @@ type Step = 'credentials' | 'code';
       @if (step() === 'credentials') {
         <form class="space-y-4" novalidate (submit)="onSubmit($event)">
           <div>
-            <label for="email" class="mb-1 block text-sm font-medium text-text">{{ 'auth.email' | transloco }}</label>
-            <input id="email" type="email" dir="ltr" autocomplete="username" inputmode="email"
+            <label for="email" class="mb-2 flex items-center gap-2 text-sm font-medium text-text"><i class="pi pi-envelope text-[#8FB0FF]" aria-hidden="true"></i>{{ 'auth.email' | transloco }}</label>
+            <input id="email" type="email" dir="ltr" autocomplete="username" inputmode="email" placeholder="Enter your email address..."
               class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="email()" (input)="email.set(value($event))"
               [attr.aria-invalid]="submitted() && !emailValid()" aria-describedby="email-err" />
@@ -37,9 +37,9 @@ type Step = 'credentials' | 'code';
           </div>
 
           <div>
-            <label for="password" class="mb-1 block text-sm font-medium text-text">{{ 'auth.password' | transloco }}</label>
+            <label for="password" class="mb-2 flex items-center gap-2 text-sm font-medium text-text"><i class="pi pi-lock text-[#8FB0FF]" aria-hidden="true"></i>{{ 'auth.password' | transloco }}</label>
             <div class="relative">
-              <input id="password" dir="ltr" autocomplete="current-password"
+              <input id="password" dir="ltr" autocomplete="current-password" placeholder="Enter your password..."
                 [type]="showPassword() ? 'text' : 'password'"
                 class="h-11 w-full rounded-[10px] border border-input bg-card ps-3 pe-12 text-text focus-visible:outline-2 focus-visible:outline-accent"
                 [value]="password()" (input)="password.set(value($event))"
@@ -58,12 +58,11 @@ type Step = 'credentials' | 'code';
 
           <button type="submit" [disabled]="loading()"
             class="h-12 w-full rounded-[10px] bg-accent font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60">
-            {{ (loading() ? 'auth.signingIn' : 'auth.signIn') | transloco }}
+            <span class="inline-flex items-center justify-center gap-2"><i class="pi pi-sign-in" aria-hidden="true"></i>{{ (loading() ? 'auth.signingIn' : 'auth.signIn') | transloco }}</span>
           </button>
 
-          <div class="flex flex-col gap-2 text-sm">
-            <a routerLink="/forgot-password" class="text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent">{{ 'auth.forgot' | transloco }}</a>
-            <a routerLink="/recover-email" class="text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent">{{ 'auth.forgotEmail' | transloco }}</a>
+          <div class="flex flex-col items-center gap-3 text-sm"><div class="flex w-full items-center gap-3 text-xs text-muted"><span class="h-px flex-1 bg-[var(--auth-line)]"></span>or<span class="h-px flex-1 bg-[var(--auth-line)]"></span></div>
+            <a routerLink="/forgot-password" class="text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent"><i class="pi pi-lock me-2 text-xs" aria-hidden="true"></i>{{ 'auth.forgot' | transloco }}</a>
           </div>
         </form>
       } @else {
