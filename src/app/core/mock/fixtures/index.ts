@@ -42,12 +42,9 @@ export const FIXTURES: Record<string, FixtureHandler> = {
   ...RESERVATION_FIXTURES,
   ...PUTAWAY_FIXTURES,
   ...POS_FIXTURES,
-<<<<<<< HEAD
-=======
   // POS ke customer routes ko wholesale wale (credit fields ke saath) override karte hain.
   ...SALES_FIXTURES,
   ...REPAIR_FIXTURES,
   ...REPORT_FIXTURES,
   ...ACCOUNT_FIXTURES,
->>>>>>> origin/develop
 };
