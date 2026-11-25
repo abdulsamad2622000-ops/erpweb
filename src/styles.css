@@ -347,41 +347,5 @@ html:not(.dark) .auth-glass a:hover { color: #1E3A8A !important; }
 app-sidebar nav ul i.pi { color: #CBD5E1; }
 app-sidebar nav ul a.bg-accent i.pi { color: #FFFFFF; }
 app-sidebar nav > div:first-child i.pi { color: #60A5FA; }
-/* === Form spacing: fields aur submit button === */
-form .field,
-form .form-field,
-form .p-field {
-  margin-bottom: 1rem;
-}
 
-form button[type="submit"],
-form .form-actions button {
-  margin-top: 1.5rem;
-}
 
-form .form-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-/* === end form spacing === */
-
-/* === Save row alignment === */
-form .form-actions,
-form .actions,
-form .save-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-form .form-actions p,
-form .form-actions span,
-form .actions p,
-form .actions span,
-form .save-row p,
-form .save-row span {
-  margin: 0;
-  line-height: 1;
-}
-/* === end save row alignment === */
