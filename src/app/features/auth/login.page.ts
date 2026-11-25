@@ -69,7 +69,7 @@ type Step = 'credentials' | 'code';
         <form class="space-y-4" novalidate (submit)="onCode($event)">
           <div>
             <label for="code" class="mb-1 block text-sm font-medium text-text">{{ 'auth.code' | transloco }}</label>
-            <input id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+            <input placeholder="Enter code..." id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
               class="h-12 w-full rounded-[10px] border border-input bg-card px-3 text-center text-xl tracking-[0.5em] text-text focus-visible:outline-2 focus-visible:outline-accent"
               [value]="code()" (input)="code.set(digits($event))"
               [attr.aria-invalid]="submitted() && !codeValid()" aria-describedby="code-err" />

@@ -41,7 +41,7 @@ import { ConfirmDialogService } from './confirm-dialog.service';
                 {{ 'common.reason.label' | transloco }}
                 <span class="ms-1 text-red-600" aria-hidden="true">*</span>
               </label>
-              <textarea
+              <textarea placeholder="Enter confirm text..."
                 #box
                 id="confirm-text"
                 rows="3"
@@ -72,7 +72,7 @@ import { ConfirmDialogService } from './confirm-dialog.service';
                 <label for="confirm-text" class="text-sm font-medium">
                   {{ 'common.approval.noteLabel' | transloco }}
                 </label>
-                <textarea
+                <textarea placeholder="Enter confirm text..."
                   #box
                   id="confirm-text"
                   rows="3"

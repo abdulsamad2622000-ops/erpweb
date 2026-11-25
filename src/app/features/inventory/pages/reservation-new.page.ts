@@ -27,7 +27,7 @@ import { todayIso } from '../utils/reservation-utils';
           [control]="form.controls.customerName"
           [required]="true"
         >
-          <input id="res-customer" formControlName="customerName" [class]="ui.input" />
+          <input placeholder="Enter res customer..." id="res-customer" formControlName="customerName" [class]="ui.input" />
         </app-form-field>
 
         <app-form-field
@@ -44,13 +44,13 @@ import { todayIso } from '../utils/reservation-utils';
           inputId="res-note"
           [control]="form.controls.note"
         >
-          <textarea id="res-note" rows="2" formControlName="note" [class]="ui.input + ' py-2'"></textarea>
+          <textarea placeholder="Enter res note..." id="res-note" rows="2" formControlName="note" [class]="ui.input + ' py-2'"></textarea>
         </app-form-field>
 
         <div class="space-y-2.5">
           <label for="res-serial" class="block text-sm font-medium">{{ 'reservationsPage.serialInput' | transloco }}</label>
           <div class="flex flex-wrap gap-2">
-            <input
+            <input placeholder="Enter res serial..."
               #box
               id="res-serial"
               dir="ltr"

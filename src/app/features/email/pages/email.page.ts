@@ -32,9 +32,9 @@ import { EmailService } from '../services/email.service';
         @if (sel(); as t) {
           <div [class]="ui.card + ' space-y-3'">
             <label class="block text-sm font-medium">{{ 'emailPage.subject' | transloco }}
-              <input [class]="ui.input + ' mt-1'" [(ngModel)]="t.subject" /></label>
+              <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="t.subject" /></label>
             <label class="block text-sm font-medium">{{ 'emailPage.body' | transloco }}
-              <textarea rows="10" [class]="ui.input + ' mt-1 py-2 font-mono'" [(ngModel)]="t.body"></textarea></label>
+              <textarea placeholder="Type here..." rows="10" [class]="ui.input + ' mt-1 py-2 font-mono'" [(ngModel)]="t.body"></textarea></label>
             <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'emailPage.vars' | transloco }}
               @for (v of t.variables; track v) { <code class="me-2" dir="ltr">{{ '{{' + v + '}}' }}</code> }</p>
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="h-5 w-5" [(ngModel)]="t.isActive" /> {{ 'emailPage.active' | transloco }}</label>
@@ -42,7 +42,7 @@ import { EmailService } from '../services/email.service';
             <div class="flex flex-wrap items-end justify-between gap-2">
               <div class="flex flex-wrap items-end gap-2" *hasPermission="'email.template.edit'">
                 <label class="text-sm font-medium">{{ 'emailPage.testTo' | transloco }}
-                  <input type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="testTo" /></label>
+                  <input placeholder="Type here..." type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="testTo" /></label>
                 <button type="button" [class]="ui.btn" [disabled]="busy() || !testTo" (click)="test(t)">{{ 'emailPage.sendTest' | transloco }}</button>
               </div>
               <button *hasPermission="'email.template.edit'" type="button" [class]="ui.primary" [disabled]="busy() || !t.subject.trim() || !t.body.trim()" (click)="save(t)">

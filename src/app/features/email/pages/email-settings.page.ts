@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -33,24 +33,24 @@ type Tab = 'smtp' | 'triggers' | 'schedules';
       @if (tab() === 'smtp') {
         <div [class]="ui.card + ' space-y-3'">
           <div class="grid gap-3 sm:grid-cols-2">
-            <label class="block text-sm font-medium">Host<input dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.host" /></label>
-            <label class="block text-sm font-medium">Port<input type="number" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.port" /></label>
+            <label class="block text-sm font-medium">Host<input placeholder="Type here..." dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.host" /></label>
+            <label class="block text-sm font-medium">Port<input placeholder="Type here..." type="number" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.port" /></label>
             <label class="block text-sm font-medium">Encryption
               <select [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.encryption">
                 <option value="tls">TLS (STARTTLS)</option><option value="ssl">SSL</option><option value="none">None</option>
               </select></label>
-            <label class="block text-sm font-medium">Username<input dir="ltr" autocomplete="off" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.username" /></label>
+            <label class="block text-sm font-medium">Username<input placeholder="Type here..." dir="ltr" autocomplete="off" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.username" /></label>
             <label class="block text-sm font-medium">Password
               <input type="password" autocomplete="new-password" [class]="ui.input + ' mt-1'" [(ngModel)]="password"
                 [placeholder]="hasPassword() ? 'Saved. Leave empty to keep it.' : 'Not set'" /></label>
-            <label class="block text-sm font-medium">From name<input [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.fromName" /></label>
-            <label class="block text-sm font-medium">From email<input type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.fromEmail" /></label>
+            <label class="block text-sm font-medium">From name<input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.fromName" /></label>
+            <label class="block text-sm font-medium">From email<input placeholder="Type here..." type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="smtp.fromEmail" /></label>
           </div>
           <p class="text-xs text-slate-600">The password is encrypted on the server and is never shown again.</p>
           <div class="flex flex-wrap items-end justify-between gap-2" *hasPermission="'email.template.edit'">
             <div class="flex flex-wrap items-end gap-2">
               <label class="text-sm font-medium">Send a test to
-                <input type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="testTo" /></label>
+                <input placeholder="Type here..." type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="testTo" /></label>
               <button type="button" [class]="ui.btn" [disabled]="busy() || !testTo.trim()" (click)="testSmtp()">Send test email</button>
             </div>
             <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveSmtp()">Save</button>
@@ -92,7 +92,7 @@ type Tab = 'smtp' | 'triggers' | 'schedules';
                   <option value="receivables">Receivables</option><option value="purchases">Purchases</option></select></td>
                 <td [class]="ui.td"><select [class]="ui.input" aria-label="How often" [(ngModel)]="s.frequency">
                   <option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></td>
-                <td [class]="ui.td"><input type="email" dir="ltr" aria-label="Send to" [class]="ui.input" [(ngModel)]="s.recipients" /></td>
+                <td [class]="ui.td"><input placeholder="Type here..." type="email" dir="ltr" aria-label="Send to" [class]="ui.input" [(ngModel)]="s.recipients" /></td>
                 <td [class]="ui.td"><input type="checkbox" class="h-5 w-5" aria-label="On or off" [(ngModel)]="s.enabled" /></td>
                 <td [class]="ui.td"><button type="button" [class]="ui.btn" (click)="removeSchedule($index)" aria-label="Remove schedule"><i class="pi pi-trash" aria-hidden="true"></i></button></td>
               </tr>

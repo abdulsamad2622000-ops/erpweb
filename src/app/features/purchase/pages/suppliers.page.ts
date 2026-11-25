@@ -60,22 +60,22 @@ import { UI, errorMessage } from '../utils/ui';
                      [saving]="saving()" (save)="submit()" (closed)="saving.set(false)">
       <div [formGroup]="form" class="grid gap-4 sm:grid-cols-2">
         <app-form-field class="sm:col-span-2" [label]="'common.name' | transloco" inputId="sup-name" [control]="form.controls.name" [required]="true">
-          <input id="sup-name" formControlName="name" [class]="ui.input" />
+          <input placeholder="Enter sup name..." id="sup-name" formControlName="name" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.suppliers.phone' | transloco" inputId="sup-phone" [control]="form.controls.phone">
-          <input id="sup-phone" formControlName="phone" dir="ltr" [class]="ui.input" />
+          <input placeholder="Enter sup phone..." id="sup-phone" formControlName="phone" dir="ltr" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.suppliers.email' | transloco" inputId="sup-email" [control]="form.controls.email">
-          <input id="sup-email" type="email" formControlName="email" dir="ltr" [class]="ui.input" />
+          <input placeholder="Enter sup email..." id="sup-email" type="email" formControlName="email" dir="ltr" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.suppliers.city' | transloco" inputId="sup-city" [control]="form.controls.city">
-          <input id="sup-city" formControlName="city" [class]="ui.input" />
+          <input placeholder="Enter sup city..." id="sup-city" formControlName="city" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.suppliers.taxNumber' | transloco" inputId="sup-tax" [control]="form.controls.taxNumber">
-          <input id="sup-tax" formControlName="taxNumber" dir="ltr" [class]="ui.input" />
+          <input placeholder="Enter sup tax..." id="sup-tax" formControlName="taxNumber" dir="ltr" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.suppliers.termsDays' | transloco" inputId="sup-terms" [control]="form.controls.paymentTermsDays">
-          <input id="sup-terms" type="number" min="0" formControlName="paymentTermsDays" [class]="ui.input" />
+          <input placeholder="Enter sup terms..." id="sup-terms" type="number" min="0" formControlName="paymentTermsDays" [class]="ui.input" />
         </app-form-field>
         <label class="flex min-h-11 items-center gap-2 text-sm">
           <input type="checkbox" formControlName="isActive" class="size-5" /> {{ 'common.status.active' | transloco }}

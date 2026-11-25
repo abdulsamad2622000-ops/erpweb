@@ -53,7 +53,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
                 <button type="button" [class]="s === 'cancelled' ? ui.danger : ui.btn" [disabled]="busy()" (click)="move(s)">{{ 'repairsPage.status.' + s | transloco }}</button>
               }
               <label class="min-w-64 flex-1 text-sm font-medium">{{ 'repairsPage.statusNote' | transloco }}
-                <input [class]="ui.input + ' mt-1'" [(ngModel)]="note" /></label>
+                <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="note" /></label>
             </div>
           </div>
         }
@@ -61,7 +61,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
         <div [class]="ui.card + ' space-y-3'">
           <h2 class="font-semibold">{{ 'repairsPage.work' | transloco }}</h2>
           <label class="block text-sm font-medium">{{ 'repairsPage.diagnosis' | transloco }}
-            <textarea rows="2" [class]="ui.input + ' mt-1 py-2'" [disabled]="!open(j)" [(ngModel)]="diagnosis"></textarea></label>
+            <textarea placeholder="Type here..." rows="2" [class]="ui.input + ' mt-1 py-2'" [disabled]="!open(j)" [(ngModel)]="diagnosis"></textarea></label>
           <table class="w-full text-sm">
             <thead [class]="ui.thead"><tr>
               <th scope="col" [class]="ui.th">{{ 'repairsPage.part' | transloco }}</th>
@@ -74,14 +74,14 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
             <tbody>
               @for (p of parts(); track $index; let i = $index) {
                 <tr [class]="ui.tr">
-                  <td [class]="ui.td"><input class="min-h-9 w-full rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
+                  <td [class]="ui.td"><input placeholder="Type here..." class="min-h-9 w-full rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
                     [attr.aria-label]="'repairsPage.part' | transloco" [ngModel]="p.description" (ngModelChange)="setPart(i, 'description', $event)" /></td>
                   <td [class]="ui.td"><input class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2" dir="ltr" [disabled]="!open(j)"
                     [attr.aria-label]="'repairsPage.partSerial' | transloco" [placeholder]="'repairsPage.partSerialHint' | transloco"
                     [ngModel]="p.serial ?? ''" (ngModelChange)="setPart(i, 'serial', $event)" /></td>
-                  <td [class]="ui.td"><input type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j) || !!p.serial"
+                  <td [class]="ui.td"><input placeholder="Type here..." type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j) || !!p.serial"
                     [attr.aria-label]="'posPage.qty' | transloco" [ngModel]="p.qty" (ngModelChange)="setPart(i, 'qty', $event)" /></td>
-                  <td [class]="ui.td"><input type="number" min="0" class="min-h-9 w-28 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
+                  <td [class]="ui.td"><input placeholder="Type here..." type="number" min="0" class="min-h-9 w-28 rounded border border-slate-400 bg-transparent px-2" [disabled]="!open(j)"
                     [attr.aria-label]="'posPage.price' | transloco" [ngModel]="p.unitPrice" (ngModelChange)="setPart(i, 'unitPrice', $event)" /></td>
                   <td [class]="ui.td + ' text-end'">{{ fmt(p.qty * p.unitPrice) }}</td>
                   <td [class]="ui.td">@if (open(j)) {
@@ -95,7 +95,7 @@ import { JOB_TONE, WARRANTY_TONE, isOpen, jobSlipHtml, jobTotal } from '../utils
           <div class="flex flex-wrap items-end justify-between gap-2">
             <div class="flex flex-wrap gap-2">
               <label class="text-sm font-medium">{{ 'repairsPage.labour' | transloco }}
-                <input type="number" min="0" [class]="ui.input + ' mt-1 w-36'" [disabled]="!open(j)" [ngModel]="labour()" (ngModelChange)="labour.set(+$event || 0)" /></label>
+                <input placeholder="Type here..." type="number" min="0" [class]="ui.input + ' mt-1 w-36'" [disabled]="!open(j)" [ngModel]="labour()" (ngModelChange)="labour.set(+$event || 0)" /></label>
               <label class="text-sm font-medium">{{ 'repairsPage.promised' | transloco }}
                 <input type="date" [class]="ui.input + ' mt-1'" [disabled]="!open(j)" [(ngModel)]="promisedOn" /></label>
             </div>

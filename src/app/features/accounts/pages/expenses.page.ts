@@ -74,7 +74,7 @@ import { expenseProblem } from '../utils/accounts-utils';
         <div class="grid gap-3 sm:grid-cols-2">
           <h2 id="ex-t" class="font-semibold sm:col-span-2">{{ (editId ? 'expensesPage.edit' : 'expensesPage.add') | transloco }}</h2>
           <label class="text-sm font-medium">{{ 'salesDocs.date' | transloco }}<input type="date" [max]="today" [class]="ui.input + ' mt-1'" [(ngModel)]="f.date" /></label>
-          <label class="text-sm font-medium">{{ 'posPage.amount' | transloco }}<input type="number" min="1" [class]="ui.input + ' mt-1'" [(ngModel)]="f.amount" /></label>
+          <label class="text-sm font-medium">{{ 'posPage.amount' | transloco }}<input placeholder="Type here..." type="number" min="1" [class]="ui.input + ' mt-1'" [(ngModel)]="f.amount" /></label>
           <label class="text-sm font-medium">{{ 'expensesPage.category' | transloco }}
             <select [class]="ui.input + ' mt-1'" [(ngModel)]="f.categoryId">
               <option [ngValue]="0">{{ 'expensesPage.pick' | transloco }}</option>
@@ -85,12 +85,12 @@ import { expenseProblem } from '../utils/accounts-utils';
               @for (m of methods; track m) { <option [ngValue]="m">{{ 'posPage.methods.' + m | transloco }}</option> }
             </select></label>
           <div class="flex items-end gap-2 sm:col-span-2" *hasPermission="'accounts.expense.edit'">
-            <label class="flex-1 text-sm font-medium">{{ 'expensesPage.newCategory' | transloco }}<input [class]="ui.input + ' mt-1'" [(ngModel)]="newCat" /></label>
+            <label class="flex-1 text-sm font-medium">{{ 'expensesPage.newCategory' | transloco }}<input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="newCat" /></label>
             <button type="button" [class]="ui.btn" [disabled]="newCat.trim().length < 2" (click)="addCat(f)">{{ 'common.add' | transloco }}</button>
           </div>
-          <label class="text-sm font-medium">{{ 'expensesPage.paidTo' | transloco }}<input [class]="ui.input + ' mt-1'" [(ngModel)]="f.paidTo" /></label>
-          <label class="text-sm font-medium">{{ 'salesDocs.reference' | transloco }}<input [class]="ui.input + ' mt-1'" [(ngModel)]="f.reference" /></label>
-          <label class="text-sm font-medium sm:col-span-2">{{ 'salesDocs.note' | transloco }}<input [class]="ui.input + ' mt-1'" [(ngModel)]="f.note" /></label>
+          <label class="text-sm font-medium">{{ 'expensesPage.paidTo' | transloco }}<input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.paidTo" /></label>
+          <label class="text-sm font-medium">{{ 'salesDocs.reference' | transloco }}<input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.reference" /></label>
+          <label class="text-sm font-medium sm:col-span-2">{{ 'salesDocs.note' | transloco }}<input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.note" /></label>
           @if (formError(); as e) { <p role="alert" class="text-sm text-red-600 sm:col-span-2">{{ e }}</p> }
           <div class="flex justify-end gap-2 sm:col-span-2">
             <button type="button" [class]="ui.btn" (click)="form.set(null)">{{ 'common.cancel' | transloco }}</button>

@@ -54,11 +54,11 @@ interface BaseLine {
             <div class="flex flex-wrap items-end gap-2">
               <div class="min-w-48 flex-1">
                 <label [attr.for]="'lc-label-' + i" class="mb-1 block text-sm">{{ 'purchase.payables.landed.label' | transloco }}</label>
-                <input [id]="'lc-label-' + i" [class]="ui.input" [value]="it.label" [disabled]="!canEdit()" maxlength="60" (input)="setLabel(i, $event)" />
+                <input placeholder="Type here..." [id]="'lc-label-' + i" [class]="ui.input" [value]="it.label" [disabled]="!canEdit()" maxlength="60" (input)="setLabel(i, $event)" />
               </div>
               <div class="w-40">
                 <label [attr.for]="'lc-amount-' + i" class="mb-1 block text-sm">{{ 'purchase.payables.amount' | transloco }}</label>
-                <input [id]="'lc-amount-' + i" type="number" min="0" step="0.01" [class]="ui.input" [value]="it.amount" [disabled]="!canEdit()" (input)="setAmount(i, $event)" />
+                <input placeholder="Type here..." [id]="'lc-amount-' + i" type="number" min="0" step="0.01" [class]="ui.input" [value]="it.amount" [disabled]="!canEdit()" (input)="setAmount(i, $event)" />
               </div>
               @if (canEdit()) {
                 <button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(i)" [attr.aria-label]="'common.delete' | transloco">✕</button>

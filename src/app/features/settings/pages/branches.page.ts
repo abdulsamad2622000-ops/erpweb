@@ -46,7 +46,7 @@ import { BranchesStore } from '../stores/org.stores';
           [control]="form.controls.code"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter branch code..."
             id="branch-code"
             dir="ltr"
             formControlName="code"
@@ -59,7 +59,7 @@ import { BranchesStore } from '../stores/org.stores';
           [control]="form.controls.name"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter branch name..."
             id="branch-name"
             formControlName="name"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -70,7 +70,7 @@ import { BranchesStore } from '../stores/org.stores';
           inputId="branch-city"
           [control]="form.controls.city"
         >
-          <input
+          <input placeholder="Enter branch city..."
             id="branch-city"
             formControlName="city"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -81,7 +81,7 @@ import { BranchesStore } from '../stores/org.stores';
           inputId="branch-address"
           [control]="form.controls.address"
         >
-          <textarea
+          <textarea placeholder="Enter branch address..."
             id="branch-address"
             rows="3"
             formControlName="address"
@@ -93,7 +93,7 @@ import { BranchesStore } from '../stores/org.stores';
           inputId="branch-phone"
           [control]="form.controls.phone"
         >
-          <input
+          <input placeholder="Enter branch phone..."
             id="branch-phone"
             type="tel"
             dir="ltr"

@@ -47,7 +47,7 @@ import { COUNT_TONE, canDoCount, variance } from '../utils/count-utils';
           </div>
           <div>
             <label for="cn-note" class="mb-1 block text-sm">{{ 'purchase.grn.note' | transloco }}</label>
-            <input id="cn-note" [class]="ui.input" [ngModel]="note()" (ngModelChange)="note.set($event)" maxlength="200" />
+            <input placeholder="Enter cn note..." id="cn-note" [class]="ui.input" [ngModel]="note()" (ngModelChange)="note.set($event)" maxlength="200" />
           </div>
           <button type="button" [class]="ui.primary" [disabled]="busy() || !warehouseId()" (click)="start()">
             {{ 'inventory.counts.start' | transloco }}

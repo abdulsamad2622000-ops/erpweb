@@ -24,7 +24,7 @@ type Direction = '' | 'in' | 'out';
       <div class="flex flex-wrap items-end gap-3">
         <div>
           <label for="led-q" class="mb-1 block text-sm">{{ 'common.search' | transloco }}</label>
-          <input id="led-q" dir="ltr" [class]="ui.input + ' w-64'" [ngModel]="q()" (ngModelChange)="q.set($event)" />
+          <input placeholder="Enter led q..." id="led-q" dir="ltr" [class]="ui.input + ' w-64'" [ngModel]="q()" (ngModelChange)="q.set($event)" />
         </div>
         <div>
           <label for="led-dir" class="mb-1 block text-sm">{{ 'inventory.ledger.direction' | transloco }}</label>

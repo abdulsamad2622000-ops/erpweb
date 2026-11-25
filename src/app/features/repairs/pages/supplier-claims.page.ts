@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { HasPermissionDirective } from '../../../core/auth/has-permission.directive';
@@ -22,10 +22,10 @@ const LABEL: Record<ClaimStatus, string> = { open: 'Open', sent: 'Sent to suppli
       @if (notice(); as n) { <p role="status" class="text-sm text-green-700">{{ n }}</p> }
 
       <form *hasPermission="'warranty.claim.create'" [class]="ui.card + ' grid gap-3 sm:grid-cols-3'" (ngSubmit)="create()">
-        <label class="block text-sm font-medium">Serial number<input name="serial" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="serial" /></label>
-        <label class="block text-sm font-medium">Supplier<input name="supplier" [class]="ui.input + ' mt-1'" [(ngModel)]="supplier" /></label>
+        <label class="block text-sm font-medium">Serial number<input placeholder="Enter serial..." name="serial" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="serial" /></label>
+        <label class="block text-sm font-medium">Supplier<input placeholder="Enter supplier..." name="supplier" [class]="ui.input + ' mt-1'" [(ngModel)]="supplier" /></label>
         <label class="block text-sm font-medium sm:col-span-3">Reason (at least 10 characters)
-          <textarea name="reason" rows="2" [class]="ui.input + ' mt-1 py-2'" [(ngModel)]="reason"></textarea></label>
+          <textarea placeholder="Enter reason..." name="reason" rows="2" [class]="ui.input + ' mt-1 py-2'" [(ngModel)]="reason"></textarea></label>
         <div class="sm:col-span-3"><button type="submit" [class]="ui.primary" [disabled]="busy() || !serial.trim() || !supplier.trim() || reason.trim().length < 10">Create claim</button></div>
       </form>
 

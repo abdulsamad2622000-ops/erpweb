@@ -41,15 +41,15 @@ import { WARRANTY_TONE } from '../utils/repair-utils';
         <label class="text-sm font-medium sm:col-span-2">{{ 'repairsPage.device' | transloco }}
           <input [class]="ui.input + ' mt-1'" [(ngModel)]="device" [placeholder]="w()?.productName ?? ''" /></label>
         <label class="text-sm font-medium">{{ 'customersPage.name' | transloco }}
-          <input [class]="ui.input + ' mt-1'" [(ngModel)]="name" /></label>
+          <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="name" /></label>
         <label class="text-sm font-medium">{{ 'customersPage.phone' | transloco }}
-          <input type="tel" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="phone" /></label>
+          <input placeholder="Type here..." type="tel" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="phone" /></label>
         <label class="text-sm font-medium sm:col-span-2">{{ 'repairsPage.problem' | transloco }}
-          <textarea rows="3" [class]="ui.input + ' mt-1 py-2'" [(ngModel)]="problem"></textarea></label>
+          <textarea placeholder="Type here..." rows="3" [class]="ui.input + ' mt-1 py-2'" [(ngModel)]="problem"></textarea></label>
         <label class="text-sm font-medium sm:col-span-2">{{ 'repairsPage.accessories' | transloco }}
           <input [class]="ui.input + ' mt-1'" [(ngModel)]="accessories" [placeholder]="'repairsPage.accessoriesHint' | transloco" /></label>
         <label class="text-sm font-medium">{{ 'repairsPage.estimate' | transloco }}
-          <input type="number" min="0" [class]="ui.input + ' mt-1'" [(ngModel)]="estimate" /></label>
+          <input placeholder="Type here..." type="number" min="0" [class]="ui.input + ' mt-1'" [(ngModel)]="estimate" /></label>
         <label class="text-sm font-medium">{{ 'repairsPage.promised' | transloco }}
           <input type="date" [class]="ui.input + ' mt-1'" [(ngModel)]="promisedOn" /></label>
         @if (error(); as e) { <p role="alert" class="text-sm text-red-600 sm:col-span-2">{{ e }}</p> }
