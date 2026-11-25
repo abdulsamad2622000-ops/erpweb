@@ -1153,8 +1153,6 @@
       "postedNotice": "GRN posted. Stock updated. You can now print labels."
     }
   },
-<<<<<<< HEAD
-=======
   "posPage": {
     "title": "Retail POS",
     "openShiftTitle": "Open your shift",
@@ -1257,7 +1255,6 @@
     "done": "Return {{number}} saved. Refund Rs {{amount}} by",
     "exchangeHint": "For an exchange, go back to the POS and sell the new item."
   },
->>>>>>> origin/develop
   "scanApp": {
     "title": "ERP Scan",
     "home": "Scan home",
@@ -1402,7 +1399,6 @@
       "bin": "Bin"
     }
   },
-<<<<<<< HEAD
   "posPage": {
     "title": "Retail POS",
     "openShiftTitle": "Open your shift",
@@ -1504,7 +1500,6 @@
     "submit": "Confirm return",
     "done": "Return {{number}} saved. Refund Rs {{amount}} by",
     "exchangeHint": "For an exchange, go back to the POS and sell the new item."
-=======
   "customersPage": {
     "title": "Customers",
     "add": "New customer",
@@ -1902,6 +1897,5 @@
     "send": "Email",
     "sendNow": "Send",
     "sentTo": "Email sent {{to}}"
->>>>>>> origin/develop
   }
 }
