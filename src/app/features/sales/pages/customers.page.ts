@@ -79,9 +79,9 @@ const EMPTY: CustomerForm = {
         <div class="grid gap-3 sm:grid-cols-2">
           <h2 id="cf-t" class="font-semibold sm:col-span-2">{{ (editId ? 'customersPage.editTitle' : 'customersPage.add') | transloco }}</h2>
           <label class="text-sm font-medium">{{ 'customersPage.name' | transloco }}
-            <input [class]="ui.input + ' mt-1'" [(ngModel)]="f.name" /></label>
+            <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.name" /></label>
           <label class="text-sm font-medium">{{ 'customersPage.phone' | transloco }}
-            <input type="tel" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="f.phone" /></label>
+            <input placeholder="Type here..." type="tel" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="f.phone" /></label>
           <label class="text-sm font-medium">{{ 'customersPage.type' | transloco }}
             <select [class]="ui.input + ' mt-1'" [(ngModel)]="f.type" (ngModelChange)="f.priceTier = $event">
               @for (t of types; track t) { <option [value]="t">{{ 'customersPage.types.' + t | transloco }}</option> }
@@ -91,16 +91,16 @@ const EMPTY: CustomerForm = {
               @for (t of types; track t) { <option [value]="t">{{ 'customersPage.types.' + t | transloco }}</option> }
             </select></label>
           <label class="text-sm font-medium">{{ 'customersPage.creditLimit' | transloco }}
-            <input type="number" min="0" [class]="ui.input + ' mt-1'" [(ngModel)]="f.creditLimit" />
+            <input placeholder="Type here..." type="number" min="0" [class]="ui.input + ' mt-1'" [(ngModel)]="f.creditLimit" />
             <span class="text-xs font-normal text-slate-600 dark:text-slate-400">{{ 'customersPage.creditHint' | transloco }}</span></label>
           <label class="text-sm font-medium">{{ 'customersPage.terms' | transloco }}
-            <input type="number" min="0" max="365" [class]="ui.input + ' mt-1'" [(ngModel)]="f.paymentTermsDays" /></label>
+            <input placeholder="Type here..." type="number" min="0" max="365" [class]="ui.input + ' mt-1'" [(ngModel)]="f.paymentTermsDays" /></label>
           <label class="text-sm font-medium">{{ 'customersPage.email' | transloco }}
-            <input type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="f.email" /></label>
+            <input placeholder="Type here..." type="email" dir="ltr" [class]="ui.input + ' mt-1'" [(ngModel)]="f.email" /></label>
           <label class="text-sm font-medium">{{ 'customersPage.city' | transloco }}
-            <input [class]="ui.input + ' mt-1'" [(ngModel)]="f.city" /></label>
+            <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.city" /></label>
           <label class="text-sm font-medium sm:col-span-2">{{ 'customersPage.address' | transloco }}
-            <input [class]="ui.input + ' mt-1'" [(ngModel)]="f.address" /></label>
+            <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="f.address" /></label>
           @if (editId) {
             <label class="flex items-center gap-2 text-sm sm:col-span-2">
               <input type="checkbox" class="h-5 w-5" [(ngModel)]="f.isActive" /> {{ 'customersPage.active' | transloco }}</label>

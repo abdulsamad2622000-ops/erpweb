@@ -90,7 +90,7 @@ const TONE: Record<MatchStatus, BadgeTone> = {
             <div class="flex flex-wrap items-end gap-3">
               <div class="min-w-40">
                 <label for="bill-no" class="mb-1 block text-sm">{{ 'purchase.payables.matching.billNumber' | transloco }}</label>
-                <input id="bill-no" dir="ltr" [class]="ui.input" [value]="billNumber()" maxlength="40" (input)="billNumber.set(val($event))" />
+                <input placeholder="Enter bill no..." id="bill-no" dir="ltr" [class]="ui.input" [value]="billNumber()" maxlength="40" (input)="billNumber.set(val($event))" />
               </div>
               <div>
                 <label for="bill-date" class="mb-1 block text-sm">{{ 'purchase.payables.matching.billDate' | transloco }}</label>
@@ -98,7 +98,7 @@ const TONE: Record<MatchStatus, BadgeTone> = {
               </div>
               <div class="w-40">
                 <label for="bill-amount" class="mb-1 block text-sm">{{ 'purchase.payables.matching.billAmount' | transloco }}</label>
-                <input id="bill-amount" type="number" min="0" step="0.01" [class]="ui.input" [value]="billAmount()" (input)="billAmount.set(val($event))" />
+                <input placeholder="Enter bill amount..." id="bill-amount" type="number" min="0" step="0.01" [class]="ui.input" [value]="billAmount()" (input)="billAmount.set(val($event))" />
               </div>
               <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveBill()">{{ 'purchase.payables.matching.saveBill' | transloco }}</button>
             </div>

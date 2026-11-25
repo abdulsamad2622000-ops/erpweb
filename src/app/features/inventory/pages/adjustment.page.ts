@@ -95,7 +95,7 @@ interface DraftLine {
 
         <div [class]="ui.card + ' space-y-2'">
           <label for="adj-reason" class="block text-sm font-medium">{{ 'inventory.adjustments.reason' | transloco }} *</label>
-          <textarea id="adj-reason" rows="3" maxlength="300" [class]="ui.input + ' py-2'" [ngModel]="reason()" (ngModelChange)="reason.set($event)"></textarea>
+          <textarea placeholder="Enter adj reason..." id="adj-reason" rows="3" maxlength="300" [class]="ui.input + ' py-2'" [ngModel]="reason()" (ngModelChange)="reason.set($event)"></textarea>
           <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'inventory.adjustments.reasonHint' | transloco: { n: minReason } }}</p>
           <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'inventory.adjustments.pendingNote' | transloco }}</p>
           <button type="button" [class]="ui.primary" [disabled]="!canSend()" (click)="send()">{{ 'inventory.adjustments.send' | transloco }}</button>

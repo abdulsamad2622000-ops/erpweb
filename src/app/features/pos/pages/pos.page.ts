@@ -40,7 +40,7 @@ import {
             }
           </select>
           <label for="pos-open-cash" class="block text-sm font-medium">{{ 'posPage.openingCash' | transloco }}</label>
-          <input id="pos-open-cash" type="number" min="0" inputmode="decimal" [class]="ui.input" [(ngModel)]="openCash" />
+          <input placeholder="Enter pos open cash..." id="pos-open-cash" type="number" min="0" inputmode="decimal" [class]="ui.input" [(ngModel)]="openCash" />
           @if (error(); as e) {
             <p role="alert" class="text-sm text-red-600">{{ e }}</p>
           }
@@ -150,7 +150,7 @@ import {
                       @if (l.serial) {
                         1
                       } @else {
-                        <input type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2"
+                        <input placeholder="Type here..." type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2"
                           [attr.aria-label]="('posPage.qty' | transloco) + ' ' + l.name"
                           [ngModel]="l.qty" (ngModelChange)="setQty($index, $event)" />
                       }
@@ -209,7 +209,7 @@ import {
                   ({{ limit() === null ? ('posPage.noLimit' | transloco) : ('posPage.maxPct' | transloco: { n: limit() }) }})
                 </span>
               </label>
-              <input id="pos-disc" type="number" min="0" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2 text-end"
+              <input placeholder="Enter pos disc..." id="pos-disc" type="number" min="0" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2 text-end"
                 [ngModel]="discount()" (ngModelChange)="discount.set(+$event || 0)" />
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'posPage.maxRs' | transloco: { n: fmt(maxDisc()) } }}</p>
@@ -236,7 +236,7 @@ import {
               @for (m of methods; track m) {
                 <div class="flex items-center justify-between gap-2 text-sm">
                   <label [for]="'pos-pay-' + m">{{ 'posPage.methods.' + m | transloco }}</label>
-                  <input [id]="'pos-pay-' + m" type="number" min="0" class="min-h-9 w-36 rounded border border-slate-400 bg-transparent px-2 text-end"
+                  <input placeholder="Type here..." [id]="'pos-pay-' + m" type="number" min="0" class="min-h-9 w-36 rounded border border-slate-400 bg-transparent px-2 text-end"
                     [ngModel]="split()[m]" (ngModelChange)="setSplit(m, $event)" />
                 </div>
               }
@@ -292,9 +292,9 @@ import {
         <div class="space-y-3">
           <h2 id="cust-t" class="font-semibold">{{ 'posPage.newCustomer' | transloco }}</h2>
           <label for="nc-name" class="block text-sm font-medium">{{ 'posPage.name' | transloco }}</label>
-          <input id="nc-name" [class]="ui.input" [(ngModel)]="newName" />
+          <input placeholder="Enter nc name..." id="nc-name" [class]="ui.input" [(ngModel)]="newName" />
           <label for="nc-phone" class="block text-sm font-medium">{{ 'posPage.phone' | transloco }}</label>
-          <input id="nc-phone" type="tel" dir="ltr" [class]="ui.input" [(ngModel)]="newPhone" />
+          <input placeholder="Enter nc phone..." id="nc-phone" type="tel" dir="ltr" [class]="ui.input" [(ngModel)]="newPhone" />
           @if (error(); as e) { <p role="alert" class="text-sm text-red-600">{{ e }}</p> }
           <div class="flex justify-end gap-2">
             <button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'common.cancel' | transloco }}</button>
@@ -312,12 +312,12 @@ import {
           <div class="flex justify-between"><span>{{ 'posPage.cashRefunds' | transloco }}</span><span>{{ fmt(s.cashRefunds) }}</span></div>
           <div class="flex justify-between font-semibold"><span>{{ 'posPage.expectedCash' | transloco }}</span><span>{{ fmt(s.expectedCash) }}</span></div>
           <label for="cl-cash" class="block font-medium">{{ 'posPage.countedCash' | transloco }}</label>
-          <input id="cl-cash" type="number" min="0" [class]="ui.input" [(ngModel)]="countedCash" />
+          <input placeholder="Enter cl cash..." id="cl-cash" type="number" min="0" [class]="ui.input" [(ngModel)]="countedCash" />
           @if (countedCash !== null && diff(s) !== 0) {
             <p class="text-red-600">{{ 'posPage.difference' | transloco: { n: fmt(diff(s)) } }}</p>
           }
           <label for="cl-note" class="block font-medium">{{ 'posPage.closeNote' | transloco }}</label>
-          <textarea id="cl-note" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="closeNote"></textarea>
+          <textarea placeholder="Enter cl note..." id="cl-note" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="closeNote"></textarea>
           @if (error(); as e) { <p role="alert" class="text-red-600">{{ e }}</p> }
           <div class="flex justify-end gap-2">
             <button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'common.cancel' | transloco }}</button>

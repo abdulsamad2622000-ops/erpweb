@@ -65,7 +65,7 @@ import { WarehousesStore } from '../stores/org.stores';
           [control]="form.controls.code"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter warehouse code..."
             id="warehouse-code"
             dir="ltr"
             formControlName="code"
@@ -78,7 +78,7 @@ import { WarehousesStore } from '../stores/org.stores';
           [control]="form.controls.name"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter warehouse name..."
             id="warehouse-name"
             formControlName="name"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"

@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { PublicWarranty } from '../models/claim.models';
@@ -14,7 +14,7 @@ import { ClaimsService } from '../services/claims.service';
       <h1 class="text-2xl font-semibold">Check your warranty</h1>
       <form class="space-y-3 rounded-xl border border-slate-300 p-4" (ngSubmit)="check()">
         <label for="wc-serial" class="block text-sm font-medium">Serial number</label>
-        <input id="wc-serial" name="serial" dir="ltr" autocomplete="off" class="min-h-11 w-full rounded-lg border border-slate-400 px-3" [(ngModel)]="serial" />
+        <input placeholder="Enter wc serial..." id="wc-serial" name="serial" dir="ltr" autocomplete="off" class="min-h-11 w-full rounded-lg border border-slate-400 px-3" [(ngModel)]="serial" />
         <button type="submit" class="min-h-12 w-full rounded-lg bg-[#2563EB] px-5 font-medium text-white disabled:opacity-50" [disabled]="busy() || !serial.trim()">Check</button>
       </form>
       @if (busy()) { <p role="status" class="text-sm">Checking...</p> }

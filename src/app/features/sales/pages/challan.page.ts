@@ -64,13 +64,13 @@ import { creditCheck } from '../utils/sales-utils';
             </div>
             <div class="flex flex-wrap items-end gap-2">
               <label class="text-sm font-medium">{{ 'salesDocs.paidNow' | transloco }}
-                <input type="number" min="0" [class]="ui.input + ' mt-1 w-40'" [(ngModel)]="payNow" /></label>
+                <input placeholder="Type here..." type="number" min="0" [class]="ui.input + ' mt-1 w-40'" [(ngModel)]="payNow" /></label>
               <label class="text-sm font-medium">{{ 'posPage.payment' | transloco }}
                 <select [class]="ui.input + ' mt-1'" [(ngModel)]="method">
                   @for (m of methods; track m) { <option [ngValue]="m">{{ 'posPage.methods.' + m | transloco }}</option> }
                 </select></label>
               <label class="text-sm font-medium">{{ 'salesDocs.reference' | transloco }}
-                <input [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
+                <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
             </div>
             @if (credit(); as cr) {
               <p class="text-sm" [class.text-red-600]="!cr.allowed">

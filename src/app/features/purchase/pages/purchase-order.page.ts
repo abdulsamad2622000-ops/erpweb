@@ -66,7 +66,7 @@ import { PO_TONE, UI, errorMessage } from '../utils/ui';
         </div>
         <div>
           <label for="po-terms" class="mb-1 block text-sm">{{ 'purchase.orders.terms' | transloco }}</label>
-          <input id="po-terms" formControlName="terms" [class]="ui.input" />
+          <input placeholder="Enter po terms..." id="po-terms" formControlName="terms" [class]="ui.input" />
         </div>
 
         <div [class]="ui.tableWrap">
@@ -88,8 +88,8 @@ import { PO_TONE, UI, errorMessage } from '../utils/ui';
                       @for (p of products(); track p.id) { <option [ngValue]="p.id">{{ p.sku }} · {{ p.name }}</option> }
                     </select>
                   </td>
-                  <td [class]="ui.td"><input type="number" min="1" step="1" formControlName="qty" [class]="ui.input" [attr.aria-label]="'purchase.orders.qty' | transloco" /></td>
-                  <td [class]="ui.td"><input type="number" min="0" formControlName="unitCost" [class]="ui.input" [attr.aria-label]="'purchase.orders.unitCost' | transloco" /></td>
+                  <td [class]="ui.td"><input placeholder="Enter qty..." type="number" min="1" step="1" formControlName="qty" [class]="ui.input" [attr.aria-label]="'purchase.orders.qty' | transloco" /></td>
+                  <td [class]="ui.td"><input placeholder="Enter unit cost..." type="number" min="0" formControlName="unitCost" [class]="ui.input" [attr.aria-label]="'purchase.orders.unitCost' | transloco" /></td>
                   <td [class]="ui.td + ' text-end'">{{ money(lineTotalOf(i)) }}</td>
                   @if (po(); as o) { <td [class]="ui.td">{{ receivedOf(o, i) }}</td> }
                   @if (editable()) {

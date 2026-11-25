@@ -56,7 +56,7 @@ const PREVIEW_MAX = 6;
       <div class="flex flex-wrap items-end gap-3">
         <div>
           <label for="label-q" class="mb-1 block text-sm">{{ 'common.search' | transloco }}</label>
-          <input id="label-q" [ngModel]="q()" (ngModelChange)="q.set($event); reload()"
+          <input placeholder="Enter label q..." id="label-q" [ngModel]="q()" (ngModelChange)="q.set($event); reload()"
                  class="min-h-11 w-64 rounded-lg border border-slate-400 bg-transparent px-3 text-sm" />
         </div>
         @if (kind() === 'serial') {

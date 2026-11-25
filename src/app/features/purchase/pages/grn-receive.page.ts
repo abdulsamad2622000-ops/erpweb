@@ -149,7 +149,7 @@ const FEEDBACK_MAX = 8;
               } @else {
                 <div [class]="ui.card">
                   <label for="grn-qty" class="mb-1 block text-sm">{{ 'purchase.grn.qtyReceived' | transloco: { max: left(l) } }}</label>
-                  <input id="grn-qty" type="number" min="0" [max]="left(l)" [disabled]="posted()" [ngModel]="l.qty" (ngModelChange)="setQty($event)" [class]="ui.input + ' max-w-40'" />
+                  <input placeholder="Enter grn qty..." id="grn-qty" type="number" min="0" [max]="left(l)" [disabled]="posted()" [ngModel]="l.qty" (ngModelChange)="setQty($event)" [class]="ui.input + ' max-w-40'" />
                 </div>
               }
             </div>

@@ -52,7 +52,7 @@ import { CategoriesStore } from '../stores/products.stores';
           [control]="form.controls.name"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter category name..."
             id="category-name"
             formControlName="name"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"

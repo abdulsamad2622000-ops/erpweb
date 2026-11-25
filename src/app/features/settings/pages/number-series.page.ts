@@ -78,7 +78,7 @@ import { SettingsStore } from '../stores/settings.store';
           [control]="form.controls.prefix"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter series prefix..."
             id="series-prefix"
             dir="ltr"
             formControlName="prefix"
@@ -91,7 +91,7 @@ import { SettingsStore } from '../stores/settings.store';
           [control]="form.controls.nextNumber"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter series next..."
             id="series-next"
             type="number"
             inputmode="numeric"
@@ -106,7 +106,7 @@ import { SettingsStore } from '../stores/settings.store';
           [control]="form.controls.padding"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter series padding..."
             id="series-padding"
             type="number"
             inputmode="numeric"

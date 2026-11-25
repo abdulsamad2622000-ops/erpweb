@@ -96,7 +96,7 @@ import { ORDER_TONE, leftToDeliver } from '../utils/sales-utils';
                           <span class="text-xs text-slate-600 dark:text-slate-400">{{ (picks()[l.id] ?? []).length }} / {{ left(l) }}</span>
                         </div>
                       } @else {
-                        <input type="number" min="0" [max]="left(l)" class="min-h-9 w-24 rounded border border-slate-400 bg-transparent px-2"
+                        <input placeholder="Type here..." type="number" min="0" [max]="left(l)" class="min-h-9 w-24 rounded border border-slate-400 bg-transparent px-2"
                           [attr.aria-label]="('salesDocs.thisChallan' | transloco) + ' ' + l.name" [ngModel]="qtys()[l.id] ?? 0" (ngModelChange)="setQty(l, $event)" />
                       }
                     </td>
@@ -112,7 +112,7 @@ import { ORDER_TONE, leftToDeliver } from '../utils/sales-utils';
         @if (delivering()) {
           <div [class]="ui.card + ' space-y-2'">
             <label for="dl-note" class="block text-sm font-medium">{{ 'salesDocs.note' | transloco }}</label>
-            <input id="dl-note" [class]="ui.input" [(ngModel)]="note" />
+            <input placeholder="Enter dl note..." id="dl-note" [class]="ui.input" [(ngModel)]="note" />
             <div class="flex justify-end gap-2">
               <button type="button" [class]="ui.btn" (click)="delivering.set(false)">{{ 'common.cancel' | transloco }}</button>
               <button type="button" [class]="ui.primary" [disabled]="!pickedCount() || !warehouseId || busy()" (click)="createChallan(o)">

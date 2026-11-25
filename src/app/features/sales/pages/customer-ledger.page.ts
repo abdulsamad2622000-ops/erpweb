@@ -47,13 +47,13 @@ import { newKey } from '../utils/sales-print';
             <h2 class="font-semibold">{{ 'ledgerPage.receive' | transloco }}</h2>
             <div class="flex flex-wrap items-end gap-2">
               <label class="text-sm font-medium">{{ 'posPage.amount' | transloco }}
-                <input type="number" min="0" [class]="ui.input + ' mt-1 w-40'" [ngModel]="amount()" (ngModelChange)="amount.set(+$event || 0)" /></label>
+                <input placeholder="Type here..." type="number" min="0" [class]="ui.input + ' mt-1 w-40'" [ngModel]="amount()" (ngModelChange)="amount.set(+$event || 0)" /></label>
               <label class="text-sm font-medium">{{ 'posPage.payment' | transloco }}
                 <select [class]="ui.input + ' mt-1'" [(ngModel)]="method">
                   @for (m of methods; track m) { <option [ngValue]="m">{{ 'posPage.methods.' + m | transloco }}</option> }
                 </select></label>
               <label class="text-sm font-medium">{{ 'salesDocs.reference' | transloco }}
-                <input [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
+                <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
               <label class="flex min-h-11 items-center gap-2 text-sm">
                 <input type="checkbox" class="h-5 w-5" [ngModel]="manual()" (ngModelChange)="manual.set($event)" /> {{ 'ledgerPage.pickBills' | transloco }}</label>
             </div>
@@ -73,7 +73,7 @@ import { newKey } from '../utils/sales-print';
                     <td [class]="ui.td + ' text-end'">{{ fmt(i.balance) }}</td>
                     <td [class]="ui.td + ' text-end'">
                       @if (manual()) {
-                        <input type="number" min="0" [max]="i.balance" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2 text-end"
+                        <input placeholder="Type here..." type="number" min="0" [max]="i.balance" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2 text-end"
                           [attr.aria-label]="('ledgerPage.applied' | transloco) + ' ' + i.number" [ngModel]="alloc()[i.id] ?? 0" (ngModelChange)="setAlloc(i.id, $event)" />
                       } @else { {{ fmt(fifo()[i.id] ?? 0) }} }
                     </td>

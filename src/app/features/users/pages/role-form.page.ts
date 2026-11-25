@@ -51,10 +51,10 @@ const INPUT = 'min-h-11 w-full rounded-lg border border-input bg-transparent px-
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <app-form-field #fName [label]="'roles.name' | transloco" inputId="role-name" [control]="form.controls.name" [required]="true">
-            <input id="role-name" formControlName="name" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fName.describedBy()" />
+            <input placeholder="Enter full name..." id="role-name" formControlName="name" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fName.describedBy()" />
           </app-form-field>
           <app-form-field #fDesc [label]="'roles.description' | transloco" inputId="role-desc" [control]="form.controls.description">
-            <input id="role-desc" formControlName="description" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fDesc.describedBy()" />
+            <input placeholder="Enter role desc..." id="role-desc" formControlName="description" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fDesc.describedBy()" />
           </app-form-field>
         </div>
 

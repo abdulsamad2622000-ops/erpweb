@@ -48,7 +48,7 @@ const EMPTY: LabelTemplateInput = {
         <div [formGroup]="form" class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
           <div class="grid gap-4 sm:grid-cols-2">
             <app-form-field [label]="'common.name' | transloco" inputId="tpl-name" [control]="form.controls.name" [required]="true">
-              <input id="tpl-name" formControlName="name" class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm" />
+              <input placeholder="Enter tpl name..." id="tpl-name" formControlName="name" class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm" />
             </app-form-field>
             <div>
               <label for="tpl-kind" class="mb-1 block text-sm">{{ 'labels.labelFor' | transloco }}</label>
@@ -69,10 +69,10 @@ const EMPTY: LabelTemplateInput = {
                 </button>
               }
               <label class="ms-2 flex items-center gap-1 text-sm">W
-                <input type="number" formControlName="widthMm" min="20" max="150" class="min-h-11 w-20 rounded-lg border border-slate-400 bg-transparent px-2" />
+                <input placeholder="Enter width mm..." type="number" formControlName="widthMm" min="20" max="150" class="min-h-11 w-20 rounded-lg border border-slate-400 bg-transparent px-2" />
               </label>
               <label class="flex items-center gap-1 text-sm">H
-                <input type="number" formControlName="heightMm" min="15" max="150" class="min-h-11 w-20 rounded-lg border border-slate-400 bg-transparent px-2" />
+                <input placeholder="Enter height mm..." type="number" formControlName="heightMm" min="15" max="150" class="min-h-11 w-20 rounded-lg border border-slate-400 bg-transparent px-2" />
               </label>
               <span class="text-sm text-slate-500">mm</span>
             </div>

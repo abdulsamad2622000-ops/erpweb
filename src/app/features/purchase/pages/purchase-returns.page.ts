@@ -63,7 +63,7 @@ const MIN_REASON = 10;
 
           <div>
             <label for="ret-reason" class="mb-1 block text-sm">{{ 'common.reason.label' | transloco }} *</label>
-            <textarea id="ret-reason" rows="2" [class]="ui.input + ' py-2'" [value]="reason()" (input)="reason.set(val($event))"></textarea>
+            <textarea placeholder="Enter ret reason..." id="ret-reason" rows="2" [class]="ui.input + ' py-2'" [value]="reason()" (input)="reason.set(val($event))"></textarea>
             <p class="mt-1 text-xs text-slate-500">{{ 'common.reason.hint' | transloco: { min: minReason } }}</p>
           </div>
 

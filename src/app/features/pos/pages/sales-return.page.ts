@@ -69,7 +69,7 @@ import { money, refundFor } from '../utils/pos-utils';
             }
           </select>
           <label for="sr-reason" class="block text-sm font-medium">{{ 'salesReturnPage.reason' | transloco }}</label>
-          <textarea id="sr-reason" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="reason"></textarea>
+          <textarea placeholder="Enter sr reason..." id="sr-reason" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="reason"></textarea>
           <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'salesReturnPage.reasonHint' | transloco }}</p>
           <div class="flex items-center justify-between">
             <span class="text-base font-semibold">{{ 'salesReturnPage.amount' | transloco }}: {{ fmt(amount()) }}</span>
