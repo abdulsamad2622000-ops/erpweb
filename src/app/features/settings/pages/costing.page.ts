@@ -75,7 +75,7 @@ import { SettingsStore } from '../stores/settings.store';
               {{ 'common.save' | transloco }}
             </button>
             @if (saved()) {
-              <p role="status" class="text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
+              <p role="status" class="mt-3 text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
             }
             @if (saveError(); as msg) {
               <p role="alert" class="text-sm text-red-600">{{ msg }}</p>
