@@ -100,11 +100,11 @@ const INPUT = 'min-h-11 w-full rounded-lg border border-input bg-transparent px-
         }
 
         <app-form-field #fName [label]="'users.name' | transloco" inputId="user-name" [control]="form.controls.name" [required]="true">
-          <input id="user-name" formControlName="name" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fName.describedBy()" />
+          <input placeholder="Enter full name..." id="user-name" formControlName="name" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fName.describedBy()" />
         </app-form-field>
 
         <app-form-field #fEmail [label]="'users.email' | transloco" inputId="user-email" [control]="form.controls.email" [required]="true">
-          <input id="user-email" type="email" dir="ltr" formControlName="email" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fEmail.describedBy()" />
+          <input placeholder="Enter email address..." id="user-email" type="email" dir="ltr" formControlName="email" autocomplete="off" class="${INPUT}" [attr.aria-describedby]="fEmail.describedBy()" />
         </app-form-field>
 
         <app-form-field
@@ -115,7 +115,7 @@ const INPUT = 'min-h-11 w-full rounded-lg border border-input bg-transparent px-
           [required]="editingId() === null"
           [hint]="(editingId() === null ? 'users.passwordHint' : 'users.passwordEditHint') | transloco">
           <div class="flex gap-2">
-            <input id="user-password" [type]="showPw() ? 'text' : 'password'" dir="ltr" formControlName="password" autocomplete="new-password" class="${INPUT}" [attr.aria-describedby]="fPass.describedBy()" />
+            <input placeholder="Enter at least 8 characters..." id="user-password" [type]="showPw() ? 'text' : 'password'" dir="ltr" formControlName="password" autocomplete="new-password" class="${INPUT}" [attr.aria-describedby]="fPass.describedBy()" />
             <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="showPw.set(!showPw())">
               {{ (showPw() ? 'users.passwordHide' : 'users.passwordShow') | transloco }}
             </button>

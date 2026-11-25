@@ -91,13 +91,13 @@ import { INVOICE_TONE } from '../utils/sales-utils';
             <h2 class="font-semibold">{{ 'salesDocs.receivePayment' | transloco }}</h2>
             <div class="flex flex-wrap items-end gap-2">
               <label class="text-sm font-medium">{{ 'posPage.amount' | transloco }}
-                <input type="number" min="0" [max]="s.balance" [class]="ui.input + ' mt-1 w-40'" [(ngModel)]="amount" /></label>
+                <input placeholder="Type here..." type="number" min="0" [max]="s.balance" [class]="ui.input + ' mt-1 w-40'" [(ngModel)]="amount" /></label>
               <label class="text-sm font-medium">{{ 'posPage.payment' | transloco }}
                 <select [class]="ui.input + ' mt-1'" [(ngModel)]="method">
                   @for (m of methods; track m) { <option [ngValue]="m">{{ 'posPage.methods.' + m | transloco }}</option> }
                 </select></label>
               <label class="text-sm font-medium">{{ 'salesDocs.reference' | transloco }}
-                <input [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
+                <input placeholder="Type here..." [class]="ui.input + ' mt-1'" [(ngModel)]="reference" /></label>
               <button type="button" [class]="ui.primary" [disabled]="busy() || !(amount > 0) || amount > s.balance" (click)="receive(s)">{{ 'salesDocs.save' | transloco }}</button>
             </div>
             @if (formError(); as e) { <p role="alert" class="text-sm text-red-600">{{ e }}</p> }

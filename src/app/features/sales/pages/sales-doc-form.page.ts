@@ -74,10 +74,10 @@ import { EditLine, docTotal, lineProblem } from '../utils/sales-utils';
             @for (l of lines(); track l.productId; let i = $index) {
               <tr [class]="ui.tr">
                 <td [class]="ui.td"><div class="font-medium">{{ l.name }}</div><div class="text-xs text-slate-600 dark:text-slate-400" dir="ltr">{{ l.sku }}</div></td>
-                <td [class]="ui.td"><input type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2"
+                <td [class]="ui.td"><input placeholder="Type here..." type="number" min="1" class="min-h-9 w-20 rounded border border-slate-400 bg-transparent px-2"
                   [attr.aria-label]="('posPage.qty' | transloco) + ' ' + l.name" [ngModel]="l.qty" (ngModelChange)="set(i, 'qty', $event)" /></td>
                 <td [class]="ui.td">
-                  <input type="number" min="0" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2"
+                  <input placeholder="Type here..." type="number" min="0" class="min-h-9 w-32 rounded border border-slate-400 bg-transparent px-2"
                     [attr.aria-label]="('posPage.price' | transloco) + ' ' + l.name" [ngModel]="l.unitPrice" (ngModelChange)="set(i, 'unitPrice', $event)" />
                   <div class="text-xs text-slate-600 dark:text-slate-400">{{ 'salesDocs.tierLowest' | transloco: { tier: fmt(l.tierPrice), low: fmt(l.lowestPrice) } }}</div>
                   @if (problem(l); as p) { <div class="text-xs text-red-600">{{ p | transloco: { n: fmt(l.lowestPrice) } }}</div> }
@@ -97,7 +97,7 @@ import { EditLine, docTotal, lineProblem } from '../utils/sales-utils';
 
       <div [class]="ui.card + ' space-y-2'">
         <label for="df-note" class="block text-sm font-medium">{{ 'salesDocs.note' | transloco }}</label>
-        <textarea id="df-note" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="note"></textarea>
+        <textarea placeholder="Enter df note..." id="df-note" rows="2" [class]="ui.input + ' py-2'" [(ngModel)]="note"></textarea>
         @if (error(); as e) { <p role="alert" class="text-sm text-red-600">{{ e }}</p> }
         <div class="flex justify-end">
           <button type="button" [class]="ui.primary" [disabled]="!canSave() || busy()" (click)="save()">{{ 'common.save' | transloco }}</button>

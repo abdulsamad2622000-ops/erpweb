@@ -122,15 +122,15 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
               <div id="panel-basics" role="tabpanel" aria-labelledby="tab-basics" class="space-y-4">
                 <div class="grid gap-4 sm:grid-cols-2">
                   <app-form-field [label]="'products.sku' | transloco" inputId="product-sku" [control]="form.controls.sku" [required]="true">
-                    <input id="product-sku" dir="ltr" formControlName="sku" [class]="inputClass" />
+                    <input placeholder="Enter product sku..." id="product-sku" dir="ltr" formControlName="sku" [class]="inputClass" />
                   </app-form-field>
                   <app-form-field [label]="'products.barcode' | transloco" inputId="product-barcode" [control]="form.controls.barcode">
-                    <input id="product-barcode" dir="ltr" formControlName="barcode" [class]="inputClass" />
+                    <input placeholder="Enter product barcode..." id="product-barcode" dir="ltr" formControlName="barcode" [class]="inputClass" />
                   </app-form-field>
                 </div>
 
                 <app-form-field [label]="'products.name' | transloco" inputId="product-name" [control]="form.controls.name" [required]="true">
-                  <input id="product-name" formControlName="name" [class]="inputClass" />
+                  <input placeholder="Enter product name..." id="product-name" formControlName="name" [class]="inputClass" />
                 </app-form-field>
 
                 <div class="grid gap-4 sm:grid-cols-2">
@@ -181,19 +181,19 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
                 <p class="text-sm text-[#5B6679]">{{ 'productForm.specsHint' | transloco }}</p>
                 <div class="grid gap-4 sm:grid-cols-2">
                   <app-form-field [label]="'productForm.cpu' | transloco" inputId="product-cpu" [control]="form.controls.specs.controls.cpu">
-                    <input id="product-cpu" formControlName="cpu" list="dl-cpu" [class]="inputClass" />
+                    <input placeholder="Enter product cpu..." id="product-cpu" formControlName="cpu" list="dl-cpu" [class]="inputClass" />
                   </app-form-field>
                   <app-form-field [label]="'productForm.ram' | transloco" inputId="product-ram" [control]="form.controls.specs.controls.ram">
-                    <input id="product-ram" formControlName="ram" list="dl-ram" [class]="inputClass" />
+                    <input placeholder="Enter product ram..." id="product-ram" formControlName="ram" list="dl-ram" [class]="inputClass" />
                   </app-form-field>
                   <app-form-field [label]="'productForm.storage' | transloco" inputId="product-storage" [control]="form.controls.specs.controls.storage">
-                    <input id="product-storage" formControlName="storage" list="dl-storage" [class]="inputClass" />
+                    <input placeholder="Enter product storage..." id="product-storage" formControlName="storage" list="dl-storage" [class]="inputClass" />
                   </app-form-field>
                   <app-form-field [label]="'productForm.gpu' | transloco" inputId="product-gpu" [control]="form.controls.specs.controls.gpu">
-                    <input id="product-gpu" formControlName="gpu" list="dl-gpu" [class]="inputClass" />
+                    <input placeholder="Enter product gpu..." id="product-gpu" formControlName="gpu" list="dl-gpu" [class]="inputClass" />
                   </app-form-field>
                   <app-form-field [label]="'productForm.screen' | transloco" inputId="product-screen" [control]="form.controls.specs.controls.screen">
-                    <input id="product-screen" formControlName="screen" list="dl-screen" [class]="inputClass" />
+                    <input placeholder="Enter product screen..." id="product-screen" formControlName="screen" list="dl-screen" [class]="inputClass" />
                   </app-form-field>
                 </div>
                 <datalist id="dl-cpu">@for (s of cpuOptions; track s) { <option [value]="s"></option> }</datalist>
@@ -231,13 +231,13 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
                       </div>
                       <div class="grid gap-4 sm:grid-cols-2">
                         <app-form-field [label]="'productForm.variantSku' | transloco" [inputId]="'variant-sku-' + i" [control]="g.controls.sku" [required]="true">
-                          <input [id]="'variant-sku-' + i" dir="ltr" formControlName="sku" [class]="inputClass" />
+                          <input placeholder="Enter sku..." [id]="'variant-sku-' + i" dir="ltr" formControlName="sku" [class]="inputClass" />
                         </app-form-field>
                         <app-form-field [label]="'productForm.variantName' | transloco" [inputId]="'variant-name-' + i" [control]="g.controls.name" [required]="true">
-                          <input [id]="'variant-name-' + i" formControlName="name" [class]="inputClass" />
+                          <input placeholder="Enter name..." [id]="'variant-name-' + i" formControlName="name" [class]="inputClass" />
                         </app-form-field>
                         <app-form-field [label]="'productForm.variantBarcode' | transloco" [inputId]="'variant-barcode-' + i" [control]="g.controls.barcode">
-                          <input [id]="'variant-barcode-' + i" dir="ltr" formControlName="barcode" [class]="inputClass" />
+                          <input placeholder="Enter barcode..." [id]="'variant-barcode-' + i" dir="ltr" formControlName="barcode" [class]="inputClass" />
                         </app-form-field>
                         <label class="flex min-h-11 items-center gap-2 self-end text-sm">
                           <input type="checkbox" formControlName="isActive" class="size-5" />
@@ -264,11 +264,11 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
                 <div class="grid gap-4 sm:grid-cols-2">
                   @if (canCost) {
                     <app-form-field [label]="'productForm.costPrice' | transloco" inputId="product-cost" [control]="form.controls.pricing.controls.costPrice">
-                      <input id="product-cost" type="number" inputmode="decimal" min="0" step="0.01" dir="ltr" formControlName="costPrice" [class]="inputClass" />
+                      <input placeholder="Enter product cost..." id="product-cost" type="number" inputmode="decimal" min="0" step="0.01" dir="ltr" formControlName="costPrice" [class]="inputClass" />
                     </app-form-field>
                   }
                   <app-form-field [label]="'productForm.minPrice' | transloco" inputId="product-min-price" [control]="form.controls.pricing.controls.minPrice">
-                    <input id="product-min-price" type="number" inputmode="decimal" min="0" step="0.01" dir="ltr" formControlName="minPrice" [class]="inputClass" />
+                    <input placeholder="Enter product min price..." id="product-min-price" type="number" inputmode="decimal" min="0" step="0.01" dir="ltr" formControlName="minPrice" [class]="inputClass" />
                   </app-form-field>
                 </div>
                 @if (canCost) {
@@ -283,7 +283,7 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
                       [inputId]="'product-price-' + t"
                       [control]="form.controls.pricing.controls[t]"
                     >
-                      <input
+                      <input placeholder="Type here..."
                         [id]="'product-price-' + t"
                         type="number"
                         inputmode="decimal"
@@ -345,7 +345,7 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
               <div id="panel-stock" role="tabpanel" aria-labelledby="tab-stock" class="space-y-6">
                 <div class="space-y-1">
                   <app-form-field [label]="'productForm.warranty' | transloco" inputId="product-warranty" [control]="form.controls.warrantyMonths" [required]="true">
-                    <input id="product-warranty" type="number" inputmode="numeric" min="0" max="120" step="1" dir="ltr" formControlName="warrantyMonths" [class]="inputClass" />
+                    <input placeholder="Enter product warranty..." id="product-warranty" type="number" inputmode="numeric" min="0" max="120" step="1" dir="ltr" formControlName="warrantyMonths" [class]="inputClass" />
                   </app-form-field>
                   <p class="text-xs text-[#5B6679]">{{ 'productForm.warrantyHint' | transloco }}</p>
                 </div>
@@ -372,7 +372,7 @@ type ReorderGroup = ReturnType<typeof reorderGroup>;
                       @for (g of form.controls.reorderLevels.controls; track g; let i = $index) {
                         <div [formGroupName]="i" class="space-y-1">
                           <label [attr.for]="'reorder-' + i" class="block text-sm">{{ branchName(g.controls.branchId.value) }}</label>
-                          <input
+                          <input placeholder="Enter level..."
                             [id]="'reorder-' + i"
                             type="number"
                             inputmode="numeric"

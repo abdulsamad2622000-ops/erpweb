@@ -178,7 +178,7 @@ import { flattenTree, nextLevel, pathOf } from '../utils/location-utils';
           [control]="form.controls.code"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter loc code..."
             id="loc-code"
             dir="ltr"
             formControlName="code"
@@ -191,7 +191,7 @@ import { flattenTree, nextLevel, pathOf } from '../utils/location-utils';
           [control]="form.controls.name"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter loc name..."
             id="loc-name"
             formControlName="name"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"

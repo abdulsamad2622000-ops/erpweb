@@ -20,7 +20,7 @@ import { STOCK_STATUSES, STOCK_TONE } from '../utils/inventory-ui';
       <div class="flex flex-wrap items-end gap-3">
         <div>
           <label for="ser-q" class="mb-1 block text-sm">{{ 'common.search' | transloco }}</label>
-          <input id="ser-q" dir="ltr" [class]="ui.input + ' w-64'" [ngModel]="q()" (ngModelChange)="q.set($event); load()" />
+          <input placeholder="Enter ser q..." id="ser-q" dir="ltr" [class]="ui.input + ' w-64'" [ngModel]="q()" (ngModelChange)="q.set($event); load()" />
         </div>
         <div>
           <label for="ser-status" class="mb-1 block text-sm">{{ 'inventory.serials.status' | transloco }}</label>

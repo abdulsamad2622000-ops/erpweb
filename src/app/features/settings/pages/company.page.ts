@@ -41,7 +41,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
             [control]="form.controls.name"
             [required]="true"
           >
-            <input
+            <input placeholder="Enter company name..."
               id="company-name"
               formControlName="name"
               class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -85,7 +85,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
             inputId="company-address"
             [control]="form.controls.address"
           >
-            <textarea
+            <textarea placeholder="Enter company address..."
               id="company-address"
               formControlName="address"
               rows="3"
@@ -99,7 +99,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               inputId="company-city"
               [control]="form.controls.city"
             >
-              <input
+              <input placeholder="Enter company city..."
                 id="company-city"
                 formControlName="city"
                 class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -110,7 +110,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               inputId="company-country"
               [control]="form.controls.country"
             >
-              <input
+              <input placeholder="Enter company country..."
                 id="company-country"
                 formControlName="country"
                 class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -121,7 +121,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               inputId="company-phone"
               [control]="form.controls.phone"
             >
-              <input
+              <input placeholder="Enter company phone..."
                 id="company-phone"
                 type="tel"
                 dir="ltr"
@@ -134,7 +134,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               inputId="company-email"
               [control]="form.controls.email"
             >
-              <input
+              <input placeholder="Enter company email..."
                 id="company-email"
                 type="email"
                 dir="ltr"
@@ -147,7 +147,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               inputId="company-tax"
               [control]="form.controls.taxNumber"
             >
-              <input
+              <input placeholder="Enter company tax..."
                 id="company-tax"
                 formControlName="taxNumber"
                 class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
@@ -159,7 +159,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               [control]="form.controls.taxRate"
               [required]="true"
             >
-              <input
+              <input placeholder="Enter company tax rate..."
                 id="company-tax-rate"
                 type="number"
                 inputmode="decimal"
@@ -198,7 +198,7 @@ const MAX_LOGO_BYTES = 512 * 1024;
               {{ 'common.save' | transloco }}
             </button>
             @if (saved()) {
-              <p role="status" class="text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
+              <p role="status" class="mt-3 text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
             }
             @if (saveError(); as msg) {
               <p role="alert" class="text-sm text-red-600">{{ msg }}</p>

@@ -78,7 +78,7 @@ import { SettingsStore } from '../stores/settings.store';
           [control]="form.controls.name"
           [required]="true"
         >
-          <input
+          <input placeholder="Enter tier name..."
             id="tier-name"
             formControlName="name"
             class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"

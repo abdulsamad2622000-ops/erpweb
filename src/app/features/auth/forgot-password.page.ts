@@ -29,7 +29,7 @@ const ERR = 'rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-
           <form class="space-y-4" novalidate (submit)="onEmail($event)">
             <div>
               <label for="email" class="mb-1 block text-sm font-medium text-text">{{ 'auth.email' | transloco }}</label>
-              <input id="email" type="email" dir="ltr" autocomplete="email" inputmode="email" class="${FIELD}"
+              <input id="email" placeholder="Enter your email address..." type="email" dir="ltr" autocomplete="email" inputmode="email" class="${FIELD}"
                 [value]="email()" (input)="email.set(value($event))"
                 [attr.aria-invalid]="submitted() && !emailValid()" aria-describedby="email-err" />
               @if (submitted() && !emailValid()) {
@@ -43,7 +43,7 @@ const ERR = 'rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-
           <form class="space-y-4" novalidate (submit)="onCode($event)">
             <div>
               <label for="code" class="mb-1 block text-sm font-medium text-text">{{ 'auth.code' | transloco }}</label>
-              <input id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+              <input placeholder="Enter code..." id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
                 class="h-12 w-full rounded-[10px] border border-input bg-card px-3 text-center text-xl tracking-[0.5em] text-text focus-visible:outline-2 focus-visible:outline-accent"
                 [value]="code()" (input)="code.set(digits($event))"
                 [attr.aria-invalid]="submitted() && !codeValid()" aria-describedby="code-err" />
@@ -69,7 +69,7 @@ const ERR = 'rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-
             <div>
               <label for="password" class="mb-1 block text-sm font-medium text-text">{{ 'auth.newPassword' | transloco }}</label>
               <div class="relative">
-                <input id="password" dir="ltr" autocomplete="new-password" [type]="showPw() ? 'text' : 'password'"
+                <input placeholder="Enter password..." id="password" dir="ltr" autocomplete="new-password" [type]="showPw() ? 'text' : 'password'"
                   class="h-11 w-full rounded-[10px] border border-input bg-card ps-3 pe-12 text-text focus-visible:outline-2 focus-visible:outline-accent"
                   [value]="password()" (input)="password.set(value($event))"
                   [attr.aria-invalid]="submitted() && !passwordValid()" aria-describedby="password-err" />
@@ -86,7 +86,7 @@ const ERR = 'rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-
             </div>
             <div>
               <label for="confirm" class="mb-1 block text-sm font-medium text-text">{{ 'auth.confirmPassword' | transloco }}</label>
-              <input id="confirm" dir="ltr" autocomplete="new-password" [type]="showPw() ? 'text' : 'password'" class="${FIELD}"
+              <input placeholder="Enter confirm..." id="confirm" dir="ltr" autocomplete="new-password" [type]="showPw() ? 'text' : 'password'" class="${FIELD}"
                 [value]="confirm()" (input)="confirm.set(value($event))"
                 [attr.aria-invalid]="submitted() && !matches()" aria-describedby="confirm-err" />
               @if (submitted() && !matches()) {

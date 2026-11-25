@@ -31,8 +31,9 @@ import { MenuItem, visibleMenu } from '../core/nav/menu.config';
                   @for (child of item.children; track child.key) {
                     <li>
                       <a [routerLink]="'/' + child.path" routerLinkActive="bg-accent !text-white" (click)="navigate.emit()"
-                        class="flex h-10 items-center gap-3 rounded-[10px] ps-10 pe-3 text-sm hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-accent">
-                        {{ 'menu.' + child.key | transloco }}
+                        class="flex h-10 items-center gap-3 rounded-[10px] ps-8 pe-3 text-sm hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-accent">
+                        <i [class]="child.icon" aria-hidden="true"></i>
+                        <span>{{ 'menu.' + child.key | transloco }}</span>
                       </a>
                     </li>
                   }

@@ -32,7 +32,7 @@ import { ThemeService } from '../../core/theme/theme.service';
       <div class="relative mx-auto grid min-h-dvh max-w-6xl content-center items-center gap-6 px-4 pb-8 pt-16 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:px-10 lg:py-10">
         <aside class="flex flex-col items-center text-center" aria-hidden="true">
           <div class="flex items-center gap-3 text-3xl font-bold text-text lg:text-5xl">
-            <i class="pi pi-desktop text-[#4F7BFF]"></i>
+            <img src="/brand-logo.svg" alt="" aria-hidden="true" class="brand-logo" />
             <span>Laptop <span class="auth-erp">ERP</span></span>
           </div>
           <p class="mt-2 text-sm text-muted sm:text-base lg:mt-3 lg:text-lg">Smarter Business. Better Management.</p>
@@ -79,7 +79,7 @@ import { ThemeService } from '../../core/theme/theme.service';
 
         <div class="auth-glass mx-auto w-full max-w-md rounded-3xl p-5 sm:p-8">
           <div class="mb-5 flex items-center gap-2 text-lg font-semibold text-text">
-            <i class="pi pi-desktop text-[#4F7BFF]" aria-hidden="true"></i>
+            <img src="/brand-logo.svg" alt="" aria-hidden="true" class="brand-logo" />
             <span>Laptop <span class="auth-erp">ERP</span></span>
           </div>
           <h1 class="text-3xl font-semibold text-text sm:text-4xl">{{ heading() }}</h1>

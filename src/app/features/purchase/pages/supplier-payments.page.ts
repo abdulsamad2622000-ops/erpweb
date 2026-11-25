@@ -92,7 +92,7 @@ import { UI, errorMessage } from '../utils/ui';
           <input id="pay-date" type="date" formControlName="date" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.payables.amount' | transloco" inputId="pay-amount" [control]="form.controls.amount" [required]="true">
-          <input id="pay-amount" type="number" min="0" step="0.01" formControlName="amount" [class]="ui.input" />
+          <input placeholder="Enter pay amount..." id="pay-amount" type="number" min="0" step="0.01" formControlName="amount" [class]="ui.input" />
         </app-form-field>
         <app-form-field [label]="'purchase.payables.method' | transloco" inputId="pay-method" [control]="form.controls.method">
           <select id="pay-method" formControlName="method" [class]="ui.input">
@@ -100,10 +100,10 @@ import { UI, errorMessage } from '../utils/ui';
           </select>
         </app-form-field>
         <app-form-field [label]="'purchase.payables.reference' | transloco" inputId="pay-ref" [control]="form.controls.reference">
-          <input id="pay-ref" formControlName="reference" dir="ltr" [class]="ui.input" />
+          <input placeholder="Enter pay ref..." id="pay-ref" formControlName="reference" dir="ltr" [class]="ui.input" />
         </app-form-field>
         <app-form-field class="sm:col-span-2" [label]="'purchase.grn.note' | transloco" inputId="pay-note" [control]="form.controls.note">
-          <input id="pay-note" formControlName="note" [class]="ui.input" />
+          <input placeholder="Enter pay note..." id="pay-note" formControlName="note" [class]="ui.input" />
         </app-form-field>
         @if (formError(); as e) { <p role="alert" class="text-sm text-red-600 sm:col-span-2">{{ e }}</p> }
       </div>

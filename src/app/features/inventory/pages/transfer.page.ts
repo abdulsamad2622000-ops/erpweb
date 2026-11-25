@@ -87,7 +87,7 @@ const NEEDS_APPROVE: TransferAction[] = ['approve', 'reject'];
 
           <div>
             <label for="tr-note" class="mb-1 block text-sm">{{ 'purchase.grn.note' | transloco }}</label>
-            <input id="tr-note" [class]="ui.input" [ngModel]="note()" (ngModelChange)="note.set($event)" maxlength="200" />
+            <input placeholder="Enter tr note..." id="tr-note" [class]="ui.input" [ngModel]="note()" (ngModelChange)="note.set($event)" maxlength="200" />
           </div>
 
           <button type="button" [class]="ui.primary" [disabled]="busy() || newLines().length === 0" (click)="submitNew()">
