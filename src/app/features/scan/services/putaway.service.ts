@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { APP_CONFIG } from '../../../core/config/app-config';
 import { WarehouseLocation } from '../../settings/models/location.models';
 import { LocationsService } from '../../settings/services/org.service';
@@ -31,10 +31,19 @@ export class PutAwayService {
     }
   }
 
-  /** Ek serial ko bin mein rakhta hai. Idempotency-Key se dobara bhejna mehfooz hai. */
+  /**
+   * Ek serial ko bin mein rakhta hai. Server ka contract: { binBarcode, serials[] } -> { moved, bin }.
+   * Idempotency-Key se dobara bhejna mehfooz hai.
+   */
   place(body: PutAwayBody, idempotencyKey: string): Observable<PutAwayResult> {
-    return this.http.post<PutAwayResult>(`${APP_CONFIG.apiBase}/inventory/putaway`, body, {
-      headers: { 'Idempotency-Key': idempotencyKey },
-    });
+    return this.http
+      .post<{ moved: number; bin: string }>(
+        `${APP_CONFIG.apiBase}/inventory/putaway`,
+        { binBarcode: body.bin, serials: [body.serial] },
+        { headers: { 'Idempotency-Key': idempotencyKey } },
+      )
+      .pipe(
+        map((r) => ({ serial: body.serial, binBarcode: r.bin, binName: r.bin, warehouseId: 0, previousBin: null })),
+      );
   }
 }

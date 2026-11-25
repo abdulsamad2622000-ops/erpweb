@@ -61,7 +61,7 @@ export const routes: Routes = [
       {
         path: 'putaway',
         canActivate: [permissionGuard],
-        data: { title: 'scan', permission: 'inventory.transfer.create' },
+        data: { title: 'scan', permission: 'inventory.putaway.create' },
         loadComponent: () => import('./features/scan/pages/scan-putaway.page').then((m) => m.ScanPutAwayPage),
       },
       {

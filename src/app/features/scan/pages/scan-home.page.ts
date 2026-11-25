@@ -13,7 +13,7 @@ interface ScanTile {
 
 /** Naye scan screens (transfer, count) yahan ek ek line se judenge. */
 const TILES: ScanTile[] = [
-  { key: 'putaway', path: '/scan/putaway', icon: 'pi pi-download', permission: 'inventory.transfer.create' },
+  { key: 'putaway', path: '/scan/putaway', icon: 'pi pi-download', permission: 'inventory.putaway.create' },
   { key: 'transfers', path: '/scan/transfers', icon: 'pi pi-truck', permission: 'inventory.transfer.create' },
   { key: 'counts', path: '/scan/counts', icon: 'pi pi-list-check', permission: 'inventory.count.create' },
   { key: 'lookup', path: '/scan/lookup', icon: 'pi pi-search', permission: 'inventory.serial.view' },

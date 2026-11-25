@@ -97,6 +97,10 @@ How it works:
 - Offline queue in IndexedDB. Each action carries an `Idempotency-Key`, so retrying after a lost connection never doubles a put-away, transfer or count. A sync chip shows waiting, syncing and failed items.
 - Last successful `/me` is cached for 7 days, so a refresh with no internet keeps the user signed in. Cleared on logout or 401.
 - "No internet" toasts are hidden on `/scan` screens; the sync chip shows the state instead.
+
+Open questions for the backend:
+- Idempotency-Key support on put-away, transfer and count endpoints.
+- Conflict response (409) shape when a serial changed while the phone was offline.
 ## Sales (Steps 11 to 13)
 - `/sales/quotations`, `/sales/orders`, `/sales/challans`, `/sales/invoices` (`sales.quotation.view`, `sales.order.view`, `sales.challan.view`, `sales.invoice.view`): wholesale flow. A quotation can be sent, edited, cancelled or converted to an order. Prices follow the customer's price tier. Create and edit need `sales.quotation.create` / `sales.quotation.edit` and `sales.order.create`.
 - Challans are made from an order by scanning serials (partial delivery is allowed). An invoice is made from the delivered challans.
