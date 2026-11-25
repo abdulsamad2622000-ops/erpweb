@@ -11,7 +11,7 @@ import { MenuItem, visibleMenu } from '../core/nav/menu.config';
   template: `
     <nav class="flex h-full flex-col bg-nav text-slate-300" [attr.aria-label]="'nav.main' | transloco">
       <div class="flex h-16 shrink-0 items-center gap-2 px-5 text-lg font-semibold text-white">
-        <i class="pi pi-box text-accent"></i>
+        <img src="logo.svg" alt="" width="32" height="32" class="h-8 w-8 rounded-lg" aria-hidden="true" />
         <span>{{ 'app.name' | transloco }}</span>
       </div>
       <ul class="flex-1 space-y-1 overflow-y-auto px-3 pb-6">
