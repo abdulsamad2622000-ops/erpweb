@@ -1,4 +1,4 @@
-import { isDevMode } from '@angular/core';
+﻿import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, permissionGuard } from './core/auth/guards';
 import { FEATURE_FLAGS } from './core/config/feature-flags';
@@ -28,6 +28,10 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [guestGuard],
     loadComponent: () => import('./features/auth/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'warranty-check',
+    loadComponent: () => import('./features/repairs/pages/warranty-public.page').then((m) => m.WarrantyPublicPage),
   },
   {
     path: 'forgot-password',
@@ -102,6 +106,18 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'dashboard',
+        canActivate: [permissionGuard],
+        data: { title: 'dashboard', permission: 'dashboard.view.view' },
+        loadComponent: () => import('./features/reports/pages/dashboard.page').then((m) => m.DashboardPage),
+      },
+      {
+        path: 'reports',
+        canActivate: [permissionGuard],
+        data: { title: 'reports', permission: 'reports.report.view' },
+        loadComponent: () => import('./features/reports/pages/reports.page').then((m) => m.ReportsPage),
+      },
       {
         path: 'products/brands',
         canActivate: [permissionGuard],
@@ -178,27 +194,6 @@ export const routes: Routes = [
         data: { title: 'transfers', permission: 'inventory.transfer.view' },
         loadComponent: () =>
           import('./features/inventory/pages/transfers.page').then((m) => m.TransfersPage),
-      },
-      {
-        path: 'inventory/adjustments/new',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.create' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments/:id',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustment.page').then((m) => m.AdjustmentPage),
-      },
-      {
-        path: 'inventory/adjustments',
-        canActivate: [permissionGuard],
-        data: { title: 'adjustments', permission: 'inventory.adjustment.view' },
-        loadComponent: () =>
-          import('./features/inventory/pages/adjustments.page').then((m) => m.AdjustmentsPage),
       },
       {
         path: 'inventory/adjustments/new',
@@ -492,6 +487,144 @@ export const routes: Routes = [
         canActivate: [permissionGuard],
         data: { title: 'salesReturns', permission: 'sales.return.view' },
         loadComponent: () => import('./features/pos/pages/sales-return.page').then((m) => m.SalesReturnPage),
+      },
+      {
+        path: 'customers/aging',
+        canActivate: [permissionGuard],
+        data: { title: 'customers', permission: 'customers.customer.view' },
+        loadComponent: () => import('./features/sales/pages/aging.page').then((m) => m.AgingPage),
+      },
+      {
+        path: 'customers/:id/ledger',
+        canActivate: [permissionGuard],
+        data: { title: 'customers', permission: 'customers.customer.view' },
+        loadComponent: () => import('./features/sales/pages/customer-ledger.page').then((m) => m.CustomerLedgerPage),
+      },
+      {
+        path: 'customers',
+        canActivate: [permissionGuard],
+        data: { title: 'customers', permission: 'customers.customer.view' },
+        loadComponent: () => import('./features/sales/pages/customers.page').then((m) => m.CustomersPage),
+      },
+      {
+        path: 'sales/quotations',
+        canActivate: [permissionGuard],
+        data: { title: 'quotations', permission: 'sales.quotation.view', kind: 'quotations' },
+        loadComponent: () => import('./features/sales/pages/sales-list.page').then((m) => m.SalesListPage),
+      },
+      {
+        path: 'sales/quotations/new',
+        canActivate: [permissionGuard],
+        data: { title: 'quotations', permission: 'sales.quotation.create', kind: 'quotation' },
+        loadComponent: () => import('./features/sales/pages/sales-doc-form.page').then((m) => m.SalesDocFormPage),
+      },
+      {
+        path: 'sales/quotations/:id/edit',
+        canActivate: [permissionGuard],
+        data: { title: 'quotations', permission: 'sales.quotation.edit', kind: 'quotation' },
+        loadComponent: () => import('./features/sales/pages/sales-doc-form.page').then((m) => m.SalesDocFormPage),
+      },
+      {
+        path: 'sales/quotations/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'quotations', permission: 'sales.quotation.view' },
+        loadComponent: () => import('./features/sales/pages/quotation.page').then((m) => m.QuotationPage),
+      },
+      {
+        path: 'sales/orders',
+        canActivate: [permissionGuard],
+        data: { title: 'salesOrders', permission: 'sales.order.view', kind: 'orders' },
+        loadComponent: () => import('./features/sales/pages/sales-list.page').then((m) => m.SalesListPage),
+      },
+      {
+        path: 'sales/orders/new',
+        canActivate: [permissionGuard],
+        data: { title: 'salesOrders', permission: 'sales.order.create', kind: 'order' },
+        loadComponent: () => import('./features/sales/pages/sales-doc-form.page').then((m) => m.SalesDocFormPage),
+      },
+      {
+        path: 'sales/orders/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'salesOrders', permission: 'sales.order.view' },
+        loadComponent: () => import('./features/sales/pages/sales-order.page').then((m) => m.SalesOrderPage),
+      },
+      {
+        path: 'sales/challans',
+        canActivate: [permissionGuard],
+        data: { title: 'challans', permission: 'sales.challan.view', kind: 'challans' },
+        loadComponent: () => import('./features/sales/pages/sales-list.page').then((m) => m.SalesListPage),
+      },
+      {
+        path: 'sales/challans/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'challans', permission: 'sales.challan.view' },
+        loadComponent: () => import('./features/sales/pages/challan.page').then((m) => m.ChallanPage),
+      },
+      {
+        path: 'sales/invoices',
+        canActivate: [permissionGuard],
+        data: { title: 'invoices', permission: 'sales.invoice.view', kind: 'invoices' },
+        loadComponent: () => import('./features/sales/pages/sales-list.page').then((m) => m.SalesListPage),
+      },
+      {
+        path: 'sales/invoices/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'invoices', permission: 'sales.invoice.view' },
+        loadComponent: () => import('./features/sales/pages/invoice.page').then((m) => m.InvoicePage),
+      },
+      {
+        path: 'warranty',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/repairs.page').then((m) => m.RepairsPage),
+      },
+      {
+        path: 'warranty/new',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.create' },
+        loadComponent: () => import('./features/repairs/pages/repair-new.page').then((m) => m.RepairNewPage),
+      },
+      {
+        path: 'warranty/:id',
+        canActivate: [permissionGuard],
+        data: { title: 'warranty', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/repair-job.page').then((m) => m.RepairJobPage),
+      },
+      {
+        path: 'accounts/expenses',
+        canActivate: [permissionGuard],
+        data: { title: 'expenses', permission: 'accounts.expense.view' },
+        loadComponent: () => import('./features/accounts/pages/expenses.page').then((m) => m.ExpensesPage),
+      },
+      {
+        path: 'accounts/cashbook',
+        canActivate: [permissionGuard],
+        data: { title: 'cashbook', permission: 'accounts.cashbook.view' },
+        loadComponent: () => import('./features/accounts/pages/cashbook.page').then((m) => m.CashbookPage),
+      },
+      {
+        path: 'email',
+        canActivate: [permissionGuard],
+        data: { title: 'email', permission: 'email.template.view' },
+        loadComponent: () => import('./features/email/pages/email.page').then((m) => m.EmailPage),
+      },
+      {
+        path: 'reports/more',
+        canActivate: [permissionGuard],
+        data: { title: 'reports', permission: 'reports.report.view' },
+        loadComponent: () => import('./features/reports/pages/reports-more.page').then((m) => m.ReportsMorePage),
+      },
+      {
+        path: 'email/settings',
+        canActivate: [permissionGuard],
+        data: { title: 'email', permission: 'email.template.view' },
+        loadComponent: () => import('./features/email/pages/email-settings.page').then((m) => m.EmailSettingsPage),
+      },
+      {
+        path: 'purchase/warranty-claims',
+        canActivate: [permissionGuard],
+        data: { title: 'supplierClaims', permission: 'warranty.claim.view' },
+        loadComponent: () => import('./features/repairs/pages/supplier-claims.page').then((m) => m.SupplierClaimsPage),
       },
       ...(isDevMode() ? devRoutes : []),
       ...placeholderRoutes,

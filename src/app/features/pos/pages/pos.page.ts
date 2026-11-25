@@ -7,6 +7,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { Warehouse } from '../../settings/models/org.models';
 import { WarehousesService } from '../../settings/services/org.service';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
 import { PrintService } from '../../../shared/ui/print/print.service';
 import { ScanEvent, ScanInputComponent } from '../../../shared/ui/scan-input/scan-input.component';
 import { UI, errorMessage } from '../../purchase/utils/ui';
@@ -21,7 +22,7 @@ import {
 /** Step 12: full-screen retail POS. F2 scan, F4 search, F8 hold, F9 pay, Esc clear. */
 @Component({
   selector: 'app-pos-page',
-  imports: [FormsModule, RouterLink, TranslocoPipe, ScanInputComponent],
+  imports: [FormsModule, RouterLink, TranslocoPipe, ScanInputComponent, ModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (loading()) {
@@ -268,8 +269,8 @@ import {
 
     <!-- Panels -->
     @if (panel() === 'holds') {
-      <div class="fixed inset-0 z-40 flex items-start justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="holds-t">
-        <div [class]="ui.card + ' w-full max-w-lg space-y-3'">
+      <app-modal labelledBy="holds-t" size="md" (closed)="panel.set(null)">
+        <div class="space-y-3">
           <h2 id="holds-t" class="font-semibold">{{ 'posPage.heldBills' | transloco }}</h2>
           @for (h of holds(); track h.id) {
             <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
@@ -284,11 +285,11 @@ import {
           }
           <div class="flex justify-end"><button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'posPage.close' | transloco }}</button></div>
         </div>
-      </div>
+      </app-modal>
     }
     @if (panel() === 'customer') {
-      <div class="fixed inset-0 z-40 flex items-start justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="cust-t">
-        <div [class]="ui.card + ' w-full max-w-md space-y-3'">
+      <app-modal labelledBy="cust-t" size="md" (closed)="panel.set(null)">
+        <div class="space-y-3">
           <h2 id="cust-t" class="font-semibold">{{ 'posPage.newCustomer' | transloco }}</h2>
           <label for="nc-name" class="block text-sm font-medium">{{ 'posPage.name' | transloco }}</label>
           <input id="nc-name" [class]="ui.input" [(ngModel)]="newName" />
@@ -300,11 +301,11 @@ import {
             <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveCustomer()">{{ 'common.save' | transloco }}</button>
           </div>
         </div>
-      </div>
+      </app-modal>
     }
     @if (panel() === 'close' && shift(); as s) {
-      <div class="fixed inset-0 z-40 flex items-start justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="close-t">
-        <div [class]="ui.card + ' w-full max-w-md space-y-2 text-sm'">
+      <app-modal labelledBy="close-t" size="md" (closed)="panel.set(null)">
+        <div class="space-y-2 text-sm">
           <h2 id="close-t" class="text-base font-semibold">{{ 'posPage.closeShift' | transloco }}</h2>
           <div class="flex justify-between"><span>{{ 'posPage.openingCash' | transloco }}</span><span>{{ fmt(s.openingCash) }}</span></div>
           <div class="flex justify-between"><span>{{ 'posPage.salesCount' | transloco }}</span><span>{{ s.salesCount }} · {{ fmt(s.salesTotal) }}</span></div>
@@ -325,11 +326,11 @@ import {
             </button>
           </div>
         </div>
-      </div>
+      </app-modal>
     }
     @if (panel() === 'done' && lastSale(); as s) {
-      <div class="fixed inset-0 z-40 flex items-start justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="done-t">
-        <div [class]="ui.card + ' w-full max-w-sm space-y-3 text-center'">
+      <app-modal labelledBy="done-t" size="sm" (closed)="nextSale()">
+        <div class="space-y-3 text-center">
           <h2 id="done-t" class="text-lg font-semibold">{{ 'posPage.saleDone' | transloco }}</h2>
           <p class="text-sm">{{ s.number }} · {{ fmt(s.total) }}</p>
           @if (s.change > 0) {
@@ -340,7 +341,7 @@ import {
             <button type="button" [class]="ui.primary" (click)="nextSale()">{{ 'posPage.nextSale' | transloco }}</button>
           </div>
         </div>
-      </div>
+      </app-modal>
     }
   `,
 })

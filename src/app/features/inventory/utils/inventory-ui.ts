@@ -8,6 +8,7 @@ export const STOCK_TONE: Record<StockStatus, BadgeTone> = {
   returned: 'neutral',
   damaged: 'danger',
   sold: 'info',
+  consumed: 'neutral',
 };
 
-export const STOCK_STATUSES: StockStatus[] = ['in_stock', 'quarantine', 'rejected', 'returned', 'damaged', 'sold'];
+export const STOCK_STATUSES: StockStatus[] = ['in_stock', 'quarantine', 'rejected', 'returned', 'damaged', 'sold', 'consumed'];

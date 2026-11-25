@@ -10,6 +10,7 @@ export * from './number-input/number-utils';
 export * from './date-input/date-input.component';
 export * from './search-select/search-select.component';
 export * from './crud-dialog/crud-dialog.component';
+export * from './modal/modal.component';
 export * from './list-page/list-page.component';
 export * from './scan-input/scan-input.component';
 export * from './import-wizard/import-wizard.component';

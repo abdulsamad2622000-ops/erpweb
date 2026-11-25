@@ -52,7 +52,7 @@ class AuthController extends Controller
     {
         $data = $request->validate(['code' => ['required', 'digits:6']]);
 
-        $userId = $request->session()->get('2fa.user_id');
+        $userId = $request->hasSession() ? $request->session()->get('2fa.user_id') : null;
         $user = $userId ? User::find($userId) : null;
         if (! $user) {
             return response()->json(['message' => 'Login expired.'], 401);
@@ -79,7 +79,7 @@ class AuthController extends Controller
 
     public function resend(Request $request): JsonResponse
     {
-        $userId = $request->session()->get('2fa.user_id');
+        $userId = $request->hasSession() ? $request->session()->get('2fa.user_id') : null;
         $user = $userId ? User::find($userId) : null;
         if (! $user) {
             return response()->json(['message' => 'Login expired.'], 401);

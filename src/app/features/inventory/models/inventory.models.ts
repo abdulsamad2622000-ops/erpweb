@@ -1,4 +1,4 @@
-export type StockStatus = 'in_stock' | 'quarantine' | 'rejected' | 'returned' | 'damaged' | 'sold';
+export type StockStatus = 'in_stock' | 'quarantine' | 'rejected' | 'returned' | 'damaged' | 'sold' | 'consumed';
 
 export interface StockSerial {
   serial: string;

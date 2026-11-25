@@ -20,7 +20,7 @@ import { todayIso } from '../utils/reservation-utils';
         <a routerLink="/inventory/reservations" [class]="ui.btn">{{ 'reservationsPage.back' | transloco }}</a>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()" [class]="ui.card + ' space-y-4'">
+      <form [formGroup]="form" (ngSubmit)="submit()" [class]="ui.card + ' space-y-6'">
         <app-form-field
           [label]="'reservationsPage.customer' | transloco"
           inputId="res-customer"
@@ -34,10 +34,10 @@ import { todayIso } from '../utils/reservation-utils';
           [label]="'reservationsPage.holdUntil' | transloco"
           inputId="res-hold"
           [control]="form.controls.holdUntil"
+          [hint]="'reservationsPage.holdHint' | transloco"
         >
           <input id="res-hold" type="date" [min]="today" formControlName="holdUntil" [class]="ui.input" />
         </app-form-field>
-        <p class="-mt-2 text-xs text-slate-600 dark:text-slate-400">{{ 'reservationsPage.holdHint' | transloco }}</p>
 
         <app-form-field
           [label]="'reservationsPage.note' | transloco"
@@ -47,7 +47,7 @@ import { todayIso } from '../utils/reservation-utils';
           <textarea id="res-note" rows="2" formControlName="note" [class]="ui.input + ' py-2'"></textarea>
         </app-form-field>
 
-        <div class="space-y-2">
+        <div class="space-y-2.5">
           <label for="res-serial" class="block text-sm font-medium">{{ 'reservationsPage.serialInput' | transloco }}</label>
           <div class="flex flex-wrap gap-2">
             <input
@@ -60,7 +60,7 @@ import { todayIso } from '../utils/reservation-utils';
             />
             <button type="button" [class]="ui.btn" (click)="addFrom(box)">{{ 'reservationsPage.serialAdd' | transloco }}</button>
           </div>
-          <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'reservationsPage.serialHint' | transloco }}</p>
+          <p class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ 'reservationsPage.serialHint' | transloco }}</p>
           @if (serials().length) {
             <ul class="flex flex-wrap gap-2" [attr.aria-label]="'reservationsPage.serials' | transloco">
               @for (s of serials(); track s) {
@@ -115,16 +115,25 @@ export class ReservationNewPage {
     this.addFrom(box);
   }
 
+  /** PO-, GRN-, INV- jaise document numbers serial nahi hote. */
+  private static readonly DOC_NO = /^(PO|GRN|INV|TRF|ADJ|CNT|RSV)-\d+$/i;
+
   /** Ek serial ya paste ki hui list (line, comma, tab) dono chalti hain. */
   protected addFrom(box: HTMLInputElement): void {
     const found = parseSerialList(box.value);
-    if (found.length) {
-      this.serials.update((cur) => [...cur, ...found.filter((s) => !cur.includes(s))]);
+    const bad = found.filter((s) => ReservationNewPage.DOC_NO.test(s));
+    const good = found.filter((s) => !ReservationNewPage.DOC_NO.test(s));
+    if (bad.length) {
+      this.error.set(bad.join(', ') + ' is a document number, not a serial. Scan the laptop serial.');
+    } else {
+      this.error.set(null);
     }
-    box.value = '';
+    if (good.length) {
+      this.serials.update((cur) => [...cur, ...good.filter((s) => !cur.includes(s))]);
+    }
+    box.value = bad.length ? box.value : '';
     box.focus();
   }
-
   protected remove(serial: string): void {
     this.serials.update((cur) => cur.filter((s) => s !== serial));
   }

@@ -1,4 +1,6 @@
 export type PayMethod = 'cash' | 'card' | 'transfer';
+/** Return par refund: paisa wapas ya customer ke khate mein credit. */
+export type RefundMethod = PayMethod | 'credit';
 
 export const PAY_METHODS: PayMethod[] = ['cash', 'card', 'transfer'];
 
@@ -103,7 +105,7 @@ export interface Sale {
   note: string | null;
   lines: SaleLine[];
   payments: Payment[];
-  returns: { number: string; amount: number; refundMethod: PayMethod; createdAt: string }[];
+  returns: { number: string; amount: number; refundMethod: RefundMethod; createdAt: string }[];
 }
 
 export interface HeldBill {
@@ -116,7 +118,7 @@ export interface HeldBill {
 export interface ReturnInput {
   saleId: number;
   lines: { saleLineId: number; qty: number }[];
-  refundMethod: PayMethod;
+  refundMethod: RefundMethod;
   reason: string;
 }
 
@@ -124,6 +126,6 @@ export interface ReturnResult {
   id: number;
   number: string;
   amount: number;
-  refundMethod: PayMethod;
+  refundMethod: RefundMethod;
   sale: Sale;
 }

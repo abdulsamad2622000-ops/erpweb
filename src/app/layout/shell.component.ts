@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PwaBannerComponent } from '../core/pwa/pwa-banner.component';
 import { SidebarComponent } from './sidebar.component';
 import { TopbarComponent } from './topbar.component';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, SidebarComponent, TopbarComponent],
+  imports: [RouterOutlet, SidebarComponent, TopbarComponent, PwaBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown.escape)': 'close()' },
   template: `
@@ -21,6 +22,7 @@ import { TopbarComponent } from './topbar.component';
       <div class="flex min-w-0 flex-1 flex-col">
         <app-topbar (menuToggle)="open()" />
         <main class="flex-1 p-4 lg:p-6">
+          <app-pwa-banner />
           <router-outlet />
         </main>
       </div>

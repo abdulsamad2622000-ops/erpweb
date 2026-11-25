@@ -19,6 +19,7 @@ class RoleSeeder extends Seeder
                 'inventory.location.view', 'inventory.transfer.view', 'inventory.transfer.create', 'inventory.count.view',
                 'inventory.count.create', 'inventory.putaway.create', 'inventory.adjustment.view', 'inventory.adjustment.create', 'inventory.reservation.view',
                 'purchase.grn.view', 'purchase.grn.create', 'barcode.label.view', 'barcode.label.print',
+                'sales.order.view', 'sales.challan.view', 'sales.challan.create',
             ]],
             'purchase_staff' => ['Purchase Staff', [
                 'dashboard.view.view', 'products.product.view', 'inventory.stock.view',
@@ -30,19 +31,26 @@ class RoleSeeder extends Seeder
             'sales_staff' => ['Sales Staff', [
                 'dashboard.view.view', 'products.product.view', 'inventory.stock.view',
                 'inventory.reservation.view', 'inventory.reservation.create',
-                'customers.customer.view', 'warranty.claim.view',
-                'sales.quotation.view', 'sales.order.view', 'sales.invoice.view',
-                'sales.challan.view', 'sales.return.view',
+                'customers.customer.view', 'customers.customer.create', 'warranty.claim.view', 'warranty.claim.create',
+                'sales.quotation.view', 'sales.quotation.create', 'sales.quotation.edit',
+                'sales.order.view', 'sales.order.create', 'sales.order.edit', 'sales.invoice.view',
+                'sales.challan.view', 'sales.challan.create', 'sales.return.view',
             ]],
             'cashier' => ['Cashier', [
                 'dashboard.view.view', 'pos.sale.create', 'products.product.view',
                 'customers.customer.view', 'customers.customer.create', 'sales.invoice.view',
-                'sales.return.view', 'sales.return.create',
+                'sales.return.view', 'sales.return.create', 'warranty.claim.view', 'warranty.claim.create',
+            ]],
+            'technician' => ['Technician', [
+                'dashboard.view.view', 'products.product.view', 'inventory.serial.view',
+                'warranty.claim.view', 'warranty.claim.create', 'warranty.claim.edit', 'inventory.stock.view',
             ]],
             'accountant' => ['Accountant', [
                 'dashboard.view.view', 'reports.report.view', 'purchase.payment.view', 'purchase.payment.create',
                 'purchase.supplier.view', 'purchase.order.view',
-                'sales.invoice.view', 'customers.customer.view',
+                'sales.invoice.view', 'sales.invoice.create', 'sales.invoice.edit', 'sales.challan.view',
+                'customers.customer.view', 'customers.customer.edit',
+                'accounts.expense.view', 'accounts.expense.create', 'accounts.expense.edit', 'accounts.cashbook.view', 'email.message.send',
             ]],
         ];
 

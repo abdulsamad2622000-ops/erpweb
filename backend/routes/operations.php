@@ -3,7 +3,13 @@
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\LabelsController;
 use App\Http\Controllers\Api\PayablesController;
+use App\Http\Controllers\Api\AccountsController;
+use App\Http\Controllers\Api\CustomerLedgerController;
+use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\PosController;
+use App\Http\Controllers\Api\RepairController;
+use App\Http\Controllers\Api\ReportsController;
+use App\Http\Controllers\Api\WholesaleController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\StockControlController;
 use Illuminate\Support\Facades\Route;
@@ -57,17 +63,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('inventory/transfers', [InventoryController::class, 'storeTransfer'])->middleware($p('inventory.transfer.create'));
     foreach (['dispatch' => 'inventory.transfer.create', 'receive' => 'inventory.transfer.create', 'cancel' => 'inventory.transfer.create',
         'approve' => 'inventory.transfer.approve', 'reject' => 'inventory.transfer.approve'] as $a => $perm) {
-        Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware($p($perm));
+        Route::post("inventory/transfers/{transfer}/{$a}", [InventoryController::class, 'transferAction'])->defaults('action', $a)->middleware([$p($perm), 'idempotent']);
     }
 
-    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware($p('inventory.putaway.create'));
+    Route::post('inventory/putaway', [InventoryController::class, 'putaway'])->middleware([$p('inventory.putaway.create'), 'idempotent']);
 
     // Counts, adjustments, reservations (Step 9b)
     Route::get('inventory/counts', [StockControlController::class, 'counts'])->middleware($p('inventory.count.view'));
     Route::get('inventory/counts/{id}', [StockControlController::class, 'count'])->whereNumber('id')->middleware($p('inventory.count.view'));
     Route::post('inventory/counts', [StockControlController::class, 'storeCount'])->middleware($p('inventory.count.create'));
     foreach (['submit' => 'inventory.count.create', 'approve' => 'inventory.count.approve', 'reject' => 'inventory.count.approve'] as $a => $perm) {
-        Route::post("inventory/counts/{id}/{$a}", [StockControlController::class, 'countAction'])->whereNumber('id')->defaults('action', $a)->middleware($p($perm));
+        Route::post("inventory/counts/{id}/{$a}", [StockControlController::class, 'countAction'])->whereNumber('id')->defaults('action', $a)->middleware([$p($perm), 'idempotent']);
     }
     Route::get('inventory/adjustments', [StockControlController::class, 'adjustments'])->middleware($p('inventory.adjustment.view'));
     Route::get('inventory/adjustments/{id}', [StockControlController::class, 'adjustment'])->whereNumber('id')->middleware($p('inventory.adjustment.view'));
@@ -107,4 +113,70 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('pos/returns', [PosController::class, 'storeReturn'])->middleware($p('sales.return.create'));
     Route::get('customers', [PosController::class, 'customers'])->middleware($p('customers.customer.view'));
     Route::post('customers', [PosController::class, 'storeCustomer'])->middleware($p('customers.customer.create'));
+    Route::get('customers/{id}', [PosController::class, 'customer'])->whereNumber('id')->middleware($p('customers.customer.view'));
+    Route::put('customers/{id}', [PosController::class, 'updateCustomer'])->whereNumber('id')->middleware($p('customers.customer.edit'));
+
+    // Customer ledger, receipts, aging (Step 13)
+    Route::get('customers/aging', [CustomerLedgerController::class, 'aging'])->middleware($p('customers.customer.view'));
+    Route::get('customers/{id}/ledger', [CustomerLedgerController::class, 'ledger'])->whereNumber('id')->middleware($p('customers.customer.view'));
+    Route::post('customers/{id}/receipts', [CustomerLedgerController::class, 'storeReceipt'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
+    Route::get('customer-receipts/{id}', [CustomerLedgerController::class, 'receipt'])->whereNumber('id')->middleware($p('customers.customer.view'));
+
+    // Accounts: expenses + cash book
+    $A = AccountsController::class;
+    Route::get('accounts/expense-categories', [$A, 'categories'])->middleware($p('accounts.expense.view'));
+    Route::post('accounts/expense-categories', [$A, 'storeCategory'])->middleware($p('accounts.expense.edit'));
+    Route::get('accounts/expenses', [$A, 'expenses'])->middleware($p('accounts.expense.view'));
+    Route::post('accounts/expenses', [$A, 'storeExpense'])->middleware([$p('accounts.expense.create'), 'idempotent']);
+    Route::put('accounts/expenses/{id}', [$A, 'updateExpense'])->whereNumber('id')->middleware($p('accounts.expense.edit'));
+    Route::post('accounts/expenses/{id}/void', [$A, 'voidExpense'])->whereNumber('id')->middleware($p('accounts.expense.edit'));
+    Route::get('accounts/cashbook', [$A, 'cashbook'])->middleware($p('accounts.cashbook.view'));
+
+    // Email
+    $E = EmailController::class;
+    Route::get('email/templates', [$E, 'templates'])->middleware($p('email.template.view'));
+    Route::put('email/templates/{key}', [$E, 'update'])->where('key', '[a-z_]+')->middleware($p('email.template.edit'));
+    Route::post('email/templates/{key}/test', [$E, 'test'])->where('key', '[a-z_]+')->middleware($p('email.template.edit'));
+    Route::get('email/logs', [$E, 'logs'])->middleware($p('email.template.view'));
+    Route::post('sales/invoices/{id}/email', [$E, 'sendInvoice'])->whereNumber('id')->middleware($p('email.message.send'));
+    Route::post('customers/{id}/statement-email', [$E, 'sendStatement'])->whereNumber('id')->middleware($p('email.message.send'));
+    Route::post('warranty/jobs/{id}/email', [$E, 'sendRepairReady'])->whereNumber('id')->middleware($p('email.message.send'));
+
+    // Dashboard + reports (Step 15)
+    Route::get('dashboard', [ReportsController::class, 'dashboard'])->middleware($p('dashboard.view.view'));
+    foreach (['sales', 'stock', 'purchases', 'repairs', 'profit'] as $r) {
+        Route::get("reports/{$r}", [ReportsController::class, $r])->middleware($p('reports.report.view'));
+    }
+
+    // Warranty & repairs (Step 14)
+    $R = RepairController::class;
+    Route::get('warranty/check/{serial}', [$R, 'check'])->middleware($p('warranty.claim.view'));
+    Route::get('warranty/jobs', [$R, 'index'])->middleware($p('warranty.claim.view'));
+    Route::get('warranty/jobs/{id}', [$R, 'show'])->whereNumber('id')->middleware($p('warranty.claim.view'));
+    Route::post('warranty/jobs', [$R, 'store'])->middleware([$p('warranty.claim.create'), 'idempotent']);
+    Route::put('warranty/jobs/{id}', [$R, 'update'])->whereNumber('id')->middleware($p('warranty.claim.edit'));
+    Route::post('warranty/jobs/{id}/status', [$R, 'status'])->whereNumber('id')->middleware($p('warranty.claim.edit'));
+    Route::post('warranty/jobs/{id}/deliver', [$R, 'deliver'])->whereNumber('id')->middleware([$p('warranty.claim.edit'), 'idempotent']);
+
+    // Wholesale (Step 11)
+    $W = WholesaleController::class;
+    Route::get('sales/price', [$W, 'price'])->middleware($p('sales.quotation.view'));
+    Route::get('sales/quotations', [$W, 'quotations'])->middleware($p('sales.quotation.view'));
+    Route::get('sales/quotations/{id}', [$W, 'quotation'])->whereNumber('id')->middleware($p('sales.quotation.view'));
+    Route::post('sales/quotations', [$W, 'storeQuotation'])->middleware($p('sales.quotation.create'));
+    Route::put('sales/quotations/{id}', [$W, 'updateQuotation'])->whereNumber('id')->middleware($p('sales.quotation.edit'));
+    foreach (['send' => 'sales.quotation.edit', 'cancel' => 'sales.quotation.edit', 'convert' => 'sales.order.create'] as $a => $perm) {
+        Route::post("sales/quotations/{id}/{$a}", [$W, 'quotationAction'])->whereNumber('id')->defaults('action', $a)->middleware($p($perm));
+    }
+    Route::get('sales/orders', [$W, 'orders'])->middleware($p('sales.order.view'));
+    Route::get('sales/orders/{id}', [$W, 'order'])->whereNumber('id')->middleware($p('sales.order.view'));
+    Route::post('sales/orders', [$W, 'storeOrder'])->middleware($p('sales.order.create'));
+    Route::post('sales/orders/{id}/cancel', [$W, 'cancelOrder'])->whereNumber('id')->middleware($p('sales.order.edit'));
+    Route::get('sales/challans', [$W, 'challans'])->middleware($p('sales.challan.view'));
+    Route::get('sales/challans/{id}', [$W, 'challan'])->whereNumber('id')->middleware($p('sales.challan.view'));
+    Route::post('sales/challans', [$W, 'storeChallan'])->middleware([$p('sales.challan.create'), 'idempotent']);
+    Route::get('sales/invoices', [$W, 'invoices'])->middleware($p('sales.invoice.view'));
+    Route::get('sales/invoices/{id}', [$W, 'invoice'])->whereNumber('id')->middleware($p('sales.invoice.view'));
+    Route::post('sales/invoices', [$W, 'storeInvoice'])->middleware([$p('sales.invoice.create'), 'idempotent']);
+    Route::post('sales/invoices/{id}/payments', [$W, 'receivePayment'])->whereNumber('id')->middleware([$p('sales.invoice.edit'), 'idempotent']);
 });

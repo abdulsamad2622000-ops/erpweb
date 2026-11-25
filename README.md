@@ -23,7 +23,7 @@ Default on (`APP_CONFIG.mockDefault`). Override in browser console:
 Fixtures live only in `src/app/core/mock/fixtures`.
 
 ## Decisions (Step 1)
-- Initial bundle warning 700 kB (PrimeNG toast); error limit 1 MB.
+- Initial bundle warning 760 kB (PrimeNG toast); error limit 1 MB.
 - Permission keys in `menu.config.ts` are drafts; backend owns the final list.
 - Website module hidden by feature flag.
 
@@ -97,10 +97,44 @@ How it works:
 - Offline queue in IndexedDB. Each action carries an `Idempotency-Key`, so retrying after a lost connection never doubles a put-away, transfer or count. A sync chip shows waiting, syncing and failed items.
 - Last successful `/me` is cached for 7 days, so a refresh with no internet keeps the user signed in. Cleared on logout or 401.
 - "No internet" toasts are hidden on `/scan` screens; the sync chip shows the state instead.
+<<<<<<< HEAD
 
 Open questions for the backend:
 - Idempotency-Key support on put-away, transfer and count endpoints.
 - Conflict response (409) shape when a serial changed while the phone was offline.
+=======
+## Sales (Steps 11 to 13)
+- `/sales/quotations`, `/sales/orders`, `/sales/challans`, `/sales/invoices` (`sales.quotation.view`, `sales.order.view`, `sales.challan.view`, `sales.invoice.view`): wholesale flow. A quotation can be sent, edited, cancelled or converted to an order. Prices follow the customer's price tier. Create and edit need `sales.quotation.create` / `sales.quotation.edit` and `sales.order.create`.
+- Challans are made from an order by scanning serials (partial delivery is allowed). An invoice is made from the delivered challans.
+- `/sales/pos` (`pos.sale.create`): retail counter. Open and close a shift, scan or search items, hold and recall bills, split payment, discount limits per user, walk-in or saved customer.
+- `/sales/returns` (`sales.return.view`): sales returns by serial.
+- `/customers` (`customers.customer.view`): customers with type, price tier, credit limit and terms. `/customers/:id/ledger` is the ledger and `/customers/aging` is receivable aging.
+
+## Warranty and service (Step 14)
+- `/warranty` (`warranty.claim.view`), `/warranty/new` (`warranty.claim.create`) and `/warranty/:id`: repair jobs and warranty claims, including parts taken from stock.
+
+## Reports and dashboard (Step 15)
+- `/dashboard` (`dashboard.view.view`): today and month sales, profit, receivable, payable, stock value, open repairs and orders, last 14 days chart, top items.
+- `/reports` (`reports.report.view`): tabbed reports with group-by and CSV export, including the profit and loss tab. Cost and profit figures depend on the user's permissions.
+
+## Accounts and email (Step 16)
+- `/accounts/expenses` (`accounts.expense.view`): expenses with categories and void. `/accounts/cashbook` (`accounts.cashbook.view`): cash book by payment method.
+- `/email` (`email.template.view`): email templates, test send and send log. Mailer status is shown when it is not set up.
+
+## Not built yet
+- Website module (Step 17): hidden by the `website` feature flag until the client confirms the platform.
+- Urdu and RTL were removed; the app is English only. Ask before adding them back.
+- Step 18: Playwright critical flows (login, GRN, transfer, wholesale, POS and return, warranty, cost hidden), responsive audit at 360/768/1280px (
+px playwright test -c playwright.audit.config.ts) and an axe accessibility scan are done.
+
+## Quality audits (Step 18)
+Audits live in `e2e/audit` and use `playwright.audit.config.ts` (long timeout, one worker).
+- Accessibility (axe): `npx playwright test -c playwright.audit.config.ts e2e/audit/a11y.audit.ts`
+- Responsive (360, 768, 1280 px): `npx playwright test -c playwright.audit.config.ts e2e/audit/responsive.audit.ts` (about 6 minutes)
+- Critical flows: `npm run e2e` (login, GRN, transfer, wholesale, POS, warranty, cost hidden for Store Keeper).
+- Status: axe and responsive audits pass. Lint, unit tests and production build pass. Initial bundle is under 1 MB.
+- Website module (Step 17) is hidden by a feature flag until the client confirms the platform.
+>>>>>>> origin/develop
 ## PrimeUI license key (required before first run)
 PrimeNG 22 needs a PrimeUI key (Community license, up to 4 seats).
 1. Copy `src/app/core/config/primeui-license.example.ts` to `src/app/core/config/primeui-license.ts`.

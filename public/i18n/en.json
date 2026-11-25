@@ -77,6 +77,12 @@
     "loading": "Loading"
   },
   "auth": {
+    "fpSendCode": "Send code",
+    "fpChangeEmail": "Use a different email",
+    "fpCodeTitle": "Enter the code",
+    "fpCodeInvalid": "That code is not correct or has expired.",
+    "fpNewTitle": "Set a new password",
+    "fpDoneTitle": "Password changed",
     "title": "Sign in",
     "subtitle": "Use your work email and password.",
     "email": "Email",
@@ -189,6 +195,12 @@
     "deleteMessage": "Delete this product? This cannot be undone."
   },
   "users": {
+    "password": "Password",
+    "passwordHint": "At least 8 characters. Give this to the user so they can sign in.",
+    "passwordEditHint": "Leave empty to keep the current password.",
+    "passwordShow": "Show",
+    "passwordHide": "Hide",
+    "passwordGenerate": "Generate",
     "title": "Users",
     "add": "Add user",
     "edit": "Edit user",
@@ -604,6 +616,7 @@
     }
   },
   "menu": {
+    "supplierClaims": "Supplier claims",
     "putaway": "Put-away",
     "users": "Users",
     "roles": "Roles",
@@ -651,7 +664,10 @@
     "backup": "Backup",
     "branches": "Branches",
     "warehouses": "Warehouses",
-    "locationTree": "Location tree"
+    "locationTree": "Location tree",
+    "accounts": "Accounts",
+    "expenses": "Expenses",
+    "cashbook": "Cash book"
   },
   "labels": {
     "title": "Barcodes & labels",
@@ -669,7 +685,9 @@
     "allGrns": "All GRNs",
     "template": "Template",
     "print": "Print {{ count }} labels",
-    "pdfHint": "For a PDF, choose \"Save as PDF\" in the print dialog.",
+    "pdfHint": "Download PDF makes one page per label, sized like the template. Print uses your printer dialog.",
+    "downloadPdf": "Download PDF",
+    "pdfFailed": "The PDF could not be made. Try again.",
     "selectAll": "Select all",
     "code": "Code",
     "bin": "Bin",
@@ -720,7 +738,8 @@
       "rejected": "Rejected",
       "returned": "Returned to supplier",
       "damaged": "Damaged",
-      "sold": "Sold"
+      "sold": "Sold",
+      "consumed": "Used in repair"
     },
     "stock": {
       "reserved": "Reserved",
@@ -1134,134 +1153,8 @@
       "postedNotice": "GRN posted. Stock updated. You can now print labels."
     }
   },
-  "scanApp": {
-    "title": "ERP Scan",
-    "home": "Scan home",
-    "desktop": "Open desktop app",
-    "offline": "Offline",
-    "homeTitle": "What do you want to do?",
-    "homeHint": "Pick a task. Scan with the camera or a Bluetooth scanner.",
-    "install": {
-      "title": "Install ERP Scan",
-      "hint": "Add the app to your home screen. It opens full screen and keeps working without a connection.",
-      "button": "Install",
-      "dismiss": "Not now",
-      "iosHint": "On iPhone or iPad: tap the Share button, then choose Add to Home Screen."
-    },
-    "update": {
-      "message": "A new version of the app is ready.",
-      "button": "Reload now"
-    },
-    "noAccess": "You do not have access to any scan task. Ask an admin.",
-    "tiles": {
-      "putaway": { "title": "Put-away", "desc": "Place scanned items into a bin" },
-      "transfers": { "title": "Transfers", "desc": "Scan items to check them before dispatch or on arrival" },
-      "counts": { "title": "Stock count", "desc": "Count the items in a warehouse" },
-      "lookup": { "title": "Serial lookup", "desc": "Scan a serial to see its status and history" }
-    },
-    "putaway": {
-      "title": "Put-away",
-      "binStep": "Step 1: scan the bin label.",
-      "itemStep": "Step 2: scan every item you place in this bin. Scan another bin label to switch bins.",
-      "binPlaceholder": "Scan the bin label",
-      "itemPlaceholder": "Scan or type a serial",
-      "binNotFound": "Bin {{ code }} was not found.",
-      "activeBin": "Active bin",
-      "changeBin": "Change bin",
-      "done": "Done",
-      "empty": "Nothing placed yet. Scan the first item.",
-      "placed": "{{ n }} placed",
-      "failed": "{{ n }} failed",
-      "placedIn": "Placed in {{ bin }}",
-      "duplicate": "Already placed in this bin.",
-      "queued": "Saved on this phone. It will sync later.",
-      "status": { "placed": "Placed", "queued": "Saved offline", "failed": "Failed" },
-      "errors": {
-        "notInStock": "Only in-stock items can be put away.",
-        "wrongWarehouse": "This item is in a different warehouse than the bin.",
-        "serialNotFound": "Serial not found."
-      }
-    },
-    "transfers": {
-      "title": "Transfers",
-      "hint": "Pick a transfer to dispatch or receive.",
-      "empty": "No transfer is waiting for a scan.",
-      "items": "{{ n }} items",
-      "toDispatch": "Ready to dispatch",
-      "toReceive": "Waiting to be received"
-    },
-    "transfer": {
-      "dispatchHint": "Scan every item you load, to check it before dispatch.",
-      "receiveHint": "Scan every item that arrived.",
-      "progress": "{{ done }} of {{ total }} scanned",
-      "notInTransfer": "This serial is not in this transfer.",
-      "dispatchBtn": "Dispatch",
-      "receiveBtn": "Complete receipt",
-      "missingTitle": "Some items did not arrive",
-      "missingMessage": "{{ n }} items were not scanned and will be reported as missing. Continue?",
-      "dispatched": "Transfer dispatched.",
-      "received": "Receipt completed.",
-      "nothingToDo": "This transfer needs no scan work.",
-      "scanned": "Scanned",
-      "pending": "Not scanned yet",
-      "back": "Back to transfers"
-    },
-    "counts": {
-      "title": "Stock counts",
-      "hint": "Pick a count to start scanning.",
-      "empty": "No open stock count.",
-      "expected": "{{ n }} items expected"
-    },
-    "count": {
-      "hint": "Scan every item you can find. Items you do not scan are reported as missing.",
-      "progress": "{{ done }} counted, {{ total }} expected",
-      "extraCount": "{{ n }} not expected in this warehouse",
-      "extra": "Extra",
-      "empty": "Nothing counted yet. Scan the first item.",
-      "remove": "Remove",
-      "submit": "Submit count",
-      "submitted": "Count submitted for approval.",
-      "closed": "This count is no longer open.",
-      "unverified": "Not verified (offline)",
-      "back": "Back to counts"
-    },
-    "offlineData": "Showing data saved on this phone. It may be out of date.",
-    "queued": "Saved on this phone. It will sync when you are online.",
-    "sync": {
-      "title": "Sync",
-      "hint": "Scans saved on this phone wait here until they reach the server.",
-      "empty": "Everything is synced.",
-      "syncNow": "Sync now",
-      "offlineNote": "You are offline. Items will sync when you are back online.",
-      "retry": "Retry",
-      "discard": "Discard",
-      "discardTitle": "Discard this item?",
-      "discardMessage": "It will not be sent to the server.",
-      "pending": "Waiting",
-      "conflict": "Needs attention",
-      "chipOffline": "Offline ({{ n }})",
-      "chipSyncing": "Syncing ({{ n }})",
-      "chipWaiting": "{{ n }} waiting",
-      "chipConflict": "{{ n }} need attention",
-      "kinds": {
-        "putaway": "Put-away",
-        "transfer_dispatch": "Transfer dispatch",
-        "transfer_receive": "Transfer receipt",
-        "count_submit": "Stock count"
-      }
-    },
-    "lookup": {
-      "title": "Serial lookup",
-      "hint": "Scan or type a serial number.",
-      "placeholder": "Scan or type a serial",
-      "notFound": "Serial {{ serial }} was not found.",
-      "again": "Scan next",
-      "openDetail": "Full detail",
-      "recent": "Latest history",
-      "warehouse": "Warehouse",
-      "bin": "Bin"
-    }
-  },
+<<<<<<< HEAD
+=======
   "posPage": {
     "title": "Retail POS",
     "openShiftTitle": "Open your shift",
@@ -1363,5 +1256,652 @@
     "submit": "Confirm return",
     "done": "Return {{number}} saved. Refund Rs {{amount}} by",
     "exchangeHint": "For an exchange, go back to the POS and sell the new item."
+  },
+>>>>>>> origin/develop
+  "scanApp": {
+    "title": "ERP Scan",
+    "home": "Scan home",
+    "desktop": "Open desktop app",
+    "offline": "Offline",
+    "homeTitle": "What do you want to do?",
+    "homeHint": "Pick a task. Scan with the camera or a Bluetooth scanner.",
+    "install": {
+      "title": "Install ERP Scan",
+      "hint": "Add the app to your home screen. It opens full screen and keeps working without a connection.",
+      "button": "Install",
+      "dismiss": "Not now",
+      "iosHint": "On iPhone or iPad: tap the Share button, then choose Add to Home Screen."
+    },
+    "update": {
+      "message": "A new version of the app is ready.",
+      "button": "Reload now"
+    },
+    "noAccess": "You do not have access to any scan task. Ask an admin.",
+    "tiles": {
+      "putaway": {
+        "title": "Put-away",
+        "desc": "Place scanned items into a bin"
+      },
+      "transfers": {
+        "title": "Transfers",
+        "desc": "Scan items to check them before dispatch or on arrival"
+      },
+      "counts": {
+        "title": "Stock count",
+        "desc": "Count the items in a warehouse"
+      },
+      "lookup": {
+        "title": "Serial lookup",
+        "desc": "Scan a serial to see its status and history"
+      }
+    },
+    "putaway": {
+      "title": "Put-away",
+      "binStep": "Step 1: scan the bin label.",
+      "itemStep": "Step 2: scan every item you place in this bin. Scan another bin label to switch bins.",
+      "binPlaceholder": "Scan the bin label",
+      "itemPlaceholder": "Scan or type a serial",
+      "binNotFound": "Bin {{ code }} was not found.",
+      "activeBin": "Active bin",
+      "changeBin": "Change bin",
+      "done": "Done",
+      "empty": "Nothing placed yet. Scan the first item.",
+      "placed": "{{ n }} placed",
+      "failed": "{{ n }} failed",
+      "placedIn": "Placed in {{ bin }}",
+      "duplicate": "Already placed in this bin.",
+      "queued": "Saved on this phone. It will sync later.",
+      "status": {
+        "placed": "Placed",
+        "queued": "Saved offline",
+        "failed": "Failed"
+      },
+      "errors": {
+        "notInStock": "Only in-stock items can be put away.",
+        "wrongWarehouse": "This item is in a different warehouse than the bin.",
+        "serialNotFound": "Serial not found."
+      }
+    },
+    "transfers": {
+      "title": "Transfers",
+      "hint": "Pick a transfer to dispatch or receive.",
+      "empty": "No transfer is waiting for a scan.",
+      "items": "{{ n }} items",
+      "toDispatch": "Ready to dispatch",
+      "toReceive": "Waiting to be received"
+    },
+    "transfer": {
+      "dispatchHint": "Scan every item you load, to check it before dispatch.",
+      "receiveHint": "Scan every item that arrived.",
+      "progress": "{{ done }} of {{ total }} scanned",
+      "notInTransfer": "This serial is not in this transfer.",
+      "dispatchBtn": "Dispatch",
+      "receiveBtn": "Complete receipt",
+      "missingTitle": "Some items did not arrive",
+      "missingMessage": "{{ n }} items were not scanned and will be reported as missing. Continue?",
+      "dispatched": "Transfer dispatched.",
+      "received": "Receipt completed.",
+      "nothingToDo": "This transfer needs no scan work.",
+      "scanned": "Scanned",
+      "pending": "Not scanned yet",
+      "back": "Back to transfers"
+    },
+    "counts": {
+      "title": "Stock counts",
+      "hint": "Pick a count to start scanning.",
+      "empty": "No open stock count.",
+      "expected": "{{ n }} items expected"
+    },
+    "count": {
+      "hint": "Scan every item you can find. Items you do not scan are reported as missing.",
+      "progress": "{{ done }} counted, {{ total }} expected",
+      "extraCount": "{{ n }} not expected in this warehouse",
+      "extra": "Extra",
+      "empty": "Nothing counted yet. Scan the first item.",
+      "remove": "Remove",
+      "submit": "Submit count",
+      "submitted": "Count submitted for approval.",
+      "closed": "This count is no longer open.",
+      "unverified": "Not verified (offline)",
+      "back": "Back to counts"
+    },
+    "offlineData": "Showing data saved on this phone. It may be out of date.",
+    "queued": "Saved on this phone. It will sync when you are online.",
+    "sync": {
+      "title": "Sync",
+      "hint": "Scans saved on this phone wait here until they reach the server.",
+      "empty": "Everything is synced.",
+      "syncNow": "Sync now",
+      "offlineNote": "You are offline. Items will sync when you are back online.",
+      "retry": "Retry",
+      "discard": "Discard",
+      "discardTitle": "Discard this item?",
+      "discardMessage": "It will not be sent to the server.",
+      "pending": "Waiting",
+      "conflict": "Needs attention",
+      "chipOffline": "Offline ({{ n }})",
+      "chipSyncing": "Syncing ({{ n }})",
+      "chipWaiting": "{{ n }} waiting",
+      "chipConflict": "{{ n }} need attention",
+      "kinds": {
+        "putaway": "Put-away",
+        "transfer_dispatch": "Transfer dispatch",
+        "transfer_receive": "Transfer receipt",
+        "count_submit": "Stock count"
+      }
+    },
+    "lookup": {
+      "title": "Serial lookup",
+      "hint": "Scan or type a serial number.",
+      "placeholder": "Scan or type a serial",
+      "notFound": "Serial {{ serial }} was not found.",
+      "again": "Scan next",
+      "openDetail": "Full detail",
+      "recent": "Latest history",
+      "warehouse": "Warehouse",
+      "bin": "Bin"
+    }
+  },
+<<<<<<< HEAD
+  "posPage": {
+    "title": "Retail POS",
+    "openShiftTitle": "Open your shift",
+    "counter": "Counter (warehouse)",
+    "pickCounter": "Select a counter...",
+    "openingCash": "Opening cash",
+    "openShift": "Open shift",
+    "closeShift": "Close shift",
+    "hold": "Hold bill",
+    "recall": "Recall",
+    "returns": "Returns",
+    "scan": "Scan barcode or serial",
+    "scanHint": "Scan or type, then Enter",
+    "search": "Quick search",
+    "searchHint": "Name or SKU",
+    "results": "Search results",
+    "inStock": "{{n}} in stock",
+    "add": "Add",
+    "cart": "Bill items",
+    "item": "Item",
+    "qty": "Qty",
+    "price": "Price",
+    "amount": "Amount",
+    "remove": "Remove",
+    "warrantyM": "{{n}} months warranty",
+    "emptyCart": "Scan an item to start the bill.",
+    "checkout": "Checkout",
+    "customer": "Customer",
+    "walkIn": "Walk-in",
+    "findCustomer": "Find by name or phone",
+    "newCustomer": "New customer",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "noLimit": "no limit",
+    "maxPct": "max {{n}}%",
+    "maxRs": "Max discount: Rs {{n}}",
+    "total": "Total",
+    "payment": "Payment",
+    "split": "Split",
+    "tendered": "Amount received",
+    "paid": "Paid",
+    "due": "Due",
+    "change": "Change",
+    "complete": "Complete sale",
+    "heldBills": "Held bills",
+    "items": "items",
+    "recallOne": "Recall",
+    "noHolds": "No held bills.",
+    "close": "Close",
+    "name": "Name",
+    "phone": "Phone",
+    "salesCount": "Sales",
+    "cashRefunds": "Cash refunds",
+    "expectedCash": "Expected cash in drawer",
+    "countedCash": "Counted cash",
+    "difference": "Difference: Rs {{n}}",
+    "closeNote": "Note (required if cash does not match)",
+    "saleDone": "Sale complete",
+    "printReceipt": "Print receipt",
+    "nextSale": "Next sale",
+    "bill": "Bill",
+    "holdFirst": "Hold or finish the current bill first.",
+    "noPrice": "This item has no retail price.",
+    "alreadyInCart": "This serial is already on the bill.",
+    "discountTooHigh": "Discount cannot be more than the bill.",
+    "discountOverLimit": "Discount is over your limit ({{n}}%).",
+    "badPayment": "Enter a payment amount.",
+    "underpaid": "Payment is less than the total.",
+    "onlyCashChange": "Only cash can be overpaid (for change).",
+    "methods": {
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Transfer"
+    },
+    "receipt": {
+      "receipt": "Receipt",
+      "cashier": "Cashier",
+      "customer": "Customer",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Total",
+      "paid": "Paid",
+      "change": "Change",
+      "warranty": "Warranty until",
+      "thanks": "Thank you for shopping with us"
+    }
+  },
+  "salesReturnPage": {
+    "title": "Sales return / exchange",
+    "back": "Back to POS",
+    "find": "Scan receipt number or serial",
+    "findHint": "INV-00001 or laptop serial",
+    "pick": "Items being returned",
+    "returned": "already returned",
+    "refund": "Refund method",
+    "reason": "Reason",
+    "reasonHint": "At least 10 characters.",
+    "amount": "Refund",
+    "submit": "Confirm return",
+    "done": "Return {{number}} saved. Refund Rs {{amount}} by",
+    "exchangeHint": "For an exchange, go back to the POS and sell the new item."
+=======
+  "customersPage": {
+    "title": "Customers",
+    "add": "New customer",
+    "editTitle": "Edit customer",
+    "search": "Name or phone",
+    "type": "Type",
+    "allTypes": "All types",
+    "types": {
+      "retail": "Retail",
+      "wholesale": "Wholesale",
+      "dealer": "Dealer"
+    },
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "city": "City",
+    "address": "Address",
+    "priceTier": "Price list",
+    "creditLimit": "Credit limit",
+    "creditHint": "0 = cash only, no credit.",
+    "terms": "Payment terms (days)",
+    "balance": "Balance due",
+    "cashOnly": "Cash only",
+    "bills": "Bills",
+    "active": "Active"
+  },
+  "salesDocs": {
+    "searchHint": "Number or customer",
+    "all": "All",
+    "more": "Load more",
+    "clearCustomer": "Show all customers",
+    "number": "No.",
+    "customer": "Customer",
+    "date": "Date",
+    "items": "items",
+    "balance": "Balance",
+    "back": "Back",
+    "print": "Print",
+    "change": "Change",
+    "note": "Note",
+    "validUntil": "Valid until",
+    "validUntilLine": "This quotation is valid until {{date}}.",
+    "addItem": "Add item",
+    "pickCustomerFirst": "Pick a customer first",
+    "noItems": "Add items to this document.",
+    "tierLowest": "List {{tier}} · lowest {{low}}",
+    "createdBy": "Made by",
+    "quotation": "Quotation",
+    "order": "Sales order",
+    "challan": "Delivery challan",
+    "invoice": "Invoice",
+    "markSent": "Mark as sent",
+    "cancel": "Cancel",
+    "convert": "Make sales order",
+    "openOrder": "Open sales order",
+    "cancelQuotationMsg": "Cancel this quotation? It cannot be used after this.",
+    "convertMsg": "Make a sales order from {{number}}?",
+    "cancelOrderMsg": "Cancel this order? Nothing has been delivered yet.",
+    "fromQuotation": "From quotation",
+    "deliver": "Deliver",
+    "newChallan": "New delivery challan",
+    "fromWarehouse": "Warehouse",
+    "scanSerial": "Scan serial to deliver",
+    "delivered": "Delivered",
+    "thisChallan": "On this challan",
+    "done": "Done",
+    "nothingLeft": "Nothing left to deliver for serialized items.",
+    "createChallan": "Create challan ({{n}} items)",
+    "serial": "Serial",
+    "openInvoice": "Open invoice",
+    "makeInvoice": "Make invoice",
+    "invoiceTotal": "Invoice total",
+    "paidNow": "Paid now",
+    "reference": "Reference (cheque / transfer no.)",
+    "onCredit": "Rs {{n}} goes on credit.",
+    "overCredit": "Rs {{n}} on credit is over this customer's limit. Take more payment.",
+    "fullyPaid": "Fully paid.",
+    "createInvoice": "Create invoice",
+    "receivedBy": "Received by (name and signature): ____________________",
+    "dueDate": "Due date",
+    "returnedAmt": "Returned",
+    "payments": "Payments",
+    "receivePayment": "Receive payment",
+    "save": "Save payment",
+    "channel": {
+      "pos": "POS",
+      "wholesale": "Wholesale"
+    },
+    "refund": {
+      "cash": "Cash refund",
+      "card": "Card refund",
+      "transfer": "Transfer refund",
+      "credit": "Credit to customer account"
+    },
+    "errors": {
+      "qty": "Enter a quantity of 1 or more.",
+      "price": "Enter a price.",
+      "belowLowest": "Lowest price you can give is {{n}}."
+    },
+    "quotations": {
+      "title": "Quotations",
+      "add": "New quotation",
+      "edit": "Edit quotation",
+      "extra": "Valid until",
+      "amount": "Total"
+    },
+    "orders": {
+      "title": "Sales orders",
+      "add": "New sales order",
+      "extra": "Delivered",
+      "amount": "Total"
+    },
+    "challans": {
+      "title": "Delivery challans",
+      "extra": "Order",
+      "amount": " "
+    },
+    "invoices": {
+      "title": "Invoices",
+      "extra": "Details",
+      "amount": "Total"
+    },
+    "filter": {
+      "quotations": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "accepted": "Accepted",
+        "cancelled": "Cancelled"
+      },
+      "orders": {
+        "open": "Open",
+        "partial": "Partly delivered",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "challans": {
+        "false": "Not invoiced",
+        "true": "Invoiced"
+      },
+      "invoices": {
+        "unpaid": "Balance due"
+      }
+    },
+    "status": {
+      "quotation": {
+        "draft": "Draft",
+        "sent": "Sent",
+        "accepted": "Accepted",
+        "cancelled": "Cancelled",
+        "expired": "Expired"
+      },
+      "order": {
+        "open": "Open",
+        "partial": "Partly delivered",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "challan": {
+        "pending": "Not invoiced",
+        "invoiced": "Invoiced"
+      },
+      "invoice": {
+        "unpaid": "Unpaid",
+        "partial": "Part paid",
+        "paid": "Paid",
+        "overdue": "Overdue"
+      }
+    }
+  },
+  "ledgerPage": {
+    "title": "Ledger",
+    "statement": "Account statement",
+    "printStatement": "Print statement",
+    "receive": "Receive payment",
+    "balance": "Balance",
+    "openBills": "Unpaid bills",
+    "pickBills": "Choose bills myself",
+    "applied": "Applied",
+    "daysLate": "{{n}} days late",
+    "saved": "Receipt {{number}} saved: Rs {{amount}} applied to",
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "details": "Details",
+    "debit": "Debit (bill)",
+    "credit": "Credit (paid)",
+    "opening": "Opening balance",
+    "closing": "Closing balance",
+    "types": {
+      "invoice": "Invoice",
+      "change": "Change given",
+      "payment": "Payment",
+      "return": "Return credit",
+      "receipt": "Receipt"
+    },
+    "errors": {
+      "amount": "Enter the amount.",
+      "overDue": "Amount is more than the balance due.",
+      "overInvoice": "An applied amount is more than that bill's balance.",
+      "notMatching": "Applied amounts must add up to the receipt amount."
+    }
+  },
+  "agingPage": {
+    "title": "Receivables aging",
+    "current": "Not due",
+    "d30": "1–30 days",
+    "d60": "31–60 days",
+    "d90": "61–90 days",
+    "over90": "Over 90 days",
+    "overLimit": "Over credit limit",
+    "none": "No customer owes money."
+  },
+  "repairsPage": {
+    "title": "Warranty & repairs",
+    "add": "New job card",
+    "searchHint": "Job no., serial, name or phone",
+    "openOnly": "Open jobs",
+    "job": "Job card",
+    "device": "Laptop / device",
+    "warranty": "Warranty",
+    "promised": "Promised date",
+    "charges": "Charges",
+    "scanSerial": "Scan the laptop serial (skip if not ours)",
+    "scanHint": "Serial number, then Enter",
+    "soldOn": "Sold on {{number}} · {{date}}",
+    "until": "until {{date}}",
+    "hasOpen": "This laptop already has an open job card: {{number}}",
+    "problem": "Problem (what the customer says)",
+    "accessories": "Received with",
+    "accessoriesHint": "Charger, bag, mouse…",
+    "estimate": "Estimate (Rs)",
+    "create": "Create job card",
+    "printSlip": "Print slip",
+    "moveTo": "Move to",
+    "statusNote": "Note (needed to cancel)",
+    "work": "Diagnosis, parts and charges",
+    "diagnosis": "Diagnosis",
+    "part": "Part / work",
+    "addPart": "Add part",
+    "labour": "Labour (Rs)",
+    "warrantyHint": "In warranty: charge only for parts or damage that warranty does not cover.",
+    "deliver": "Deliver to customer",
+    "saveFirst": "Save the changed charges first.",
+    "collect": "Collect Rs {{n}}",
+    "deliverBtn": "Deliver",
+    "deliveredOn": "Delivered on {{date}}, collected Rs {{n}}",
+    "history": "History",
+    "slipTitle": "Repair job card",
+    "terms": "Please bring this slip when collecting. Items not collected within 60 days are not our responsibility. Data backup is the customer's responsibility.",
+    "w": {
+      "in_warranty": "In warranty",
+      "expired": "Warranty expired",
+      "not_ours": "Not sold by us"
+    },
+    "status": {
+      "received": "Received",
+      "diagnosing": "Checking",
+      "waiting_parts": "Waiting for parts",
+      "repairing": "Repairing",
+      "ready": "Ready",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "partSerial": "From stock (serial)",
+    "partSerialHint": "optional"
+  },
+  "dashboardPage": {
+    "hello": "Assalam o Alaikum, {{name}}",
+    "today": "Today's sales",
+    "bills": "{{n}} bills",
+    "month": "This month",
+    "profit": "Profit",
+    "receivable": "Customers owe",
+    "overdue": "Overdue",
+    "stock": "Stock in hand",
+    "units": "units",
+    "atCost": "Value at cost",
+    "payable": "We owe suppliers",
+    "openRepairs": "Open repair jobs",
+    "ready": "{{n}} ready",
+    "openOrders": "Orders to deliver",
+    "pendingPOs": "Purchase orders open",
+    "openPos": "Open POS",
+    "last14": "Sales, last 14 days",
+    "top": "Top products this month",
+    "expenses": "Expenses",
+    "net": "Net profit",
+    "cash": "Cash"
+  },
+  "reportsPage": {
+    "title": "Reports",
+    "tabs": {
+      "profit": "Profit & loss",
+      "sales": "Sales & profit",
+      "stock": "Stock value",
+      "purchases": "Purchases",
+      "repairs": "Repairs",
+      "prints": "Label prints"
+    },
+    "groupBy": "Group by",
+    "by": {
+      "day": "Day",
+      "product": "Product",
+      "staff": "Staff",
+      "channel": "Channel"
+    },
+    "csv": "Download CSV (Excel)",
+    "xlsx": "Download Excel (.xlsx)",
+    "prints": {
+      "total": "Print jobs",
+      "labels": "Labels printed",
+      "reprints": "Reprints",
+      "reprintsOnly": "Show reprints only",
+      "type": "Type",
+      "print": "Print",
+      "codes": "Codes"
+    },
+    "revenue": "Sales",
+    "cost": "Cost",
+    "profit": "Profit",
+    "bills": "Bills",
+    "returns": "Returns",
+    "costNote": "Cost = purchase cost of each serial (landed cost included); items without serial use the product cost price. Returned items are left out.",
+    "atRetail": "Value at retail price",
+    "oldest": "Oldest (days)",
+    "billed": "Supplier bills",
+    "paidOut": "Paid to suppliers",
+    "supplier": "Supplier",
+    "repairIncome": "Repair income",
+    "delivered": "Jobs delivered",
+    "receivedJobs": "Jobs received",
+    "byTech": "By technician",
+    "pl": {
+      "sales": "Sales",
+      "cogs": "Cost of laptops sold",
+      "repair": "Repair income",
+      "repairCost": "Repair parts from stock",
+      "gross": "Gross profit",
+      "expenses": "Total expenses",
+      "net": "Net profit"
+    }
+  },
+  "expensesPage": {
+    "title": "Expenses",
+    "add": "New expense",
+    "edit": "Edit expense",
+    "category": "Category",
+    "pick": "Pick a category…",
+    "paidTo": "Paid to",
+    "newCategory": "New category",
+    "void": "Void",
+    "voided": "Voided",
+    "voidMsg": "Void expense {{number}}? It will be left out of totals.",
+    "errors": {
+      "date": "Pick the date.",
+      "future": "Date cannot be in the future.",
+      "category": "Pick a category.",
+      "amount": "Enter the amount."
+    }
+  },
+  "cashbookPage": {
+    "title": "Cash book",
+    "in": "Money in",
+    "out": "Money out",
+    "time": "Time",
+    "types": {
+      "sale": "Sale",
+      "receipt": "Customer receipt",
+      "change": "Change given",
+      "refund": "Refund",
+      "repair": "Repair",
+      "supplier": "Supplier payment",
+      "expense": "Expense"
+    },
+    "note": "Shift opening cash (float) is not counted here; it stays in the POS shift."
+  },
+  "emailPage": {
+    "title": "Email",
+    "mailer": "Mail sender: {{mailer}} · from {{from}}.",
+    "notSetUp": "Mail is not set up on the server yet, so emails will not reach anyone.",
+    "subject": "Subject",
+    "body": "Message",
+    "vars": "You can use:",
+    "active": "Template is on",
+    "testTo": "Send a test to",
+    "sendTest": "Send test",
+    "saved": "Template saved.",
+    "testSent": "Test email sent to {{to}}. Save first if you changed the text.",
+    "log": "Sent emails",
+    "to": "To",
+    "st": {
+      "sent": "Sent",
+      "failed": "Failed"
+    },
+    "send": "Email",
+    "sendNow": "Send",
+    "sentTo": "Email sent {{to}}"
+>>>>>>> origin/develop
   }
 }

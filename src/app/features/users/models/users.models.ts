@@ -15,7 +15,7 @@ export interface ManagedUser {
   adjustmentUnits: number | null;
 }
 
-export type UserBody = Omit<ManagedUser, 'id' | 'roleName'>;
+export type UserBody = Omit<ManagedUser, 'id' | 'roleName'> & { password?: string };
 
 export interface RoleOption {
   id: number;

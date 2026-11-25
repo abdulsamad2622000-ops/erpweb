@@ -202,6 +202,18 @@ class PurchaseInventoryFlowTest extends TestCase
         $this->getJson('/api/v1/inventory/serials/P0000001')->assertJsonPath('binId', $bin->id)->assertJsonPath('binCode', 'BIN-MAIN-B1')
             ->assertJsonPath('timeline.1.type', 'putaway');
 
+        // Scan app: ek serial, Idempotency-Key ke saath
+        $bin2 = \App\Models\Location::create(['warehouse_id' => $this->wh1, 'parent_id' => null, 'level' => 'bin', 'name' => 'Bin 2', 'code' => 'B2', 'barcode' => 'BIN-MAIN-B2', 'is_active' => true]);
+        $this->postJson('/api/v1/inventory/putaway', ['bin' => 'nope', 'serial' => 'P0000002'])->assertNotFound();
+        $this->postJson('/api/v1/inventory/putaway', ['bin' => 'BIN-SHOW-B9', 'serial' => 'P0000002'])->assertStatus(422)->assertJsonPath('code', 'wrong_warehouse');
+        $h = ['Idempotency-Key' => 'k-123'];
+        $this->postJson('/api/v1/inventory/putaway', ['bin' => 'bin-main-b2', 'serial' => 'p0000002'], $h)->assertOk()
+            ->assertJsonPath('binBarcode', 'BIN-MAIN-B2')->assertJsonPath('previousBin', 'BIN-MAIN-B1');
+        $this->postJson('/api/v1/inventory/putaway', ['bin' => 'bin-main-b2', 'serial' => 'p0000002'], $h)->assertOk()
+            ->assertHeader('Idempotent-Replay', 'true')->assertJsonPath('previousBin', 'BIN-MAIN-B1');
+        $this->postJson('/api/v1/inventory/putaway', ['bin' => 'BIN-MAIN-B2', 'serial' => 'P0000002'])->assertOk()->assertJsonPath('previousBin', 'BIN-MAIN-B2');
+        $this->assertSame(1, \App\Models\StockMovement::where('serial', 'P0000002')->where('ref', 'BIN-MAIN-B2')->count());
+
         // Transfer ke baad bin khaali
         $t = $this->postJson('/api/v1/inventory/transfers', ['fromWarehouseId' => $this->wh1, 'toWarehouseId' => $this->wh2, 'serials' => ['P0000001']])->json('id');
         $this->postJson("/api/v1/inventory/transfers/{$t}/approve");
