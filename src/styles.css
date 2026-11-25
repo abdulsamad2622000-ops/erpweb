@@ -365,3 +365,702 @@ form .form-actions {
   margin-top: 1.5rem;
 }
 /* === end form spacing === */
+
+
+/* ===== Dark tiles final ===== */
+html.dark .auth-tile {
+  background: linear-gradient(145deg, #0F1D4A 0%, #1B2C7A 100%) !important;
+  border: 1px solid rgba(143, 168, 255, .45) !important;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, .55) !important;
+}
+html.dark .auth-tile i {
+  color: #8FB0FF !important;
+}
+
+
+/* ===== Auth logo final ===== */
+.auth-scope .brand-logo { display: inline-block; flex: none; width: 1.15em; height: 1.15em; vertical-align: middle; }
+.auth-glass .brand-logo { width: 1.7em; height: 1.7em; }
+.auth-scope :has(> .brand-logo) { display: flex; align-items: center; gap: .4em; }
+.auth-scope aside :has(> .brand-logo) { justify-content: center; }
+
+/* ===== Form spacing fixes ===== */
+
+/* Custom field ko block banao taake form ki spacing lage */
+app-form-field {
+  display: block;
+}
+
+/* Save button aur "Saved." message ek seedh mein */
+form div:has(> button[type="submit"]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+form div:has(> button[type="submit"]) > p {
+  margin: 0;
+}
+
+/* Login, 2FA, forgot aur reset: label aur field ke beech space */
+.auth-scope label[for] {
+  margin-bottom: 0.75rem;
+}
+.auth-scope label[for]:not(.flex) {
+  display: block;
+}
+
+
+/* ===== App form theme (login jaisa) ===== */
+:root {
+  --f-card: linear-gradient(145deg, #FFFFFF 0%, #F1F5FF 60%, #E3ECFF 100%);
+  --f-line: #B9C8F5;
+  --f-input: #FFFFFF;
+  --f-input-line: #A9B8E8;
+  --f-shadow: 0 16px 40px rgba(37, 66, 180, .14);
+}
+.dark {
+  --f-card: linear-gradient(145deg, #0C1746 0%, #12226B 60%, #1C2A86 100%);
+  --f-line: rgba(143, 168, 255, .4);
+  --f-input: #182663;
+  --f-input-line: rgba(143, 168, 255, .45);
+  --f-shadow: 0 20px 50px rgba(2, 6, 23, .5);
+}
+
+/* Form cards aur popups */
+form.rounded-xl:not(.auth-scope *, dialog *),
+div.rounded-xl.border:has(textarea):not(.auth-scope *, dialog *),
+dialog:modal {
+  background: var(--f-card);
+  border: 1px solid var(--f-line);
+  border-radius: 24px;
+  box-shadow: var(--f-shadow);
+  animation: formRise .5s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+dialog:modal {
+  color: var(--text);
+  overflow-x: hidden;
+}
+dialog::backdrop {
+  background: rgba(3, 10, 36, .6);
+  backdrop-filter: blur(4px);
+}
+dialog form,
+dialog form > * {
+  min-width: 0;
+  max-width: 100%;
+}
+dialog [class*="overflow-"] {
+  overflow-x: hidden;
+}
+
+/* Fields */
+:is(form, dialog, div.rounded-xl) :is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):not(.auth-scope *) {
+  background-color: var(--f-input);
+  border-color: var(--f-input-line);
+  border-radius: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+:is(form, dialog, div.rounded-xl) :is(input:not([type="checkbox"], [type="radio"]), select, textarea):not(.auth-scope *):focus {
+  outline: none;
+  border-color: #1F6BFF;
+  box-shadow: 0 0 0 3px rgba(31, 107, 255, .3);
+}
+
+/* Main buttons: gol aur hover animation */
+:is(form, dialog, div.rounded-xl) button:is(.bg-accent, [class~="bg-[#2563EB]"], [class~="bg-[#1E3A8A]"]):not(.auth-scope *) {
+  border-radius: 9999px;
+  transition: transform .15s, box-shadow .2s;
+}
+:is(form, dialog, div.rounded-xl) button:is(.bg-accent, [class~="bg-[#2563EB]"], [class~="bg-[#1E3A8A]"]):not(.auth-scope *):hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(31, 107, 255, .45);
+}
+
+/* Fields ek ek karke aayen */
+:is(form.rounded-xl, dialog form) > *:not(.auth-scope *) {
+  animation: formRise .45s ease backwards;
+}
+:is(form.rounded-xl, dialog form) > *:nth-child(2) { animation-delay: .06s; }
+:is(form.rounded-xl, dialog form) > *:nth-child(3) { animation-delay: .12s; }
+:is(form.rounded-xl, dialog form) > *:nth-child(4) { animation-delay: .18s; }
+:is(form.rounded-xl, dialog form) > *:nth-child(n+5) { animation-delay: .24s; }
+
+@keyframes formRise {
+  from { opacity: 0; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  form, form > *, dialog, div.rounded-xl { animation: none !important; transition: none !important; }
+}
+
+
+/* ===== Topbar polish ===== */
+app-topbar select {
+  appearance: none;
+  height: 38px;
+  min-height: 38px;
+  min-width: 9rem;
+  padding-block: 0;
+  padding-inline: 1rem 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  background-color: rgba(255, 255, 255, .1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color .2s, border-color .2s;
+}
+[dir="rtl"] app-topbar select {
+  background-position: left 12px center;
+}
+app-topbar select:hover {
+  background-color: rgba(255, 255, 255, .18);
+  border-color: rgba(255, 255, 255, .4);
+}
+
+app-topbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  background-color: rgba(255, 255, 255, .08);
+  transition: background-color .2s, transform .15s;
+}
+app-topbar > div button:hover {
+  background-color: rgba(255, 255, 255, .2);
+  transform: translateY(-1px);
+}
+
+app-topbar > div > span,
+app-topbar > div > div > span {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding-inline: .9rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, .08);
+  font-size: .875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* ===== Content theme (tables, lists, cards) ===== */
+
+/* Desktop par mobile menu button chhupa rahe */
+@media (min-width: 768px) {
+  app-topbar button[class~="md:hidden"] { display: none; }
+}
+@media (min-width: 1024px) {
+  app-topbar button[class~="lg:hidden"] { display: none; }
+}
+
+/* Har page halke se upar aaye */
+router-outlet + * {
+  display: block;
+  animation: contentRise .45s ease backwards;
+}
+
+/* Table aur list wale cards */
+:is(.rounded-xl, .rounded-lg).border:not(.auth-scope *, dialog *, [role="alert"]):is(:has(table), :has(ul), :has(dl)),
+section > div.rounded-xl.border:not([role="alert"]) {
+  background: var(--f-card);
+  border-color: var(--f-line);
+  border-radius: 24px;
+  box-shadow: var(--f-shadow);
+  animation: contentRise .5s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+
+/* Table ke andar ka hissa card ka rang le */
+.rounded-xl table:not(dialog *),
+.rounded-xl table:not(dialog *) :is(tbody, tr, td) {
+  background-color: transparent;
+}
+.rounded-xl table:not(dialog *) :is(thead tr, th) {
+  background-color: rgba(31, 107, 255, .12);
+}
+table tbody tr {
+  transition: background-color .2s;
+  animation: contentRise .4s ease backwards;
+}
+table tbody tr:hover {
+  background-color: rgba(31, 107, 255, .14);
+}
+table tbody tr:nth-child(2) { animation-delay: .05s; }
+table tbody tr:nth-child(3) { animation-delay: .1s; }
+table tbody tr:nth-child(4) { animation-delay: .15s; }
+table tbody tr:nth-child(5) { animation-delay: .2s; }
+table tbody tr:nth-child(n+6) { animation-delay: .25s; }
+
+@keyframes contentRise {
+  from { opacity: 0; translate: 0 14px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  router-outlet + *, .rounded-xl, .rounded-lg, table tbody tr { animation: none !important; transition: none !important; }
+}
+
+
+/* ===== Button theme ===== */
+:root {
+  --b-bg: linear-gradient(145deg, #FFFFFF 0%, #E8EFFF 100%);
+  --b-line: #A9B8E8;
+  --b-text: #1E3A8A;
+}
+.dark {
+  --b-bg: linear-gradient(145deg, #111D55 0%, #1B2C7A 100%);
+  --b-line: rgba(143, 168, 255, .45);
+  --b-text: #E8EEFF;
+}
+
+:is(button, a, label.cursor-pointer):is(.rounded-lg, .rounded-xl, .rounded-md, [class*="rounded-["]):not(app-topbar *, app-sidebar *, .auth-scope *, label:has(input[type="radio"])) {
+  border-radius: 9999px;
+  transition: transform .15s, box-shadow .2s, border-color .2s, filter .2s;
+}
+
+/* Saade (outline) buttons */
+:is(button, a, label.cursor-pointer).border:not(.bg-accent, [class~="bg-[#2563EB]"], [class~="bg-[#1E3A8A]"], [class*="red-"], [class*="danger"], app-topbar *, app-sidebar *, .auth-scope *, label:has(input[type="radio"])) {
+  background-image: var(--b-bg);
+  border-color: var(--b-line);
+  color: var(--b-text);
+  font-weight: 500;
+}
+
+/* Hover aur click */
+:is(button, a, label.cursor-pointer):is(.border, .bg-accent, [class~="bg-[#2563EB]"], [class~="bg-[#1E3A8A]"]):not(app-topbar *, app-sidebar *, .auth-scope *, :disabled, label:has(input[type="radio"])):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(31, 107, 255, .35);
+  filter: brightness(1.05);
+}
+:is(button, a, label.cursor-pointer):is(.border, .bg-accent, [class~="bg-[#2563EB]"]):not(app-topbar *, app-sidebar *, .auth-scope *, :disabled):active {
+  transform: scale(.97);
+}
+
+/* Date fields bhi usi style mein */
+input[type="date"]:not(.auth-scope *) {
+  border-radius: 14px;
+  background-color: var(--f-input);
+  border-color: var(--f-input-line);
+}
+.dark input[type="date"] { color-scheme: dark; }
+
+@media (prefers-reduced-motion: reduce) {
+  button, a, label { transition: none !important; transform: none !important; }
+}
+
+
+/* ===== Auth brand logo size ===== */
+.auth-scope .brand-logo {
+  width: 1.15em;
+  height: 1.15em;
+  background: none;
+  border-radius: 0;
+  vertical-align: middle;
+}
+.auth-glass .brand-logo {
+  width: 1.7em;
+  height: 1.7em;
+}
+.auth-glass :has(> .brand-logo) {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  line-height: 1;
+}
+
+
+/* ===== Dark theme: floating tiles ===== */
+.dark .auth-tile {
+  background: linear-gradient(145deg, #0F1D4A 0%, #1B2C7A 100%) !important;
+  border: 1px solid rgba(143, 168, 255, .45) !important;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, .55) !important;
+}
+.dark .auth-tile i {
+  color: #8FB0FF !important;
+}
+
+
+/* ===== VIP dashboard ===== */
+app-dashboard-page { display: block; }
+
+app-dashboard-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #1D4ED8, #B7791F);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark app-dashboard-page h1 {
+  background-image: linear-gradient(90deg, #FFFFFF, #F6D58A);
+}
+
+app-dashboard-page :is(a, div, article, button).rounded-xl {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px !important;
+  border: 1px solid rgba(183, 121, 31, .35) !important;
+  background: linear-gradient(145deg, #FFFFFF 0%, #F3F6FF 100%) !important;
+  color: var(--text) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, .12);
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.dark app-dashboard-page :is(a, div, article, button).rounded-xl {
+  background: linear-gradient(145deg, #0E1A45 0%, #14245F 60%, #1A2D75 100%) !important;
+  border-color: rgba(246, 213, 138, .28) !important;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, .45);
+}
+
+/* upar sunehri line */
+app-dashboard-page :is(a, div, article, button).rounded-xl::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #D9A441, #F6D58A, #D9A441, transparent);
+}
+app-dashboard-page :is(a, div, article, button).rounded-xl:hover {
+  transform: translateY(-4px);
+  border-color: #D9A441 !important;
+  box-shadow: 0 18px 40px rgba(217, 164, 65, .22);
+}
+
+/* bari raqam */
+app-dashboard-page .rounded-xl :is(.text-2xl, .text-3xl) { color: #96610F; }
+.dark app-dashboard-page .rounded-xl :is(.text-2xl, .text-3xl) { color: #F6D58A; }
+
+/* Open POS button */
+app-dashboard-page :is(a, button).rounded-xl:is(.bg-accent, [class~="bg-[#2563EB]"]) {
+  background: linear-gradient(135deg, #F6D58A 0%, #D9A441 100%) !important;
+  color: #111827 !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* ===== Table action buttons (sirf animated icons) ===== */
+td :is(button, a):has(> i.pi) {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+td :is(button, a) > i.pi {
+  display: inline-block;
+  font-size: 1.1rem;
+  color: #2563EB !important;
+  transition: transform .25s, filter .25s;
+}
+td :is(button, a) > i.pi-ban { color: #D97706 !important; }
+td :is(button, a) > i.pi-check-circle { color: #16A34A !important; }
+td :is(button, a) > i.pi-sign-out { color: #7C3AED !important; }
+td :is(button, a) > i.pi-key { color: #B7791F !important; }
+td :is(button, a) > i.pi-shield { color: #0D9488 !important; }
+td :is(button, a) > i.pi-trash { color: #DC2626 !important; }
+.dark td :is(button, a) > i.pi { filter: brightness(1.45); }
+
+td :is(button, a):hover:not(:disabled) > i.pi {
+  transform: scale(1.35);
+  filter: drop-shadow(0 3px 6px currentColor);
+}
+td :is(button, a):hover:not(:disabled) > i.pi-pencil { animation: iconWiggle .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-ban { animation: iconSpin .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-check-circle { animation: iconPop .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-sign-out { animation: iconSlide .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-key { animation: iconWiggle .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-shield { animation: iconPop .6s ease; }
+td :is(button, a):hover:not(:disabled) > i.pi-trash { animation: iconShake .5s ease; }
+
+@keyframes iconWiggle { 25% { rotate: -18deg; } 60% { rotate: 14deg; } }
+@keyframes iconSpin { to { rotate: 180deg; } }
+@keyframes iconPop { 50% { scale: 1.25; } }
+@keyframes iconSlide { 50% { translate: 5px 0; } }
+@keyframes iconShake { 20%, 60% { translate: -3px 0; } 40%, 80% { translate: 3px 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  td :is(button, a) > i.pi { animation: none !important; transition: none !important; }
+}
+
+
+/* ===== Responsive fixes ===== */
+app-topbar, app-topbar > div, app-breadcrumbs { min-width: 0; max-width: 100%; }
+app-breadcrumbs ol { flex-wrap: nowrap; overflow: hidden; white-space: nowrap; }
+main, main section { min-width: 0; max-width: 100%; }
+
+@media (max-width: 767px) {
+  app-topbar > div { gap: .4rem; padding-inline: .6rem; }
+  app-topbar app-breadcrumbs { display: none; }
+  app-topbar select {
+    min-width: 0;
+    width: 7.25rem;
+    margin-inline-start: auto;
+  }
+  app-topbar button { flex: none; }
+  app-topbar > div > span,
+  app-topbar > div > div > span { display: none; }
+
+  h1 { font-size: 1.35rem !important; overflow-wrap: anywhere; }
+
+  .rounded-xl:has(table) { overflow-x: auto; }
+  table { min-width: max-content; }
+
+  main .flex:has(> button, > a) { flex-wrap: wrap; }
+  main input:not([type="checkbox"], [type="radio"]),
+  main select,
+  main textarea { max-width: 100%; }
+
+  [role="tablist"] { overflow-x: auto; flex-wrap: nowrap; }
+
+  dialog:modal {
+    width: calc(100vw - 1rem);
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
+    border-radius: 18px;
+  }
+}
+
+
+/* ===== Dropdown theme ===== */
+:root { --dd-bg: #FFFFFF; --dd-line: #B9C8F5; --dd-text: #0F172A; }
+.dark { --dd-bg: #101C4E; --dd-line: rgba(143, 168, 255, .4); --dd-text: #E8EEFF; }
+
+@supports (appearance: base-select) {
+  html body select:not([multiple], [size]),
+  html body select:not([multiple], [size])::picker(select) {
+    appearance: base-select;
+  }
+
+  html body select:not([multiple], [size]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    background-image: none;
+    padding-inline: .9rem;
+    cursor: pointer;
+  }
+  html body select:not([multiple], [size])::picker-icon {
+    transition: rotate .2s;
+  }
+  html body select:not([multiple], [size]):open::picker-icon {
+    rotate: 180deg;
+  }
+
+  html body select:not([multiple], [size])::picker(select) {
+    margin-block: 6px;
+    padding: 6px;
+    min-width: anchor-size(width);
+    max-height: 18rem;
+    overflow-y: auto;
+    background: var(--dd-bg);
+    border: 1px solid var(--dd-line);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(2, 6, 23, .3);
+    opacity: 0;
+    translate: 0 -8px;
+    transition: opacity .2s, translate .2s, display .2s allow-discrete, overlay .2s allow-discrete;
+  }
+  html body select:not([multiple], [size]):open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  @starting-style {
+    html body select:not([multiple], [size]):open::picker(select) {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+
+  html body select:not([multiple], [size]) option {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 40px;
+    padding: .5rem .75rem;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--dd-text);
+    cursor: pointer;
+    transition: background-color .15s;
+  }
+  html body select:not([multiple], [size]) option:is(:hover, :focus-visible) {
+    background: rgba(31, 107, 255, .18);
+    color: var(--dd-text);
+  }
+  html body select:not([multiple], [size]) option:checked {
+    background: linear-gradient(135deg, #1D4ED8, #3B82F6);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  html body select:not([multiple], [size]) option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+  }
+}
+
+
+/* ===== Dialog footer alignment fix ===== */
+/* Form ke submit-button wali margin dialogs mein na lage */
+dialog form button[type="submit"],
+dialog form .form-actions button,
+dialog button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Cancel + Save ka row: ek line, beech mein aligned, right par */
+dialog form div:has(> button[type="submit"]),
+dialog div:has(> button + button[type="submit"]),
+dialog :is(footer, [class*="footer"], [class*="actions"]) {
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem !important;
+}
+
+/* Dono buttons ki height, width aur font barabar */
+dialog :is(footer, [class*="footer"], [class*="actions"], form div:has(> button[type="submit"])) > button {
+  height: 48px;
+  min-height: 48px;
+  min-width: 104px;
+  padding-inline: 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1;
+  align-self: center;
+}
+
+/* Hover par button upar na uthe (misalignment jaisa na lage) */
+dialog :is(footer, [class*="footer"], [class*="actions"]) > button:hover:not(:disabled) {
+  transform: none;
+}
+/* ===== end dialog footer fix ===== */
+
+
+/* ===== Global form footer fix (Cancel + Save aligned) ===== */
+/* Jis row mein submit button ho, uske buttons ka extra margin hatao */
+form div:has(> button[type="submit"]) > button,
+form div:has(> button[type="submit"]) > a,
+form .form-actions > button,
+form div:has(> button[type="submit"]) > p-button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: center;
+}
+
+/* Row: ek line, beech mein aligned, right par */
+form div:has(> button[type="submit"]) {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Dono buttons barabar size ke */
+form div:has(> button[type="submit"]) > button {
+  height: 48px;
+  min-height: 48px;
+  min-width: 104px;
+  padding-inline: 1.5rem;
+  line-height: 1;
+}
+
+/* Cancel + Save jo form ke bahar div mein (click) se bane hon */
+:is(main, section) div:has(> button + button.bg-accent),
+:is(main, section) div:has(> button + button[class~="bg-[#1E3A8A]"]),
+:is(main, section) div:has(> button + button[class~="bg-[#2563EB]"]) {
+  align-items: center !important;
+}
+:is(main, section) div:has(> button + button.bg-accent) > button,
+:is(main, section) div:has(> button + button[class~="bg-[#1E3A8A]"]) > button,
+:is(main, section) div:has(> button + button[class~="bg-[#2563EB]"]) > button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-self: center;
+}
+/* ===== end global form footer fix ===== */
+
+
+/* ===== Topbar branch selector: ek line, ellipsis, responsive ===== */
+html body app-topbar select:not([multiple], [size]) {
+  height: 38px;
+  min-height: 38px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-block: 0;
+  padding-inline: .85rem 2rem;
+  font-size: .875rem;
+  flex-wrap: nowrap;
+}
+html body app-topbar select:not([multiple], [size])::picker-icon {
+  flex: none;
+  font-size: .7rem;
+}
+html body app-topbar select:not([multiple], [size]) selectedcontent {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    width: 9.5rem;
+    min-width: 0;
+    max-width: 46vw;
+    font-size: .8125rem;
+    padding-inline: .7rem 1.75rem;
+  }
+}
+/* ===== end topbar branch selector ===== */
+
+
+/* ===== Topbar branch selector: width text ke hisab se ===== */
+html body app-topbar select:not([multiple], [size]) {
+  field-sizing: content;
+  width: auto;
+  min-width: 0;
+  max-width: 14rem;
+  padding-inline: .9rem 1.9rem;
+}
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    width: auto;
+    min-width: 0;
+    max-width: 46vw;
+    padding-inline: .75rem 1.75rem;
+  }
+}
+/* ===== end topbar branch selector auto width ===== */
+
+
+/* ===== Topbar branch selector: right extra space hatao ===== */
+html body app-topbar select:not([multiple], [size]) {
+  justify-content: flex-start;
+  gap: .45rem;
+  padding-inline: .9rem .8rem;
+  width: fit-content;
+}
+html body app-topbar select:not([multiple], [size])::picker-icon {
+  margin-inline-start: 0;
+  font-size: .65rem;
+}
+@media (max-width: 767px) {
+  html body app-topbar select:not([multiple], [size]) {
+    padding-inline: .75rem .65rem;
+  }
+}
+/* ===== end right space fix ===== */
