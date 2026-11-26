@@ -196,7 +196,7 @@
   },
   "users": {
     "password": "Password",
-    "passwordHint": "At least 8 characters. Give this to the user so they can sign in.",
+    "passwordHint": "Leave empty and the user gets an email with a code to set their own password (valid 48 hours). Or type one (8+ characters) and give it to them.",
     "passwordEditHint": "Leave empty to keep the current password.",
     "passwordShow": "Show",
     "passwordHide": "Hide",
@@ -243,7 +243,9 @@
     "done": {
       "logout": "Sessions ended.",
       "reset": "Reset link sent."
-    }
+    },
+    "passwordInvitePh": "Leave empty to email a set-password code",
+    "passwordEditPh": "Leave empty to keep the current password"
   },
   "roles": {
     "title": "Roles",

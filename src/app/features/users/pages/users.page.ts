@@ -112,10 +112,10 @@ const INPUT = 'min-h-11 w-full rounded-lg border border-input bg-transparent px-
           [label]="'users.password' | transloco"
           inputId="user-password"
           [control]="form.controls.password"
-          [required]="editingId() === null"
+          [required]="false"
           [hint]="(editingId() === null ? 'users.passwordHint' : 'users.passwordEditHint') | transloco">
           <div class="flex gap-2">
-            <input placeholder="Enter at least 8 characters..." id="user-password" [type]="showPw() ? 'text' : 'password'" dir="ltr" formControlName="password" autocomplete="new-password" class="${INPUT}" [attr.aria-describedby]="fPass.describedBy()" />
+            <input [placeholder]="(editingId() === null ? 'users.passwordInvitePh' : 'users.passwordEditPh') | transloco" id="user-password" [type]="showPw() ? 'text' : 'password'" dir="ltr" formControlName="password" autocomplete="new-password" class="${INPUT}" [attr.aria-describedby]="fPass.describedBy()" />
             <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="showPw.set(!showPw())">
               {{ (showPw() ? 'users.passwordHide' : 'users.passwordShow') | transloco }}
             </button>
@@ -334,9 +334,10 @@ export class UsersPage implements OnInit {
       accessExpiresAt: row?.accessExpiresAt ?? null,
       password: '',
     });
-    // Naye user ke liye password zaroori; edit mein khali = purana password rahega.
+    // Naya user: password khaali chhoro to user ko email par code jata hai aur woh khud password banata hai.
+    // Edit mein khaali = purana password rahega.
     const pw = this.form.controls.password;
-    pw.setValidators(row ? [Validators.minLength(8)] : [Validators.required, Validators.minLength(8)]);
+    pw.setValidators([Validators.minLength(8)]);
     pw.updateValueAndValidity();
     this.showPw.set(false);
     // SuperAdmin ka type badla nahi ja sakta.

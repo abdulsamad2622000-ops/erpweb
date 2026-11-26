@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
@@ -146,6 +146,17 @@ export class ForgotPasswordPage {
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.stopTimer());
+    // Email ke link se (naya user / reset): ?email=..&code=.. ho to seedha code wala step.
+    const q = inject(ActivatedRoute).snapshot.queryParamMap;
+    const email = (q.get('email') ?? '').trim();
+    const code = (q.get('code') ?? '').replace(/\D/g, '').slice(0, 6);
+    if (email) {
+      this.email.set(email);
+      if (code) {
+        this.code.set(code);
+        this.step.set('code');
+      }
+    }
   }
 
   value(e: Event): string {
