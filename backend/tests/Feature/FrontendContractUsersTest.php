@@ -51,7 +51,7 @@ class FrontendContractUsersTest extends TestCase
 
     public function test_create_staff_with_frontend_body_sends_set_password_link(): void
     {
-        Notification::fake();
+        config(['mail.default' => 'array']);
         $b = Branch::create(['name' => 'Lahore']);
         $role = $this->staffRole();
 
@@ -67,7 +67,16 @@ class FrontendContractUsersTest extends TestCase
             ->assertJsonPath('data.branchIds', [$b->id])
             ->assertJsonPath('data.accessExpiresAt', '2027-03-31')
             ->assertJsonPath('data.adjustmentUnits', 3);
-        Notification::assertSentTo(User::where('email', 'sana@t.test')->first(), ResetPassword::class);
+        $res->assertJsonPath('inviteSent', true);
+        $mail = app('mailer')->getSymfonyTransport()->messages()[0]->getOriginalMessage();
+        $this->assertSame('sana@t.test', $mail->getTo()[0]->getAddress());
+        preg_match('/Your code: (\d{6})/', $mail->getTextBody(), $m);
+        $this->assertStringContainsString('forgot-password?email=sana%40t.test&code='.$m[1], $mail->getTextBody());
+        // Naya user khud code se password banaye
+        $token = $this->postJson('/api/v1/auth/forgot-password/verify', ['email' => 'sana@t.test', 'code' => $m[1]])->assertOk()->json('token');
+        $this->postJson('/api/v1/auth/reset-password', ['token' => $token, 'email' => 'sana@t.test', 'password' => 'sana-pass-123',
+            'password_confirmation' => 'sana-pass-123'])->assertOk();
+        $this->actingAs($this->super, 'sanctum');
 
         $this->getJson('/api/v1/users?roleId='.$role->id)->assertJsonPath('total', 1);
     }
@@ -95,12 +104,14 @@ class FrontendContractUsersTest extends TestCase
 
     public function test_admin_reset_password_sends_link_when_no_password_given(): void
     {
-        Notification::fake();
+        config(['mail.default' => 'array']);
         $staff = User::create(['name' => 'K', 'email' => 'k@t.test', 'password' => 'password', 'type' => 'staff', 'role' => 'store_keeper']);
 
         $this->actingAs($this->super, 'sanctum')->postJson("/api/v1/users/{$staff->id}/reset-password", [])->assertOk();
 
-        Notification::assertSentTo($staff, ResetPassword::class);
+        $mail = app('mailer')->getSymfonyTransport()->messages()[0]->getOriginalMessage();
+        $this->assertSame('k@t.test', $mail->getTo()[0]->getAddress());
+        $this->assertMatchesRegularExpression('/Your code: \d{6}/', $mail->getTextBody());
     }
 
     public function test_roles_use_key_lists_description_and_counts(): void
