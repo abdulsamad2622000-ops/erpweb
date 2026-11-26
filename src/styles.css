@@ -1064,3 +1064,28 @@ html body app-topbar select:not([multiple], [size])::picker-icon {
   }
 }
 /* ===== end right space fix ===== */
+
+
+/* ===== Topbar user name pill: lamba naam ellipsis ke saath ===== */
+app-topbar > div > span,
+app-topbar > div > div > span {
+  min-width: 0;
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  line-height: 38px;
+}
+@media (max-width: 1023px) {
+  app-topbar > div > span,
+  app-topbar > div > div > span {
+    max-width: 9rem;
+  }
+}
+/* ===== end topbar user name ===== */
+
+@media (max-width: 767px) {
+  app-topbar > div > span,
+  app-topbar > div > div > span { display: none; }
+}
