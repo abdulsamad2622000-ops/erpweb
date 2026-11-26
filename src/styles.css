@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "primeicons/primeicons.css";
 
 /* Dark mode: <html class="dark"> */
@@ -1089,3 +1089,14 @@ app-topbar > div > div > span {
   app-topbar > div > span,
   app-topbar > div > div > span { display: none; }
 }
+/* Chuna hua (selected) button saaf nazar aaye: GRN lines, POS payment, report/email tabs waghera.
+   Upar wala outline style sab .border buttons ko ek jaisa bana deta tha, is liye selection chhup jata tha. */
+:is(button, a)[aria-pressed="true"]:not(app-topbar *, app-sidebar *, .auth-scope *),
+:is(button, a)[aria-selected="true"]:not(app-topbar *, app-sidebar *, .auth-scope *) {
+  background-image: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%) !important;
+  border-color: #00BCD4 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, .45);
+}
+:is(button, a)[aria-pressed="true"] .text-slate-500,
+:is(button, a)[aria-selected="true"] .text-slate-500 { color: rgba(255, 255, 255, .85) !important; }

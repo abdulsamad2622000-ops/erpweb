@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Services\PasswordCode;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,11 +26,29 @@ class PasswordController extends Controller
     {
         $data = $request->validate(['email' => 'required|email']);
         $user = User::where('email', Str::lower($data['email']))->where('is_active', true)->first();
-        if ($user) {
-            Password::sendResetLink(['email' => $user->email]);
+        if ($user && ! PasswordCode::recentlySent($user->email)) {
+            // Frontend 6-digit code wala tareeqa use karta hai (link nahi). Code 15 minute, 5 koshishen.
+            PasswordCode::send($user, 'forgot');
         }
 
         return response()->json(['message' => self::GENERIC]);
+    }
+
+    /** Email wala 6-digit code check: sahi ho to reset token (reset-password ke liye). */
+    public function verifyCode(Request $request): JsonResponse
+    {
+        $data = $request->validate(['email' => 'required|email', 'code' => 'required|digits:6'], ['code.digits' => 'Enter the 6-digit code.']);
+        $email = Str::lower($data['email']);
+        $user = User::where('email', $email)->where('is_active', true)->first();
+        $ok = $user ? PasswordCode::check($email, $data['code']) : null;
+        if ($ok === null) {
+            throw ValidationException::withMessages(['code' => 'This code has expired. Ask for a new one.']);
+        }
+        if ($ok === false) {
+            throw ValidationException::withMessages(['code' => 'That code is not correct.']);
+        }
+
+        return response()->json(['token' => Password::createToken($user)]);
     }
 
     public function reset(Request $request): JsonResponse

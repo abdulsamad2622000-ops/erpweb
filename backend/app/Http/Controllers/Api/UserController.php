@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\PasswordCode;
 use App\Services\GrantPolicy;
 use App\Services\UserAccessRules;
 use App\Services\UserPresenter;
@@ -120,11 +121,13 @@ class UserController extends Controller
             return $u;
         });
 
+        $sent = null;
         if (! isset($data['password'])) {
-            Password::sendResetLink(['email' => $user->email]);
+            // Password nahi diya: user ko email par code + link, woh khud password banaye (48 ghante).
+            $sent = PasswordCode::send($user, 'invite');
         }
 
-        return response()->json(['data' => UserPresenter::make($user->fresh('branches'))], 201);
+        return response()->json(['data' => UserPresenter::make($user->fresh('branches')), 'inviteSent' => $sent], 201);
     }
 
     public function update(Request $request, User $user): JsonResponse
@@ -241,11 +244,12 @@ class UserController extends Controller
         $data = $request->validate(['password' => 'sometimes|string|min:8|confirmed']);
 
         if (! isset($data['password'])) {
-            // Frontend ka tareeqa: user ko password reset link email par jata hai
-            Password::sendResetLink(['email' => $user->email]);
+            // User ko email par code + link jata hai, woh khud naya password banaye.
+            $ok = PasswordCode::send($user, 'admin');
             AuditLog::record($request->user(), 'user.password_reset_link', $user);
+            abort_unless($ok, 422, 'The email could not be sent. Check the mail settings.');
 
-            return response()->json(['message' => 'A password reset link has been emailed to the user.']);
+            return response()->json(['message' => 'A code to set a new password has been emailed to the user.']);
         }
 
         $user->update(['password' => $data['password']]);
