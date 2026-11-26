@@ -1,0 +1,335 @@
+﻿src\app\core\auth\auth.store.ts:41  function savedBranch(): number | null {
+src\app\core\auth\auth.store.ts:80  const saved = savedBranch();
+src\app\core\auth\auth.store.ts:82  saved !== null && branches.some((b) => b.id === saved)
+src\app\core\auth\auth.store.ts:83  ? saved
+src\app\core\auth\auth.store.ts:100  const saved = savedBranch();
+src\app\core\auth\auth.store.ts:106  saved !== null && cached.branches.some((b) => b.id === saved) ? saved : cached.activeBranchId,
+src\app\core\auth\has-permission.directive.ts:5  * <button *hasPermission="'pos.sale.create'">...</button>
+src\app\core\auth\session-cache.ts:13  savedAt: number;
+src\app\core\auth\session-cache.ts:20  export function saveSession(s: Omit<SessionSnapshot, 'savedAt'>, now = Date.now()): void {
+src\app\core\auth\session-cache.ts:22  localStorage.setItem(KEY, JSON.stringify({ ...s, savedAt: now }));
+src\app\core\auth\session-cache.ts:33  if (!v || typeof v !== 'object' || !v.user || !Array.isArray(v.permissions) || typeof v.savedAt !== 'number') return null;
+src\app\core\auth\session-cache.ts:34  if (now - v.savedAt > SESSION_MAX_AGE_MS) return null;
+src\app\core\auth\session-cache.ts:41  savedAt: v.savedAt,
+src\app\core\mock\mock-mode.service.ts:19  const saved = localStorage.getItem(KEY);
+src\app\core\mock\mock-mode.service.ts:20  return saved === null ? APP_CONFIG.mockDefault : saved === 'true';
+src\app\core\pwa\pwa-banner.component.ts:14  <button type="button" class="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#2563EB] px-4 text-sm font-medium text-white" (click)="pwa.applyUpdate()">{{ 'scanApp.update.button' | transloco }}</button>
+src\app\core\pwa\pwa-banner.component.ts:24  <button type="button" class="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#2563EB] px-4 text-sm font-medium text-white" (click)="pwa.install()">{{ 'scanApp.install.button' | transloco }}</button>
+src\app\core\pwa\pwa-banner.component.ts:25  <button type="button" class="inline-flex min-h-12 items-center justify-center rounded-lg border border-slate-400 px-4 text-sm" (click)="pwa.dismissInstall()">{{ 'scanApp.install.dismiss' | transloco }}</button>
+src\app\core\pwa\pwa-banner.component.ts:35  <button type="button" class="inline-flex min-h-12 items-center justify-center rounded-lg border border-slate-400 px-4 text-sm" (click)="pwa.dismissInstall()">{{ 'scanApp.install.dismiss' | transloco }}</button>
+src\app\core\theme\theme.service.ts:27  const saved = localStorage.getItem(KEY);
+src\app\core\theme\theme.service.ts:28  if (saved === 'light' || saved === 'dark') return saved;
+src\app\features\accounts\pages\cashbook.page.ts:20  @if (cb()) { <button type="button" [class]="ui.btn" (click)="print(cb()!)">{{ 'salesDocs.print' | transloco }}</button> }
+src\app\features\accounts\pages\cashbook.page.ts:29  <button type="button" [class]="ui.primary" (click)="load()">{{ 'ledgerPage.show' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:26  <button *hasPermission="'accounts.expense.create'" type="button" [class]="ui.primary" (click)="openNew()">+ {{ 'expensesPage.add' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:36  <button type="button" [class]="ui.btn" (click)="load()">{{ 'ledgerPage.show' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:61  <button *hasPermission="'accounts.expense.edit'" type="button" [class]="ui.btn" (click)="edit(e)">{{ 'common.edit' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:62  <button *hasPermission="'accounts.expense.edit'" type="button" [class]="ui.danger + ' ms-1'" (click)="voidIt(e)">{{ 'expensesPage.void' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:89  <button type="button" [class]="ui.btn" [disabled]="newCat.trim().length < 2" (click)="addCat(f)">{{ 'common.add' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:96  <button type="button" [class]="ui.btn" (click)="form.set(null)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\accounts\pages\expenses.page.ts:97  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save(f)">{{ 'common.save' | transloco }}</button>
+src\app\features\auth\auth-card.component.ts:26  <button type="button"
+src\app\features\auth\forgot-password.page.ts:39  <button type="submit" [disabled]="loading()" class="${BTN}">{{ 'auth.fpSendCode' | transloco }}</button>
+src\app\features\auth\forgot-password.page.ts:54  <button type="submit" [disabled]="loading()" class="${BTN}">
+src\app\features\auth\forgot-password.page.ts:57  <button type="button" (click)="resend()" [disabled]="resendIn() > 0 || loading()"
+src\app\features\auth\forgot-password.page.ts:61  <button type="button" (click)="changeEmail()"
+src\app\features\auth\forgot-password.page.ts:76  <button type="button"
+src\app\features\auth\forgot-password.page.ts:96  <button type="submit" [disabled]="loading()" class="${BTN}">{{ 'auth.resetSave' | transloco }}</button>
+src\app\features\auth\login.page.ts:47  <button type="button"
+src\app\features\auth\login.page.ts:59  <button type="submit" [disabled]="loading()"
+src\app\features\auth\login.page.ts:80  <button type="submit" [disabled]="loading()"
+src\app\features\auth\login.page.ts:84  <button type="button" (click)="resend()" [disabled]="resendIn() > 0 || resending()"
+src\app\features\auth\login.page.ts:88  <button type="button" (click)="backToCredentials()"
+src\app\features\auth\recover-email.page.ts:34  <button type="submit" [disabled]="loading()"
+src\app\features\auth\reset-password.page.ts:48  <button type="submit" [disabled]="loading()"
+src\app\features\dev\components-showcase.page.ts:201  <button
+src\app\features\dev\components-showcase.page.ts:206  <button
+src\app\features\dev\components-showcase.page.ts:239  <button type="button" class="min-h-12 rounded-lg border border-input px-4 font-medium" (click)="printReceipt()">
+src\app\features\dev\components-showcase.page.ts:242  <button type="button" class="min-h-12 rounded-lg border border-input px-4 font-medium" (click)="printInvoice()">
+src\app\features\dev\components-showcase.page.ts:252  <button
+src\app\features\dev\components-showcase.page.ts:258  <button
+src\app\features\dev\components-showcase.page.ts:264  <button
+src\app\features\dev\components-showcase.page.ts:270  <button
+src\app\features\email\pages\email-settings.page.ts:25  <button type="button" role="tab" [attr.aria-selected]="tab() === t.id" class="min-h-11 rounded-lg border px-4 text-sm"
+src\app\features\email\pages\email-settings.page.ts:45  [placeholder]="hasPassword() ? 'Saved. Leave empty to keep it.' : 'Not set'" /></label>
+src\app\features\email\pages\email-settings.page.ts:54  <button type="button" [class]="ui.btn" [disabled]="busy() || !testTo.trim()" (click)="testSmtp()">Send test email</button>
+src\app\features\email\pages\email-settings.page.ts:56  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveSmtp()">Save</button>
+src\app\features\email\pages\email-settings.page.ts:78  <div *hasPermission="'email.template.edit'"><button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveTriggers()">Save</button></div>
+src\app\features\email\pages\email-settings.page.ts:97  <td [class]="ui.td"><button type="button" [class]="ui.btn" (click)="removeSchedule($index)" aria-label="Remove schedule"><i class="pi pi-trash" aria-hidden="true"></i></button></td>
+src\app\features\email\pages\email-settings.page.ts:103  <button type="button" [class]="ui.btn" (click)="addSchedule()">Add schedule</button>
+src\app\features\email\pages\email-settings.page.ts:104  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveSchedules()">Save</button>
+src\app\features\email\pages\email-settings.page.ts:172  const saved = await firstValueFrom(this.api.saveSmtp(body));
+src\app\features\email\pages\email-settings.page.ts:173  this.hasPassword.set(saved.hasPassword);
+src\app\features\email\pages\email-settings.page.ts:175  return 'SMTP settings saved.';
+src\app\features\email\pages\email-settings.page.ts:189  return 'Triggers saved.';
+src\app\features\email\pages\email-settings.page.ts:204  return 'Scheduled reports saved.';
+src\app\features\email\pages\email.page.ts:28  <button type="button" role="tab" [attr.aria-selected]="sel()?.key === t.key" class="min-h-11 rounded-lg border px-4 text-sm"
+src\app\features\email\pages\email.page.ts:46  <button type="button" [class]="ui.btn" [disabled]="busy() || !testTo" (click)="test(t)">{{ 'emailPage.sendTest' | transloco }}</button>
+src\app\features\email\pages\email.page.ts:48  <button *hasPermission="'email.template.edit'" type="button" [class]="ui.primary" [disabled]="busy() || !t.subject.trim() || !t.body.trim()" (click)="save(t)">
+src\app\features\email\pages\email.page.ts:56  <button type="button" [class]="ui.btn" (click)="loadLogs()">{{ 'common.retry' | transloco }}</button></div>
+src\app\features\email\pages\email.page.ts:68  <td [class]="ui.td"><app-status-badge [label]="'emailPage.st.' + l.status | transloco" [tone]="l.status === 'sent' ? 'success' : 'danger'" /> @if (l.status === 'failed') { <button *hasPermission="'email.template.edit'" type="button" [class]="ui.btn + ' ms-2'" [disabled]="busy()" (click)="resend(l)">Resend</button> }</td></tr>
+src\app\features\email\pages\email.page.ts:140  const saved = await firstValueFrom(this.api.save(t));
+src\app\features\email\pages\email.page.ts:141  this.settings.update((s) => (s ? { ...s, templates: s.templates.map((x) => (x.key === saved.key ? saved : x)) } : s));
+src\app\features\email\pages\email.page.ts:142  return this.i18n.translate('emailPage.saved');
+src\app\features\email\ui\send-email.component.ts:15  <button type="button" [class]="ui.btn" (click)="start()">{{ 'emailPage.send' | transloco }}</button>
+src\app\features\email\ui\send-email.component.ts:20  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="send()">{{ 'emailPage.sendNow' | transloco }}</button>
+src\app\features\email\ui\send-email.component.ts:21  <button type="button" [class]="ui.btn" (click)="open.set(false)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\inventory\pages\adjustment.page.ts:87  <td [class]="ui.td"><button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(l.serial)" [attr.aria-label]="'common.delete' | transloco">✕</button></td>
+src\app\features\inventory\pages\adjustment.page.ts:101  <button type="button" [class]="ui.primary" [disabled]="!canSend()" (click)="send()">{{ 'inventory.adjustments.send' | transloco }}</button>
+src\app\features\inventory\pages\adjustment.page.ts:143  <button type="button" [class]="act === 'reject' ? ui.danger : ui.primary" [disabled]="busy()" (click)="decide(act)">
+src\app\features\inventory\pages\adjustment.page.ts:277  this.notice.set(this.i18n.translate('inventory.adjustments.saved'));
+src\app\features\inventory\pages\adjustments.page.ts:28  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\alerts.page.ts:44  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\alerts.page.ts:55  <button
+src\app\features\inventory\pages\bins.page.ts:45  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\bins.page.ts:62  <button
+src\app\features\inventory\pages\bins.page.ts:80  <button type="button" [class]="rowClass(0)" [attr.aria-pressed]="selectedId() === 0" (click)="select(0)">
+src\app\features\inventory\pages\count.page.ts:52  <button type="button" [class]="ui.primary" [disabled]="busy() || !warehouseId()" (click)="start()">
+src\app\features\inventory\pages\count.page.ts:91  <td [class]="ui.td"><button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(l.serial)" [attr.aria-label]="'common.delete' | transloco">✕</button></td>
+src\app\features\inventory\pages\count.page.ts:100  <button type="button" [class]="ui.primary" [disabled]="busy() || draft().length === 0" (click)="submit()">
+src\app\features\inventory\pages\count.page.ts:140  <button type="button" [class]="a === 'reject' ? ui.danger : ui.primary" [disabled]="busy()" (click)="decide(a)">
+src\app\features\inventory\pages\count.page.ts:288  this.notice.set(this.i18n.translate('inventory.counts.saved'));
+src\app\features\inventory\pages\counts.page.ts:30  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\ledger.page.ts:42  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\putaway.page.ts:50  <button type="button" [class]="ui.btn" [disabled]="lines().length > 0" (click)="changeBin()">
+src\app\features\inventory\pages\putaway.page.ts:81  <td [class]="ui.td"><button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(l.serial)" [attr.aria-label]="'common.delete' | transloco">✕</button></td>
+src\app\features\inventory\pages\putaway.page.ts:89  <button type="button" [class]="ui.primary" [disabled]="busy() || lines().length === 0" (click)="save()">
+src\app\features\inventory\pages\putaway.page.ts:192  this.notice.set(this.i18n.translate('binsPage.putaway.saved', { n: r.moved, bin: b.barcode }));
+src\app\features\inventory\pages\reservation-new.page.ts:61  <button type="button" [class]="ui.btn" (click)="addFrom(box)">{{ 'reservationsPage.serialAdd' | transloco }}</button>
+src\app\features\inventory\pages\reservation-new.page.ts:69  <button
+src\app\features\inventory\pages\reservation-new.page.ts:89  <button type="submit" [class]="ui.primary" [disabled]="saving()">{{ 'reservationsPage.save' | transloco }}</button>
+src\app\features\inventory\pages\reservations.page.ts:34  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\reservations.page.ts:74  <button type="button" [class]="ui.danger" [disabled]="busyId() === r.id" (click)="release(r)">
+src\app\features\inventory\pages\serial-detail.page.ts:25  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\serials.page.ts:37  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\stock.page.ts:30  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\inventory\pages\transfer.page.ts:79  <td [class]="ui.td"><button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="removeNew(l.serial)" [attr.aria-label]="'common.delete' | transloco">✕</button></td>
+src\app\features\inventory\pages\transfer.page.ts:93  <button type="button" [class]="ui.primary" [disabled]="busy() || newLines().length === 0" (click)="submitNew()">
+src\app\features\inventory\pages\transfer.page.ts:149  <button type="button" [class]="ui.primary" [disabled]="busy() || scanned().length === 0" (click)="receive()">
+src\app\features\inventory\pages\transfer.page.ts:158  <button type="button" [class]="a === 'reject' || a === 'cancel' ? ui.danger : ui.primary" [disabled]="busy()" (click)="act(a)">
+src\app\features\inventory\pages\transfer.page.ts:351  this.notice.set(this.i18n.translate('inventory.transfers.saved'));
+src\app\features\inventory\pages\transfers.page.ts:30  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\labels\pages\label-templates.page.ts:35  <button type="button" class="min-h-11 w-full rounded-lg border border-dashed border-slate-400 px-3 text-start text-sm" (click)="edit(null)">
+src\app\features\labels\pages\label-templates.page.ts:39  <button type="button" class="min-h-11 w-full rounded-lg border px-3 py-2 text-start text-sm"
+src\app\features\labels\pages\label-templates.page.ts:65  <button type="button" class="min-h-11 rounded-lg border px-3 text-sm"
+src\app\features\labels\pages\label-templates.page.ts:118  @if (saved()) { <p role="status" class="text-sm text-green-700">{{ 'labels.saved' | transloco }}</p> }
+src\app\features\labels\pages\label-templates.page.ts:119  <button type="button" class="min-h-11 rounded-lg bg-[#1E3A8A] px-5 text-sm text-white disabled:opacity-50"
+src\app\features\labels\pages\label-templates.page.ts:143  protected readonly saved = signal(false);
+src\app\features\labels\pages\label-templates.page.ts:179  this.saved.set(false);
+src\app\features\labels\pages\label-templates.page.ts:194  this.saved.set(false);
+src\app\features\labels\pages\label-templates.page.ts:209  this.saved.set(true);
+src\app\features\labels\pages\labels.page.ts:47  <button type="button" role="tab" [attr.aria-selected]="kind() === k"
+src\app\features\labels\pages\labels.page.ts:79  <button *hasPermission="'barcode.label.print'" type="button"
+src\app\features\labels\pages\labels.page.ts:84  <button *hasPermission="'barcode.label.print'" type="button"
+src\app\features\pos\pages\pos.page.ts:47  <button type="button" [class]="ui.primary + ' w-full'" [disabled]="busy() || !openWh" (click)="openShift()">
+src\app\features\pos\pages\pos.page.ts:61  <button type="button" [class]="ui.btn" (click)="holdBill()" [disabled]="!cart().length || busy()">
+src\app\features\pos\pages\pos.page.ts:64  <button type="button" [class]="ui.btn" (click)="toggleHolds()">
+src\app\features\pos\pages\pos.page.ts:68  <button type="button" [class]="ui.btn" (click)="panel.set('close')">{{ 'posPage.closeShift' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:108  <button type="button" class="min-h-9 rounded border border-slate-300 px-2 text-xs dark:border-slate-600" (click)="pickSerial(r, s)">
+src\app\features\pos\pages\pos.page.ts:114  <button type="button" [class]="ui.btn + ' mt-1 min-h-9'" (click)="pickItem(r)">{{ 'posPage.add' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:161  <button type="button" class="inline-flex min-h-11 min-w-11 items-center justify-center text-red-600"
+src\app\features\pos\pages\pos.page.ts:181  <button type="button" class="text-sm text-[#1E3A8A] underline dark:text-cyan-400" (click)="customer.set(null)">
+src\app\features\pos\pages\pos.page.ts:193  <button type="button" [class]="ui.btn" (click)="panel.set('customer')">{{ 'posPage.newCustomer' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:196  <button type="button" class="block min-h-9 w-full rounded px-2 text-start text-sm hover:bg-slate-100 dark:hover:bg-slate-800" (click)="pickCustomer(c)">
+src\app\features\pos\pages\pos.page.ts:226  <button type="button" class="min-h-11 rounded-lg border text-sm"
+src\app\features\pos\pages\pos.page.ts:230  <button type="button" class="min-h-11 rounded-lg border text-sm"
+src\app\features\pos\pages\pos.page.ts:262  <button type="button" [class]="ui.primary + ' min-h-14 w-full text-base'" [disabled]="!!problem() || busy()" (click)="complete()">
+src\app\features\pos\pages\pos.page.ts:279  <button type="button" [class]="ui.primary" (click)="recall(h)">{{ 'posPage.recallOne' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:280  <button type="button" [class]="ui.danger" (click)="dropHold(h)">{{ 'posPage.remove' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:286  <div class="flex justify-end"><button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'posPage.close' | transloco }}</button></div>
+src\app\features\pos\pages\pos.page.ts:300  <button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:301  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveCustomer()">{{ 'common.save' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:323  <button type="button" [class]="ui.btn" (click)="panel.set(null)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:324  <button type="button" [class]="ui.primary" [disabled]="busy() || countedCash === null" (click)="closeShift()">
+src\app\features\pos\pages\pos.page.ts:340  <button type="button" [class]="ui.btn" (click)="printReceipt(s)">{{ 'posPage.printReceipt' | transloco }}</button>
+src\app\features\pos\pages\pos.page.ts:341  <button type="button" [class]="ui.primary" (click)="nextSale()">{{ 'posPage.nextSale' | transloco }}</button>
+src\app\features\pos\pages\sales-return.page.ts:76  <button *hasPermission="'sales.return.create'" type="button" [class]="ui.primary" [disabled]="!picked().size || reason.trim().length < 10 || busy()" (click)="submit(s)">
+src\app\features\products\pages\product-form.page.ts:58  <button
+src\app\features\products\pages\product-form.page.ts:74  <button type="button" class="min-h-12 rounded-lg border border-red-600 px-5" (click)="loadProduct()">
+src\app\features\products\pages\product-form.page.ts:97  <button
+src\app\features\products\pages\product-form.page.ts:222  <button
+src\app\features\products\pages\product-form.page.ts:251  <button
+src\app\features\products\pages\product-form.page.ts:305  <button type="button" class="min-h-11 rounded-lg border border-red-600 px-4" (click)="loadHistory()">
+src\app\features\products\pages\product-form.page.ts:360  <button type="button" class="min-h-11 rounded-lg border border-red-600 px-4" (click)="loadBranches()">
+src\app\features\products\pages\product-form.page.ts:410  <button
+src\app\features\products\pages\product-form.page.ts:421  <button
+src\app\features\products\pages\product-form.page.ts:457  <button type="button" class="min-h-12 rounded-lg border border-slate-400 px-5" (click)="back()">
+src\app\features\products\pages\product-form.page.ts:460  <button
+src\app\features\products\pages\product-form.page.ts:525  private savedLevels = new Map<number, number>();
+src\app\features\products\pages\product-form.page.ts:656  if (lv !== null) this.savedLevels.set(g.controls.branchId.value, lv);
+src\app\features\products\pages\product-form.page.ts:660  arr.push(reorderGroup(this.fb.nonNullable, b.id, this.savedLevels.get(b.id) ?? null));
+src\app\features\products\pages\product-form.page.ts:701  this.savedLevels = new Map<number, number>(
+src\app\features\products\pages\product-import.page.ts:22  <button type="button" class="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-400 px-4 text-sm" (click)="back()">
+src\app\features\products\pages\product-import.page.ts:50  <button type="button" class="min-h-12 rounded-lg bg-[#2563EB] px-5 font-medium text-white" (click)="back()">
+src\app\features\products\pages\product-import.page.ts:53  <button type="button" class="min-h-12 rounded-lg border border-slate-400 px-5" (click)="again()">
+src\app\features\products\pages\product-import.page.ts:116  failed.push({ sku, error: msg ?? 'Could not be saved' });
+src\app\features\products\pages\products.page.ts:23  <button
+src\app\features\products\pages\products.page.ts:31  <button
+src\app\features\purchase\pages\grn-landed-cost.page.ts:40  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\purchase\pages\grn-landed-cost.page.ts:64  <button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(i)" [attr.aria-label]="'common.delete' | transloco">✕</button>
+src\app\features\purchase\pages\grn-landed-cost.page.ts:73  <button type="button" [class]="ui.btn" (click)="add()">+ {{ 'purchase.payables.landed.add' | transloco }}</button>
+src\app\features\purchase\pages\grn-landed-cost.page.ts:74  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save()">{{ 'common.save' | transloco }}</button>
+src\app\features\purchase\pages\grn-landed-cost.page.ts:194  this.notice.set(this.i18n.translate('purchase.payables.landed.saved'));
+src\app\features\purchase\pages\grn-receive.page.ts:47  <button type="button" [class]="ui.btn" [disabled]="busy()" (click)="saveDraft()">{{ 'purchase.grn.saveDraft' | transloco }}</button>
+src\app\features\purchase\pages\grn-receive.page.ts:48  <button type="button" [class]="ui.primary" [disabled]="busy() || progress().done === 0" (click)="post()">{{ 'purchase.grn.post' | transloco }}</button>
+src\app\features\purchase\pages\grn-receive.page.ts:70  <button type="button" class="min-h-11 w-full rounded-lg border px-3 py-2 text-start text-sm"
+src\app\features\purchase\pages\grn-receive.page.ts:91  <button type="button" [class]="ui.btn" [disabled]="!pasted.trim() || busy()" (click)="addPasted()">{{ 'purchase.grn.addSerials' | transloco }}</button>
+src\app\features\purchase\pages\grn-receive.page.ts:139  <button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="removeSerial(si)" [attr.aria-label]="'common.delete' | transloco">✕</button>
+src\app\features\purchase\pages\grn-receive.page.ts:285  protected async saveDraft(): Promise<void> {
+src\app\features\purchase\pages\grn-receive.page.ts:288  this.notice.set(this.i18n.translate('purchase.grn.draftSaved'));
+src\app\features\purchase\pages\po-matching.page.ts:43  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\purchase\pages\po-matching.page.ts:103  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="saveBill()">{{ 'purchase.payables.matching.saveBill' | transloco }}</button>
+src\app\features\purchase\pages\po-matching.page.ts:187  this.notice.set(this.i18n.translate('purchase.payables.matching.billSaved'));
+src\app\features\purchase\pages\purchase-order.page.ts:97  <button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="lines.removeAt(i)" [attr.aria-label]="'common.delete' | transloco">✕</button>
+src\app\features\purchase\pages\purchase-order.page.ts:106  @if (editable()) { <button type="button" [class]="ui.btn" (click)="addLine()">+ {{ 'purchase.orders.addLine' | transloco }}</button> } @else { <span></span> }
+src\app\features\purchase\pages\purchase-order.page.ts:113  <button type="button" [class]="ui.btn" [disabled]="busy()" (click)="save(false)">{{ 'purchase.orders.saveDraft' | transloco }}</button>
+src\app\features\purchase\pages\purchase-order.page.ts:114  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save(true)">{{ 'purchase.orders.submit' | transloco }}</button>
+src\app\features\purchase\pages\purchase-order.page.ts:117  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="approve()">{{ 'purchase.orders.approve' | transloco }}</button>
+src\app\features\purchase\pages\purchase-order.page.ts:118  <button type="button" [class]="ui.danger" [disabled]="busy()" (click)="reject()">{{ 'purchase.orders.reject' | transloco }}</button>
+src\app\features\purchase\pages\purchase-order.page.ts:121  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="receive()">{{ 'purchase.orders.receive' | transloco }}</button>
+src\app\features\purchase\pages\purchase-order.page.ts:124  <button type="button" [class]="ui.danger" [disabled]="busy()" (click)="cancel()">{{ 'purchase.orders.cancel' | transloco }}</button>
+src\app\features\purchase\pages\purchase-returns.page.ts:54  <button type="button" class="min-h-11 min-w-11 rounded-lg text-red-600" (click)="remove(l.serial)" [attr.aria-label]="'common.delete' | transloco">✕</button>
+src\app\features\purchase\pages\purchase-returns.page.ts:72  <button type="button" [class]="ui.primary" [disabled]="busy() || lines().length === 0" (click)="submit()">
+src\app\features\purchase\pages\purchase-returns.page.ts:202  this.notice.set(this.i18n.translate('purchase.payables.returns.saved', { number: res.number }));
+src\app\features\purchase\pages\supplier-ledger.page.ts:36  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\purchase\pages\supplier-payments.page.ts:25  <button *hasPermission="'purchase.payment.create'" type="button" [class]="ui.primary" (click)="open()">
+src\app\features\purchase\pages\supplier-payments.page.ts:42  <button type="button" [class]="ui.btn" (click)="load()">{{ 'common.retry' | transloco }}</button>
+src\app\features\purchase\pages\supplier-payments.page.ts:215  this.notice.set(this.i18n.translate('purchase.payables.saved'));
+src\app\features\purchase\pages\suppliers.page.ts:21  <button *hasPermission="'purchase.supplier.create'" type="button" [class]="ui.primary" (click)="open(null)">
+src\app\features\purchase\pages\suppliers.page.ts:48  <button *hasPermission="'purchase.supplier.edit'" type="button" [class]="ui.btn" (click)="open(s)">{{ 'common.edit' | transloco }}</button>
+src\app\features\repairs\pages\repair-job.page.ts:33  <button type="button" [class]="ui.btn" (click)="print(j)">{{ 'repairsPage.printSlip' | transloco }}</button>
+src\app\features\repairs\pages\repair-job.page.ts:53  <button type="button" [class]="s === 'cancelled' ? ui.danger : ui.btn" [disabled]="busy()" (click)="move(s)">{{ 'repairsPage.status.' + s | transloco }}</button>
+src\app\features\repairs\pages\repair-job.page.ts:88  <button type="button" class="inline-flex min-h-11 min-w-11 items-center justify-center text-red-600"
+src\app\features\repairs\pages\repair-job.page.ts:94  @if (open(j)) { <button type="button" [class]="ui.btn" (click)="addPart()">+ {{ 'repairsPage.addPart' | transloco }}</button> }
+src\app\features\repairs\pages\repair-job.page.ts:107  <button type="button" [class]="ui.primary" [disabled]="busy() || !partsValid()" (click)="saveWork()">{{ 'common.save' | transloco }}</button>
+src\app\features\repairs\pages\repair-job.page.ts:123  <button type="button" [class]="ui.primary" [disabled]="busy() || dirty()" (click)="deliver(j)">{{ 'repairsPage.deliverBtn' | transloco }}</button>
+src\app\features\repairs\pages\repair-new.page.ts:57  <button type="button" [class]="ui.primary" [disabled]="busy() || !!w()?.openJob || problem.trim().length < 5" (click)="save()">
+src\app\features\repairs\pages\repairs.page.ts:65  <div class="flex justify-center"><button type="button" [class]="ui.btn" (click)="more()">{{ 'salesDocs.more' | transloco }}</button></div>
+src\app\features\repairs\pages\supplier-claims.page.ts:29  <div class="sm:col-span-3"><button type="submit" [class]="ui.primary" [disabled]="busy() || !serial.trim() || !supplier.trim() || reason.trim().length < 10">Create claim</button></div>
+src\app\features\repairs\pages\supplier-claims.page.ts:47  <button type="button" [class]="ui.btn" [disabled]="busy()" (click)="move(c, n)">{{ label(n) }}</button>
+src\app\features\repairs\pages\warranty-public.page.ts:18  <button type="submit" class="min-h-12 w-full rounded-lg bg-[#2563EB] px-5 font-medium text-white disabled:opacity-50" [disabled]="busy() || !serial.trim()">Check</button>
+src\app\features\reports\pages\reports-more.page.ts:27  <button type="button" role="tab" [attr.aria-selected]="tab() === t.id" class="min-h-11 rounded-lg border px-4 text-sm"
+src\app\features\reports\pages\reports-more.page.ts:34  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="load()">Show</button>
+src\app\features\reports\pages\reports-more.page.ts:35  <button type="button" [class]="ui.btn" [disabled]="!hasData()" (click)="exportCsv()">CSV</button>
+src\app\features\reports\pages\reports.page.ts:28  <button type="button" role="tab" [attr.aria-selected]="tab() === t" class="min-h-11 rounded-lg border px-4 text-sm"
+src\app\features\reports\pages\reports.page.ts:43  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="load()">{{ 'ledgerPage.show' | transloco }}</button>
+src\app\features\reports\pages\reports.page.ts:44  <button type="button" [class]="ui.btn" [disabled]="!hasData()" (click)="exportCsv()">{{ 'reportsPage.csv' | transloco }}</button>
+src\app\features\reports\pages\reports.page.ts:45  <button type="button" [class]="ui.btn" [disabled]="!hasData()" (click)="exportXlsx()">{{ 'reportsPage.xlsx' | transloco }}</button>
+src\app\features\sales\pages\challan.page.ts:29  <button type="button" [class]="ui.btn" (click)="print(c)">{{ 'salesDocs.print' | transloco }}</button>
+src\app\features\sales\pages\challan.page.ts:82  <button type="button" [class]="ui.primary" [disabled]="busy() || !credit().allowed" (click)="invoice(c)">{{ 'salesDocs.createInvoice' | transloco }}</button>
+src\app\features\sales\pages\customer-ledger.page.ts:30  <button type="button" [class]="ui.btn" (click)="print(l)">{{ 'ledgerPage.printStatement' | transloco }}</button>
+src\app\features\sales\pages\customer-ledger.page.ts:33  <button *hasPermission="'sales.invoice.edit'" type="button" [class]="ui.primary" (click)="openReceive()">{{ 'ledgerPage.receive' | transloco }}</button>
+src\app\features\sales\pages\customer-ledger.page.ts:87  <button type="button" [class]="ui.btn" (click)="receiving.set(false)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\sales\pages\customer-ledger.page.ts:88  <button type="button" [class]="ui.primary" [disabled]="!!problem() || busy()" (click)="save()">{{ 'salesDocs.save' | transloco }}</button>
+src\app\features\sales\pages\customer-ledger.page.ts:93  <p role="status" class="rounded-xl border border-green-600 p-3 text-sm">{{ 'ledgerPage.saved' | transloco: { number: r.number, amount: fmt(r.amount) } }}
+src\app\features\sales\pages\customer-ledger.page.ts:100  <button type="button" [class]="ui.btn" (click)="load()">{{ 'ledgerPage.show' | transloco }}</button>
+src\app\features\sales\pages\customers.page.ts:29  <button *hasPermission="'customers.customer.create'" type="button" [class]="ui.primary" (click)="openNew()">
+src\app\features\sales\pages\customers.page.ts:64  <button *hasPermission="'customers.customer.edit'" type="button" [class]="ui.btn + ' ms-1'" (click)="edit(c)">
+src\app\features\sales\pages\customers.page.ts:110  <button type="button" [class]="ui.btn" (click)="form.set(null)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\sales\pages\customers.page.ts:111  <button type="button" [class]="ui.primary" [disabled]="busy()" (click)="save(f)">{{ 'common.save' | transloco }}</button>
+src\app\features\sales\pages\invoice.page.ts:32  <button type="button" [class]="ui.btn" (click)="print(s)">{{ 'salesDocs.print' | transloco }}</button>
+src\app\features\sales\pages\invoice.page.ts:101  <button type="button" [class]="ui.primary" [disabled]="busy() || !(amount > 0) || amount > s.balance" (click)="receive(s)">{{ 'salesDocs.save' | transloco }}</button>
+src\app\features\sales\pages\quotation.page.ts:29  <button type="button" [class]="ui.btn" (click)="print(q)">{{ 'salesDocs.print' | transloco }}</button>
+src\app\features\sales\pages\quotation.page.ts:32  <button *hasPermission="'sales.quotation.edit'" type="button" [class]="ui.btn" [disabled]="busy()" (click)="act('send')">{{ 'salesDocs.markSent' | transloco }}</button>
+src\app\features\sales\pages\quotation.page.ts:35  <button *hasPermission="'sales.quotation.edit'" type="button" [class]="ui.danger" [disabled]="busy()" (click)="act('cancel')">{{ 'salesDocs.cancel' | transloco }}</button>
+src\app\features\sales\pages\quotation.page.ts:36  <button *hasPermission="'sales.order.create'" type="button" [class]="ui.primary" [disabled]="busy()" (click)="convert(q)">{{ 'salesDocs.convert' | transloco }}</button>
+src\app\features\sales\pages\sales-doc-form.page.ts:33  <button type="button" class="text-[#1E3A8A] underline dark:text-cyan-400" (click)="clearCustomer()">{{ 'salesDocs.change' | transloco }}</button>
+src\app\features\sales\pages\sales-doc-form.page.ts:38  <button type="button" class="block min-h-9 w-full rounded px-2 text-start text-sm hover:bg-slate-100 dark:hover:bg-slate-800" (click)="pickCustomer(c)">
+src\app\features\sales\pages\sales-doc-form.page.ts:57  <button type="button" class="block min-h-9 w-full rounded px-2 text-start text-sm hover:bg-slate-100 dark:hover:bg-slate-800" (click)="addProduct(p); pq.value = ''">
+src\app\features\sales\pages\sales-doc-form.page.ts:86  <td [class]="ui.td"><button type="button" class="inline-flex min-h-11 min-w-11 items-center justify-center text-red-600"
+src\app\features\sales\pages\sales-doc-form.page.ts:103  <button type="button" [class]="ui.primary" [disabled]="!canSave() || busy()" (click)="save()">{{ 'common.save' | transloco }}</button>
+src\app\features\sales\pages\sales-list.page.ts:88  <button type="button" [class]="ui.btn" (click)="more()">{{ 'salesDocs.more' | transloco }} ({{ rows().length }} / {{ total() }})</button>
+src\app\features\sales\pages\sales-order.page.ts:35  <button type="button" [class]="ui.btn" (click)="print(o)">{{ 'salesDocs.print' | transloco }}</button>
+src\app\features\sales\pages\sales-order.page.ts:37  <button *hasPermission="'sales.order.edit'" type="button" [class]="ui.danger" [disabled]="busy()" (click)="cancel()">{{ 'salesDocs.cancel' | transloco }}</button>
+src\app\features\sales\pages\sales-order.page.ts:40  <button *hasPermission="'sales.challan.create'" type="button" [class]="ui.primary" (click)="startDelivery()">{{ 'salesDocs.deliver' | transloco }}</button>
+src\app\features\sales\pages\sales-order.page.ts:93  <button type="button" class="min-h-9 rounded border border-slate-300 px-2 text-xs dark:border-slate-600"
+src\app\features\sales\pages\sales-order.page.ts:117  <button type="button" [class]="ui.btn" (click)="delivering.set(false)">{{ 'common.cancel' | transloco }}</button>
+src\app\features\sales\pages\sales-order.page.ts:118  <button type="button" [class]="ui.primary" [disabled]="!pickedCount() || !warehouseId || busy()" (click)="createChallan(o)">
+src\app\features\scan\pages\scan-count.page.ts:44  <button type="button" class="min-h-12 w-full rounded-lg border border-slate-400 px-4 text-sm" (click)="load()">
+src\app\features\scan\pages\scan-count.page.ts:108  <button
+src\app\features\scan\pages\scan-count.page.ts:123  <button
+src\app\features\scan\pages\scan-count.page.ts:210  const saved = await this.cache.read<CountLine[]>(this.draftKey);
+src\app\features\scan\pages\scan-count.page.ts:211  if (saved?.length && c.value.status === 'open') this.draft.set(saved);
+src\app\features\scan\pages\scan-counts.page.ts:34  <button type="button" class="min-h-12 w-full rounded-lg border border-slate-400 px-4 text-sm" (click)="load()">
+src\app\features\scan\pages\scan-lookup.page.ts:45  <button type="button" class="min-h-12 w-full rounded-lg border border-slate-400 px-4 text-sm" (click)="retry()">
+src\app\features\scan\pages\scan-lookup.page.ts:54  <button type="button" class="min-h-12 w-full rounded-lg bg-[#2563EB] px-4 text-sm font-medium text-white" (click)="again()">
+src\app\features\scan\pages\scan-lookup.page.ts:96  <button type="button" class="min-h-12 flex-1 rounded-lg bg-[#2563EB] px-4 text-sm font-medium text-white" (click)="again()">
+src\app\features\scan\pages\scan-putaway.page.ts:40  <button type="button" class="min-h-12 shrink-0 rounded-lg border border-slate-400 px-4 text-sm" (click)="changeBin()">
+src\app\features\scan\pages\scan-putaway.page.ts:89  <button type="button" class="min-h-12 w-full rounded-lg bg-[#2563EB] px-4 text-sm font-medium text-white" (click)="done()">
+src\app\features\scan\pages\scan-sync.page.ts:26  <button
+src\app\features\scan\pages\scan-sync.page.ts:57  <button type="button" class="min-h-12 flex-1 rounded-lg border border-slate-400 px-4 text-sm" (click)="queue.retry(i.id)">
+src\app\features\scan\pages\scan-sync.page.ts:61  <button type="button" class="min-h-12 flex-1 rounded-lg border border-red-600 px-4 text-sm text-red-600" (click)="discard(i.id)">
+src\app\features\scan\pages\scan-transfer.page.ts:40  <button type="button" class="min-h-12 w-full rounded-lg border border-slate-400 px-4 text-sm" (click)="load()">
+src\app\features\scan\pages\scan-transfer.page.ts:104  <button
+src\app\features\scan\pages\scan-transfer.page.ts:195  const saved = await this.cache.read<string[]>(this.draftKey);
+src\app\features\scan\pages\scan-transfer.page.ts:196  if (saved?.length) {
+src\app\features\scan\pages\scan-transfer.page.ts:198  this.scanned.set(saved.filter((s) => serials.includes(s)));
+src\app\features\scan\pages\scan-transfers.page.ts:34  <button type="button" class="min-h-12 w-full rounded-lg border border-slate-400 px-4 text-sm" (click)="load()">
+src\app\features\scan\services\offline-cache.service.ts:9  savedAt: string;
+src\app\features\scan\services\offline-cache.service.ts:30  await this.store.put('cache', { key, value, savedAt: new Date().toISOString() });
+src\app\features\settings\pages\backup.page.ts:18  <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+src\app\features\settings\pages\company.page.ts:21  <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+src\app\features\settings\pages\company.page.ts:68  <button
+src\app\features\settings\pages\company.page.ts:193  <button
+src\app\features\settings\pages\company.page.ts:200  @if (saved()) {
+src\app\features\settings\pages\company.page.ts:201  <p role="status" class="mt-3 text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
+src\app\features\settings\pages\company.page.ts:221  protected readonly saved = signal(false);
+src\app\features\settings\pages\company.page.ts:283  this.saved.set(false);
+src\app\features\settings\pages\company.page.ts:295  this.saved.set(err === null);
+src\app\features\settings\pages\costing.page.ts:18  <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+src\app\features\settings\pages\costing.page.ts:70  <button
+src\app\features\settings\pages\costing.page.ts:77  @if (saved()) {
+src\app\features\settings\pages\costing.page.ts:78  <p role="status" class="mt-3 text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
+src\app\features\settings\pages\costing.page.ts:100  protected readonly saved = signal(false);
+src\app\features\settings\pages\costing.page.ts:125  this.saved.set(false);
+src\app\features\settings\pages\costing.page.ts:130  this.saved.set(err === null);
+src\app\features\settings\pages\locations.page.ts:44  <button
+src\app\features\settings\pages\locations.page.ts:53  <button
+src\app\features\settings\pages\locations.page.ts:78  <button type="button" class="min-h-11 rounded-lg border border-slate-400 px-4" (click)="reload()">
+src\app\features\settings\pages\locations.page.ts:94  <button
+src\app\features\settings\pages\locations.page.ts:129  <button
+src\app\features\settings\pages\locations.page.ts:140  <button
+src\app\features\settings\pages\locations.page.ts:149  <button
+src\app\features\settings\pages\locations.page.ts:157  <button
+src\app\features\settings\pages\number-series.page.ts:21  <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+src\app\features\settings\pages\number-series.page.ts:52  <button
+src\app\features\settings\pages\price-tiers.page.ts:21  <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+src\app\features\settings\pages\price-tiers.page.ts:52  <button
+src\app\features\users\pages\role-form.page.ts:116  <button type="submit" class="min-h-12 rounded-lg bg-accent px-6 font-medium text-white disabled:opacity-50" [disabled]="saving()">
+src\app\features\users\pages\user-permissions.page.ts:75  <button
+src\app\features\users\pages\user-permissions.page.ts:95  <button type="button" class="min-h-12 rounded-lg bg-accent px-6 font-medium text-white disabled:opacity-50" [disabled]="saving()" (click)="save()">
+src\app\features\users\pages\user-permissions.page.ts:98  <button type="button" class="min-h-12 rounded-lg border border-input px-6 font-medium" (click)="clearAll()">
+src\app\features\users\pages\user-permissions.page.ts:206  this.notice.set(this.i18n.translate('overrides.saved'));
+src\app\features\users\pages\users.page.ts:38  <button
+src\app\features\users\pages\users.page.ts:119  <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="showPw.set(!showPw())">
+src\app\features\users\pages\users.page.ts:122  <button type="button" class="min-h-11 shrink-0 rounded-lg border border-input px-3 text-sm" (click)="generatePassword()">
+src\app\layout\sidebar.component.ts:21  <button type="button"
+src\app\layout\topbar.component.ts:14  <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent lg:hidden"
+src\app\layout\topbar.component.ts:30  <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
+src\app\layout\topbar.component.ts:37  <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-[10px] hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-accent"
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.ts:98  <button
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.ts:106  <button
+src\app\shared\ui\confirm-dialog\confirm-dialog.component.ts:119  <button
+src\app\shared\ui\crud-dialog\crud-dialog.component.ts:33  <button
+src\app\shared\ui\crud-dialog\crud-dialog.component.ts:40  <button
+src\app\shared\ui\data-table\data-table.component.ts:39  <button
+src\app\shared\ui\data-table\data-table.component.ts:67  <button
+src\app\shared\ui\data-table\data-table.component.ts:97  <button
+src\app\shared\ui\data-table\data-table.component.ts:133  <button
+src\app\shared\ui\data-table\data-table.component.ts:163  <button
+src\app\shared\ui\data-table\data-table.component.ts:172  <button
+src\app\shared\ui\import-wizard\import-wizard.component.ts:60  <button type="button" class="min-h-11 rounded-lg border border-input px-4 text-sm" (click)="downloadSample()">
+src\app\shared\ui\import-wizard\import-wizard.component.ts:101  <button type="button" class="min-h-12 rounded-lg border border-input px-5 font-medium" (click)="reset()">Wapas</button>
+src\app\shared\ui\import-wizard\import-wizard.component.ts:102  <button
+src\app\shared\ui\import-wizard\import-wizard.component.ts:158  <button type="button" class="min-h-12 rounded-lg border border-input px-5 font-medium" (click)="step.set(2)">Wapas</button>
+src\app\shared\ui\import-wizard\import-wizard.component.ts:159  <button
+src\app\shared\ui\import-wizard\import-wizard.component.ts:166  <button type="button" class="min-h-12 rounded-lg border border-input px-5 font-medium" (click)="cancelled.emit()">Cancel</button>
+src\app\shared\ui\list-page\list-page.component.ts:24  <button
+src\app\shared\ui\list-page\list-page.component.ts:33  <button
+src\app\shared\ui\page-toolbar\page-toolbar.component.ts:41  <button *hasPermission="'products.product.create'"> -->
+src\app\shared\ui\scan-input\scan-camera.component.ts:81  <button
+src\app\shared\ui\scan-input\scan-input.component.ts:58  <button
+src\app\shared\ui\scan-input\scan-input.component.ts:69  <button
+src\app\shared\ui\search-select\search-select.component.ts:57  <button
+src\app\shared\ui\error-state.component.ts:13  <button type="button" class="mt-4 inline-flex h-12 items-center rounded-[10px] bg-accent px-6 text-white focus-visible:outline-2 focus-visible:outline-accent"
+src\app\app.ts:15  inject(ThemeService);     // saved theme apply karo

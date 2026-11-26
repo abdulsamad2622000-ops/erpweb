@@ -1,0 +1,964 @@
+﻿
+===== \src\app\features\auth\login.page.ts =====
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
+import { AuthStore, LoginOutcome } from '../../core/auth/auth.store';
+import { safeReturnUrl } from '../../core/auth/return-url';
+import { AuthCardComponent } from './auth-card.component';
+
+type Step = 'credentials' | 'code';
+
+@Component({
+  selector: 'app-login',
+  imports: [RouterLink, TranslocoPipe, AuthCardComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <app-auth-card
+      [heading]="(step() === 'code' ? 'auth.codeTitle' : 'auth.title') | transloco"
+      [subtitle]="step() === 'code' ? ('auth.codeSentTo' | transloco: { email: masked() }) : ('auth.subtitle' | transloco)">
+
+      @if (errorKey(); as k) {
+        <p role="alert" class="mb-4 rounded-[10px] border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+          {{ k | transloco }}
+        </p>
+      }
+
+      @if (step() === 'credentials') {
+        <form class="space-y-4" novalidate (submit)="onSubmit($event)">
+          <div>
+            <label for="email" class="mb-2 flex items-center gap-2 text-sm font-medium text-text"><i class="pi pi-envelope text-[#8FB0FF]" aria-hidden="true"></i>{{ 'auth.email' | transloco }}</label>
+            <input id="email" type="email" dir="ltr" autocomplete="username" inputmode="email" placeholder="Enter your email address..."
+              class="h-11 w-full rounded-[10px] border border-input bg-card px-3 text-text focus-visible:outline-2 focus-visible:outline-accent"
+              [value]="email()" (input)="email.set(value($event))"
+              [attr.aria-invalid]="submitted() && !emailValid()" aria-describedby="email-err" />
+            @if (submitted() && !emailValid()) {
+              <p id="email-err" class="mt-1 text-sm text-danger">{{ 'auth.emailInvalid' | transloco }}</p>
+            }
+          </div>
+
+          <div>
+            <label for="password" class="mb-2 flex items-center gap-2 text-sm font-medium text-text"><i class="pi pi-lock text-[#8FB0FF]" aria-hidden="true"></i>{{ 'auth.password' | transloco }}</label>
+            <div class="relative">
+              <input id="password" dir="ltr" autocomplete="current-password" placeholder="Enter your password..."
+                [type]="showPassword() ? 'text' : 'password'"
+                class="h-11 w-full rounded-[10px] border border-input bg-card ps-3 pe-12 text-text focus-visible:outline-2 focus-visible:outline-accent"
+                [value]="password()" (input)="password.set(value($event))"
+                [attr.aria-invalid]="submitted() && !passwordValid()" aria-describedby="password-err" />
+              <button type="button"
+                class="absolute inset-y-0 end-0 inline-flex w-11 items-center justify-center rounded-[10px] text-muted hover:text-text focus-visible:outline-2 focus-visible:outline-accent"
+                [attr.aria-label]="(showPassword() ? 'auth.hidePassword' : 'auth.showPassword') | transloco"
+                (click)="showPassword.set(!showPassword())">
+                <i [class]="showPassword() ? 'pi pi-eye-slash' : 'pi pi-eye'" aria-hidden="true"></i>
+              </button>
+            </div>
+            @if (submitted() && !passwordValid()) {
+              <p id="password-err" class="mt-1 text-sm text-danger">{{ 'auth.passwordRequired' | transloco }}</p>
+            }
+          </div>
+
+          <button type="submit" [disabled]="loading()"
+            class="h-12 w-full rounded-[10px] bg-accent font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60">
+            <span class="inline-flex items-center justify-center gap-2"><i class="pi pi-sign-in" aria-hidden="true"></i>{{ (loading() ? 'auth.signingIn' : 'auth.signIn') | transloco }}</span>
+          </button>
+
+          <div class="flex flex-col items-center gap-3 text-sm"><div class="flex w-full items-center gap-3 text-xs text-muted"><span class="h-px flex-1 bg-[var(--auth-line)]"></span>or<span class="h-px flex-1 bg-[var(--auth-line)]"></span></div>
+            <a routerLink="/forgot-password" class="text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent"><i class="pi pi-lock me-2 text-xs" aria-hidden="true"></i>{{ 'auth.forgot' | transloco }}</a>
+          </div>
+        </form>
+      } @else {
+        <form class="space-y-4" novalidate (submit)="onCode($event)">
+          <div>
+            <label for="code" class="mb-1 block text-sm font-medium text-text">{{ 'auth.code' | transloco }}</label>
+            <input id="code" dir="ltr" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+              class="h-12 w-full rounded-[10px] border border-input bg-card px-3 text-center text-xl tracking-[0.5em] text-text focus-visible:outline-2 focus-visible:outline-accent"
+              [value]="code()" (input)="code.set(digits($event))"
+              [attr.aria-invalid]="submitted() && !codeValid()" aria-describedby="code-err" />
+            @if (submitted() && !codeValid()) {
+              <p id="code-err" class="mt-1 text-sm text-danger">{{ 'auth.codeFormat' | transloco }}</p>
+            }
+          </div>
+          <button type="submit" [disabled]="loading()"
+            class="h-12 w-full rounded-[10px] bg-accent font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60">
+            {{ (loading() ? 'auth.verifying' : 'auth.verify') | transloco }}
+          </button>
+          <button type="button" (click)="resend()" [disabled]="resendIn() > 0 || resending()"
+            class="h-11 w-full rounded-[10px] border border-input text-sm font-medium text-text focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-60">
+            {{ (resendIn() > 0 ? 'auth.resendIn' : 'auth.resend') | transloco: { seconds: resendIn() } }}
+          </button>
+          <button type="button" (click)="backToCredentials()"
+            class="text-sm text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent">
+            {{ 'auth.backToCredentials' | transloco }}
+          </button>
+        </form>
+      }
+    </app-auth-card>
+  `,
+})
+export class LoginPage {
+  private readonly store = inject(AuthStore);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly step = signal<Step>('credentials');
+  readonly email = signal('');
+  readonly password = signal('');
+  readonly code = signal('');
+  readonly showPassword = signal(false);
+  readonly submitted = signal(false);
+  readonly loading = signal(false);
+  readonly errorKey = signal<string | null>(null);
+
+  readonly masked = computed(() => this.store.challenge()?.maskedEmail ?? '');
+  readonly resendIn = signal(0);
+  readonly resending = signal(false);
+  private timer: ReturnType<typeof setInterval> | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.stopTimer());
+  }
+
+  private startCountdown(seconds: number): void {
+    this.stopTimer();
+    this.resendIn.set(seconds);
+    this.timer = setInterval(() => {
+      const next = Math.max(this.resendIn() - 1, 0);
+      this.resendIn.set(next);
+      if (next === 0) this.stopTimer();
+    }, 1000);
+  }
+
+  private stopTimer(): void {
+    if (this.timer !== null) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
+  async resend(): Promise<void> {
+    if (this.resendIn() > 0 || this.resending()) return;
+    this.resending.set(true);
+    this.errorKey.set(null);
+    try {
+      this.startCountdown(await this.store.resendTwoFactor());
+    } catch (err) {
+      const status = err instanceof HttpErrorResponse ? err.status : -1;
+      if (status === 401) {
+        this.backToCredentials();
+        this.errorKey.set('errors.csrf');
+      } else {
+        this.errorKey.set(this.mapError(err, 'errors.generic'));
+      }
+    } finally {
+      this.resending.set(false);
+    }
+  }
+
+  readonly emailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email().trim()));
+  readonly passwordValid = computed(() => this.password().length > 0);
+  readonly codeValid = computed(() => /^\d{6}$/.test(this.code()));
+
+  value(e: Event): string {
+    return (e.target as HTMLInputElement).value;
+  }
+
+  digits(e: Event): string {
+    return (e.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 6);
+  }
+
+  backToCredentials(): void {
+    this.stopTimer();
+    this.step.set('credentials');
+    this.code.set('');
+    this.submitted.set(false);
+    this.errorKey.set(null);
+    this.password.set('');
+  }
+
+  async onSubmit(e: Event): Promise<void> {
+    e.preventDefault();
+    this.submitted.set(true);
+    this.errorKey.set(null);
+    if (!this.emailValid() || !this.passwordValid() || this.loading()) return;
+
+    this.loading.set(true);
+    try {
+      const res = await this.store.login({ email: this.email().trim(), password: this.password() });
+      await this.handle(res, true);
+    } catch (err) {
+      this.errorKey.set(this.mapError(err, 'auth.invalid'));
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async onCode(e: Event): Promise<void> {
+    e.preventDefault();
+    this.submitted.set(true);
+    this.errorKey.set(null);
+    if (!this.codeValid() || this.loading()) return;
+
+    this.loading.set(true);
+    try {
+      const res = await this.store.verifyTwoFactor(this.code());
+      await this.handle(res, false);
+    } catch (err) {
+      const status = err instanceof HttpErrorResponse ? err.status : -1;
+      if (status === 401) {
+        // login ka waqt ghatam ho gaya, dobara shuru
+        this.backToCredentials();
+        this.errorKey.set('errors.csrf');
+      } else {
+        this.errorKey.set(this.mapError(err, 'auth.codeInvalid'));
+        this.code.set('');
+        this.submitted.set(false);
+        document.getElementById('code')?.focus();
+      }
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  private async handle(res: LoginOutcome, fromCredentials: boolean): Promise<void> {
+    if (res === 'authenticated') {
+      await this.router.navigateByUrl(safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl')));
+    } else if (res === 'two_factor') {
+      this.submitted.set(false);
+      this.step.set('code');
+      this.startCountdown(this.store.challenge()?.resendAfterSeconds ?? 60);
+    } else {
+      this.errorKey.set(fromCredentials ? 'auth.invalid' : 'auth.codeInvalid');
+    }
+  }
+
+  private mapError(err: unknown, invalidKey: string): string {
+    const status = err instanceof HttpErrorResponse ? err.status : -1;
+    if (status === 429) return 'auth.throttled';
+    if (status === 0) return 'errors.network';
+    if (status === 401 || status === 422) return invalidKey;
+    return 'errors.generic';
+  }
+}
+
+===== \src\app\features\settings\pages\company.page.ts =====
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { FormFieldComponent } from '../../../shared/ui/form-field/form-field.component';
+import { CURRENCIES } from '../models/settings.models';
+import { SettingsStore } from '../stores/settings.store';
+
+const MAX_LOGO_BYTES = 512 * 1024;
+
+@Component({
+  selector: 'app-company-page',
+  imports: [ReactiveFormsModule, TranslocoPipe, FormFieldComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <section class="mx-auto max-w-3xl space-y-4">
+      <h1 class="text-xl font-semibold">{{ 'settingsPage.company.title' | transloco }}</h1>
+
+      @if (loadError(); as msg) {
+        <div role="alert" class="rounded-xl border border-red-600 p-4 text-sm text-red-600">
+          <p>{{ msg }}</p>
+          <button type="button" class="mt-3 min-h-12 rounded-lg border border-red-600 px-5" (click)="load()">
+            {{ 'common.retry' | transloco }}
+          </button>
+        </div>
+      } @else if (!loaded()) {
+        <div role="status" class="animate-pulse space-y-3">
+          <span class="sr-only">{{ 'state.loading' | transloco }}</span>
+          <div class="h-11 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+          <div class="h-11 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+          <div class="h-24 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+        </div>
+      } @else {
+        <form
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+          class="space-y-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900"
+        >
+          <app-form-field
+            [label]="'settingsPage.company.name' | transloco"
+            inputId="company-name"
+            [control]="form.controls.name"
+            [required]="true"
+          >
+            <input
+              id="company-name"
+              formControlName="name"
+              class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+            />
+          </app-form-field>
+
+          <div class="space-y-2">
+            <p class="text-sm font-medium">{{ 'settingsPage.company.logo' | transloco }}</p>
+            <div class="flex flex-wrap items-center gap-3">
+              @if (logo(); as src) {
+                <img
+                  [src]="src"
+                  alt=""
+                  class="h-16 max-w-40 rounded-lg border border-slate-300 object-contain p-1 dark:border-slate-600"
+                />
+              }
+              <label
+                class="inline-flex min-h-12 cursor-pointer items-center rounded-lg border border-slate-400 px-5 text-sm font-medium focus-within:ring-2 focus-within:ring-[#2563EB]"
+              >
+                {{ 'settingsPage.company.logoUpload' | transloco }}
+                <input type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" (change)="onLogo($event)" />
+              </label>
+              @if (logo()) {
+                <button
+                  type="button"
+                  class="min-h-12 rounded-lg border border-slate-400 px-5 text-sm"
+                  (click)="logo.set(null)"
+                >
+                  {{ 'settingsPage.company.logoRemove' | transloco }}
+                </button>
+              }
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400">{{ 'settingsPage.company.logoHint' | transloco }}</p>
+            @if (logoError(); as msg) {
+              <p role="alert" class="text-sm text-red-600">{{ msg }}</p>
+            }
+          </div>
+
+          <app-form-field
+            [label]="'settingsPage.company.address' | transloco"
+            inputId="company-address"
+            [control]="form.controls.address"
+          >
+            <textarea
+              id="company-address"
+              formControlName="address"
+              rows="3"
+              class="min-h-24 w-full rounded-lg border border-slate-400 bg-transparent px-3 py-2 text-sm"
+            ></textarea>
+          </app-form-field>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <app-form-field
+              [label]="'settingsPage.company.city' | transloco"
+              inputId="company-city"
+              [control]="form.controls.city"
+            >
+              <input
+                id="company-city"
+                formControlName="city"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+            <app-form-field
+              [label]="'settingsPage.company.country' | transloco"
+              inputId="company-country"
+              [control]="form.controls.country"
+            >
+              <input
+                id="company-country"
+                formControlName="country"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+            <app-form-field
+              [label]="'settingsPage.company.phone' | transloco"
+              inputId="company-phone"
+              [control]="form.controls.phone"
+            >
+              <input
+                id="company-phone"
+                type="tel"
+                dir="ltr"
+                formControlName="phone"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+            <app-form-field
+              [label]="'settingsPage.company.email' | transloco"
+              inputId="company-email"
+              [control]="form.controls.email"
+            >
+              <input
+                id="company-email"
+                type="email"
+                dir="ltr"
+                formControlName="email"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+            <app-form-field
+              [label]="'settingsPage.company.taxNumber' | transloco"
+              inputId="company-tax"
+              [control]="form.controls.taxNumber"
+            >
+              <input
+                id="company-tax"
+                formControlName="taxNumber"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+            <app-form-field
+              [label]="'settingsPage.company.taxRate' | transloco"
+              inputId="company-tax-rate"
+              [control]="form.controls.taxRate"
+              [required]="true"
+            >
+              <input
+                id="company-tax-rate"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                max="100"
+                step="0.01"
+                formControlName="taxRate"
+                class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+              />
+            </app-form-field>
+          </div>
+
+          <app-form-field
+            [label]="'settingsPage.company.currency' | transloco"
+            inputId="company-currency"
+            [control]="form.controls.currency"
+            [required]="true"
+          >
+            <select
+              id="company-currency"
+              formControlName="currency"
+              class="min-h-11 w-full rounded-lg border border-slate-400 bg-transparent px-3 text-sm"
+            >
+              @for (c of currencies; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </app-form-field>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              type="submit"
+              class="min-h-12 rounded-lg bg-[#2563EB] px-6 font-medium text-white disabled:opacity-50"
+              [disabled]="saving()"
+            >
+              {{ 'common.save' | transloco }}
+            </button>
+            @if (saved()) {
+              <p role="status" class="text-sm text-green-600">{{ 'settingsPage.saved' | transloco }}</p>
+            }
+            @if (saveError(); as msg) {
+              <p role="alert" class="text-sm text-red-600">{{ msg }}</p>
+            }
+          </div>
+        </form>
+      }
+    </section>
+  `,
+})
+export class CompanyPage implements OnInit {
+  protected readonly store = inject(SettingsStore);
+  private readonly fb = inject(FormBuilder);
+  private readonly i18n = inject(TranslocoService);
+
+  protected readonly currencies = CURRENCIES;
+  protected readonly loaded = signal(false);
+  protected readonly loadError = signal<string | null>(null);
+  protected readonly saving = signal(false);
+  protected readonly saved = signal(false);
+  protected readonly saveError = signal<string | null>(null);
+  protected readonly logo = signal<string | null>(null);
+  protected readonly logoError = signal<string | null>(null);
+
+  protected readonly form = this.fb.nonNullable.group({
+    name: ['', [Validators.required, Validators.maxLength(150)]],
+    address: ['', [Validators.maxLength(300)]],
+    city: ['', [Validators.maxLength(80)]],
+    country: ['', [Validators.maxLength(80)]],
+    phone: ['', [Validators.maxLength(40)]],
+    email: ['', [Validators.email, Validators.maxLength(120)]],
+    taxNumber: ['', [Validators.maxLength(40)]],
+    taxRate: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+    currency: ['PKR', [Validators.required]],
+  });
+
+  ngOnInit(): void {
+    void this.load();
+  }
+
+  protected async load(): Promise<void> {
+    this.loadError.set(null);
+    try {
+      await this.store.loadCompany();
+      const c = this.store.company();
+      if (c) {
+        this.form.reset({
+          name: c.name,
+          address: c.address,
+          city: c.city,
+          country: c.country,
+          phone: c.phone,
+          email: c.email,
+          taxNumber: c.taxNumber,
+          taxRate: c.taxRate,
+          currency: c.currency,
+        });
+        this.logo.set(c.logo);
+      }
+      this.loaded.set(true);
+    } catch {
+      this.loadError.set(this.i18n.translate('errors.generic'));
+    }
+  }
+
+  protected onLogo(e: Event): void {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > MAX_LOGO_BYTES) {
+      this.logoError.set(this.i18n.translate('settingsPage.company.logoTooLarge'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logo.set(String(reader.result));
+      this.logoError.set(null);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  protected async submit(): Promise<void> {
+    this.saved.set(false);
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
+    this.saving.set(true);
+    const v = this.form.getRawValue();
+    const err = await this.store.saveCompany({
+      ...v,
+      name: v.name.trim(),
+      logo: this.logo(),
+    });
+    this.saving.set(false);
+    this.saveError.set(err);
+    this.saved.set(err === null);
+  }
+}
+
+===== \src\styles.css =====
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+/* Dark mode: <html class="dark"> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- Design tokens (light) ---- */
+:root {
+  --nav: #0F172A;
+  --accent: #2563EB;
+  --bg: #F6F7F9;
+  --card: #FFFFFF;
+  --border: #E2E8F0;
+  --input-border: #94A3B8;
+  --text: #0F172A;
+  --muted: #5B6679;
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+  --radius: 12px;
+  --radius-sm: 10px;
+  --input-h: 44px;
+  --btn-h: 48px;
+}
+
+/* ---- Dark theme ---- */
+.dark {
+  --bg: #0B1120;
+  --card: #111827;
+  --border: #1F2937;
+  --input-border: #475569;
+  --text: #E5E7EB;
+  --muted: #94A3B8;
+}
+
+/* ---- Tailwind ko tokens batao (bg-nav, text-muted, border-border ...) ---- */
+@theme inline {
+  --color-nav: var(--nav);
+  --color-accent: var(--accent);
+  --color-page: var(--bg);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-input: var(--input-border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --font-sans: Inter, ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+/* Native dropdown (select) ki options list ka theme */
+select { color-scheme: light; }
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+select option:checked {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+.dark select,
+[data-theme="dark"] select {
+  color-scheme: dark;
+}
+.dark select option,
+[data-theme="dark"] select option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+.dark select option:checked,
+[data-theme="dark"] select option:checked {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+/* ---- Scrollbar polish: patla, bina arrows, light/dark dono par theek ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.45) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.45);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: rgba(100, 116, 139, 0.75); }
+*::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+/* ---- Dialogs: screen ke beech mein, chhoti card jaisi (x aur y dono) ---- */
+dialog:modal {
+  margin: auto;
+  width: min(var(--dialog-w, 26rem), calc(100vw - 2rem));
+  height: fit-content;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+
+/* escapes-scroller-fix: scroll wrapper ke andar ka absolute element (jaise sr-only) wrapper ki hadd mein rahe.
+   Warna wo wrapper se bahar nikal kar poore page ko sideways scroll karwa deta hai. */
+@layer base {
+  .overflow-x-auto,
+  .overflow-x-scroll {
+    position: relative;
+  }
+}
+
+/* Dialog khula ho to peeche ka page scroll na ho. */
+body:has(dialog:modal) {
+  overflow: hidden;
+}
+
+/* ---- Auth pages (login, forgot, reset): royal blue glass, light + dark ---- */
+.auth-scope {
+  --text: #0F172A; --muted: #475569; --card: rgba(255, 255, 255, .9);
+  --border: #C7D2FE; --input-border: #94A3B8;
+  --auth-link: #1D4ED8; --auth-royal: #1F6BFF; --auth-royal-hover: #0F55E0; --auth-line: #CBD5E1;
+  color: var(--text);
+}
+.auth-bg { background: linear-gradient(135deg, #E6EEFF 0%, #F4F7FF 55%, #D9E5FF 100%); }
+.auth-waves { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .35; }
+.auth-glass {
+  background: rgba(255, 255, 255, .85); border: 1px solid #B9C8F5;
+  box-shadow: 0 20px 50px rgba(37, 66, 180, .15); backdrop-filter: blur(16px);
+}
+.auth-erp { color: #1F6BFF; }
+.auth-tile {
+  position: absolute; z-index: 1; display: flex; width: 3.6rem; height: 3.6rem; align-items: center; justify-content: center;
+  border-radius: 1rem; font-size: 1.5rem; color: #8FA8FF; background: rgba(40, 70, 170, .35);
+  border: 1px solid rgba(143, 168, 255, .35); backdrop-filter: blur(6px);
+  animation: authFloat 5s ease-in-out infinite;
+}
+.dark .auth-scope {
+  --text: #F8FAFC; --muted: #B4C2EA; --card: rgba(255, 255, 255, .06);
+  --border: rgba(143, 168, 255, .35); --input-border: rgba(143, 168, 255, .4);
+  --danger: #FCA5A5; --success: #86EFAC; --auth-link: #BFD1FF; --auth-line: rgba(143, 168, 255, .35);
+}
+.dark .auth-bg { background: linear-gradient(135deg, #030A24 0%, #0A1F6B 55%, #2B2FD6 100%); }
+.dark .auth-waves { opacity: 1; }
+.dark .auth-glass {
+  background: rgba(20, 36, 100, .45); border: 1px solid rgba(143, 168, 255, .4);
+  box-shadow: 0 24px 60px rgba(2, 6, 23, .55), inset 0 0 40px rgba(79, 123, 255, .08);
+}
+.dark .auth-erp { color: #3B82F6; }
+
+.auth-scope a.text-accent { color: var(--auth-link); }
+.auth-scope :focus-visible { outline-color: var(--auth-link); }
+.auth-scope .auth-toggle:hover { background: rgba(127, 127, 127, .22); }
+.auth-scope input::placeholder { color: var(--muted); opacity: .8; }
+.auth-scope button.bg-accent {
+  background: var(--auth-royal); border-radius: 9999px;
+  transition: background-color .2s, transform .15s, box-shadow .2s;
+}
+.auth-scope button.bg-accent:hover:not(:disabled) { background: var(--auth-royal-hover); box-shadow: 0 8px 24px rgba(31, 107, 255, .45); }
+.auth-scope button.bg-accent:active:not(:disabled) { transform: scale(.98); }
+.auth-scope input:not([type="checkbox"]) { border-radius: 12px; transition: border-color .2s, box-shadow .2s; }
+.auth-scope input:focus { border-color: var(--auth-royal); box-shadow: 0 0 0 3px rgba(31, 107, 255, .3); }
+
+/* lock icon inside email/password inputs */
+.auth-scope input#email, .auth-scope input#password, .auth-scope input#confirm {
+  background-repeat: no-repeat; background-position: 12px center; background-size: 18px 18px; padding-left: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238FA8F5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
+}
+
+@keyframes authRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes authFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes authPulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.auth-glass { animation: authRise .55s cubic-bezier(.2, .8, .2, 1) both; }
+.auth-scope aside > * { animation: authRise .6s ease both; }
+.auth-scope aside svg { animation: authFloat 5s ease-in-out infinite; }
+.auth-scope aside svg ellipse { animation: authPulse 3s ease-in-out infinite; }
+.auth-scope form, .auth-scope [role="status"] { animation: authRise .45s ease both; }
+.auth-scope form > * { animation: authRise .5s ease both; }
+.auth-scope form > *:nth-child(1) { animation-delay: .08s; }
+.auth-scope form > *:nth-child(2) { animation-delay: .16s; }
+.auth-scope form > *:nth-child(3) { animation-delay: .24s; }
+.auth-scope form > *:nth-child(4) { animation-delay: .32s; }
+.auth-scope form > *:nth-child(5) { animation-delay: .4s; }
+@media (prefers-reduced-motion: reduce) {
+  .auth-scope *, .auth-glass { animation: none !important; transition: none !important; }
+}
+
+/* auth-tile light override */
+html:not(.dark) .auth-tile {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, .18);
+  opacity: 1;
+}
+html:not(.dark) .auth-tile i {
+  color: #2563EB;
+  opacity: 1;
+  font-size: 1.35rem;
+}
+
+/* royal theme v1 */
+/* Tiles: light aur dark dono mein safed tile, gehra neela icon */
+.auth-tile {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, .25) !important;
+  opacity: 1 !important;
+}
+.auth-tile i { color: #2563EB !important; opacity: 1 !important; font-size: 1.35rem; }
+
+/* Tagline ke neeche ki line: royal blue gradient */
+.auth-scope aside .bg-gradient-to-r {
+  background-image: linear-gradient(90deg, #1D4ED8, #3B82F6, #38BDF8) !important;
+  height: 5px;
+}
+
+/* Neele buttons: navy se royal blue gradient */
+.bg-accent,
+[class~="bg-[#2563EB]"],
+[class~="bg-[#1E3A8A]"] {
+  background-image: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 55%, #2563EB 100%);
+  background-color: #1D4ED8;
+  color: #FFFFFF;
+}
+.bg-accent:hover:not(:disabled),
+[class~="bg-[#2563EB]"]:hover:not(:disabled),
+[class~="bg-[#1E3A8A]"]:hover:not(:disabled) {
+  background-image: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+}
+
+/* royal theme v2 */
+/* Sidebar: navy se royal blue gradient, dono themes mein */
+app-sidebar nav.bg-nav {
+  background-image: linear-gradient(180deg, #0B1230 0%, #0F1F5C 55%, #1E3A8A 100%);
+  background-color: #0F172A;
+  color: #CBD5E1;
+}
+app-sidebar nav.bg-nav a:hover,
+app-sidebar nav.bg-nav button:hover {
+  background-color: rgba(255, 255, 255, .12);
+}
+/* Active menu item: royal gradient, safed text */
+app-sidebar nav a.bg-accent {
+  background-image: linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%);
+  background-color: #1D4ED8;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, .45);
+}
+/* Sidebar ka brand icon */
+app-sidebar nav .pi-box { color: #60A5FA; }
+
+/* royal theme v3 */
+/* Topbar: navy se royal blue gradient, dono themes mein */
+app-topbar > div {
+  background-image: linear-gradient(90deg, #0B1230 0%, #0F1F5C 50%, #1E3A8A 100%);
+  background-color: #0F172A;
+  border-bottom-color: rgba(255, 255, 255, .12);
+  color: #FFFFFF;
+}
+/* Topbar ke andar ka text aur icons safed */
+app-topbar > div,
+app-topbar > div span,
+app-topbar > div i,
+app-topbar > div a,
+app-topbar > div label {
+  color: #FFFFFF;
+}
+app-topbar > div button:hover {
+  background-color: rgba(255, 255, 255, .15);
+}
+/* Branch selector: gehra glass, safed text */
+app-topbar select {
+  background-color: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .35);
+  color: #FFFFFF;
+}
+app-topbar select option {
+  background-color: #0F172A;
+  color: #FFFFFF;
+}
+/* Breadcrumbs ka separator halka */
+app-topbar app-breadcrumbs li,
+app-topbar app-breadcrumbs span {
+  color: #E2E8F0;
+}
+
+/* royal theme v4 */
+/* Breadcrumbs: topbar ke gradient par saaf nazar aayein */
+app-topbar app-breadcrumbs nav ol,
+app-topbar app-breadcrumbs nav ol li,
+app-topbar app-breadcrumbs nav ol li a,
+app-topbar app-breadcrumbs nav ol li span,
+app-topbar app-breadcrumbs nav ol li i {
+  color: #CBD5E1;
+}
+app-topbar app-breadcrumbs nav ol li a:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, .12);
+}
+/* Aakhri (current) page: safed aur bold */
+app-topbar app-breadcrumbs nav ol li span[aria-current="page"] {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+/* Keyboard focus ring safed */
+app-topbar a:focus-visible,
+app-topbar button:focus-visible,
+app-topbar select:focus-visible {
+  outline: 2px solid #93C5FD;
+  outline-offset: 2px;
+}
+
+/* auth links v1 */
+.auth-glass a,
+.auth-glass button.text-accent,
+.auth-glass .text-accent {
+  color: #BFDBFE !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.auth-glass a:hover,
+.auth-glass button.text-accent:hover { color: #FFFFFF !important; }
+.auth-glass input::placeholder { color: #94A3B8; opacity: 1; }
+html:not(.dark) .auth-glass a,
+html:not(.dark) .auth-glass .text-accent { color: #1D4ED8 !important; }
+html:not(.dark) .auth-glass a:hover { color: #1E3A8A !important; }
+
+/* royal theme v6 */
+/* Sirf dark theme: content background navy blue */
+.dark {
+  --bg: #0A1433;
+  --card: #0F1D4A;
+  --border: #1E3A8A;
+  --input-border: #3B5BB5;
+}
+.dark body { background-color: #0A1433; }
+
+/* Sidebar ke menu icons sab ek rang (Inventory ka icon alag na dikhe) */
+app-sidebar nav ul i.pi { color: #CBD5E1; }
+app-sidebar nav ul a.bg-accent i.pi { color: #FFFFFF; }
+app-sidebar nav > div:first-child i.pi { color: #60A5FA; }
+/* === Form spacing: fields aur submit button === */
+form .field,
+form .form-field,
+form .p-field {
+  margin-bottom: 1rem;
+}
+
+form button[type="submit"],
+form .form-actions button {
+  margin-top: 1.5rem;
+}
+
+form .form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+/* === end form spacing === */
+
+
+/* ===== Dark tiles final ===== */
+html.dark .auth-tile {
+  background: linear-gradient(145deg, #0F1D4A 0%, #1B2C7A 100%) !important;
+  border: 1px solid rgba(143, 168, 255, .45) !important;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, .55) !important;
+}
+html.dark .auth-tile i {
+  color: #8FB0FF !important;
+}
+
+
+/* ===== Auth logo final ===== */
+.auth-scope .brand-logo { display: inline-block; flex: none; width: 1.15em; height: 1.15em; vertical-align: middle; }
+.auth-glass .brand-logo { width: 1.7em; height: 1.7em; }
+.auth-scope :has(> .brand-logo) { display: flex; align-items: center; gap: .4em; }
+.auth-scope aside :has(> .brand-logo) { justify-content: center; }
+
+/* ===== Form action buttons: spacing and alignment ===== */
+form div:has(> button[type="submit"]),
+form div:has(> p-button) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+/* "Saved." message stays level with the button */
+form div:has(> button[type="submit"]) > :not(button),
+form div:has(> p-button) > :not(p-button) {
+  margin-block: 0;
+}
+
+/* Button placed directly inside the form */
+form > button[type="submit"],
+form > p-button {
+  display: inline-block;
+  margin-top: 1.25rem;
+}
+
+/* ===== Space between field label and input ===== */
+label:has(+ input:not([type="checkbox"], [type="radio"])),
+label:has(+ select),
+label:has(+ textarea),
+label:has(+ p-password),
+label:has(+ p-select),
+label:has(+ p-inputnumber),
+label:has(+ div input:not([type="checkbox"], [type="radio"])) {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
