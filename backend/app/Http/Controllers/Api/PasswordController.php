@@ -9,6 +9,9 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -26,10 +29,46 @@ class PasswordController extends Controller
         $data = $request->validate(['email' => 'required|email']);
         $user = User::where('email', Str::lower($data['email']))->where('is_active', true)->first();
         if ($user) {
-            Password::sendResetLink(['email' => $user->email]);
+            // Frontend 6-digit code wala tareeqa use karta hai (link nahi). Code 15 minute, 5 koshishen.
+            $key = 'pwreset:'.sha1($user->email);
+            $prev = Cache::get($key);
+            if ($prev && now()->timestamp - $prev['sent'] < 30) {
+                return response()->json(['message' => self::GENERIC]); // jaldi jaldi dobara na bhejo
+            }
+            $code = (string) random_int(100000, 999999);
+            Cache::put($key, ['hash' => Hash::make($code), 'tries' => 0, 'sent' => now()->timestamp], now()->addMinutes(15));
+            try {
+                $company = (string) (app(\App\Services\SettingsService::class)->get('company')['name'] ?? 'Novastackhub');
+                Mail::raw("Your password reset code is {$code}.\n\nIt expires in 15 minutes. If you did not ask for this, you can ignore this email.\n\n{$company}",
+                    fn ($m) => $m->to($user->email)->subject("Password reset code: {$code}"));
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         return response()->json(['message' => self::GENERIC]);
+    }
+
+    /** Email wala 6-digit code check: sahi ho to reset token (reset-password ke liye). */
+    public function verifyCode(Request $request): JsonResponse
+    {
+        $data = $request->validate(['email' => 'required|email', 'code' => 'required|digits:6'], ['code.digits' => 'Enter the 6-digit code.']);
+        $email = Str::lower($data['email']);
+        $key = 'pwreset:'.sha1($email);
+        $entry = Cache::get($key);
+        $user = User::where('email', $email)->where('is_active', true)->first();
+        if (! $entry || ! $user || $entry['tries'] >= 5) {
+            Cache::forget($key);
+            throw ValidationException::withMessages(['code' => 'This code has expired. Ask for a new one.']);
+        }
+        if (! Hash::check($data['code'], $entry['hash'])) {
+            $entry['tries']++;
+            Cache::put($key, $entry, now()->addMinutes(15));
+            throw ValidationException::withMessages(['code' => 'That code is not correct.']);
+        }
+        Cache::forget($key);
+
+        return response()->json(['token' => Password::createToken($user)]);
     }
 
     public function reset(Request $request): JsonResponse

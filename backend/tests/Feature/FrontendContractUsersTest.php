@@ -149,16 +149,17 @@ class FrontendContractUsersTest extends TestCase
 
     public function test_forgot_password_is_generic_and_reset_works(): void
     {
-        Notification::fake();
+        config(['mail.default' => 'array']);
         $this->postJson('/api/v1/auth/forgot-password', ['email' => 'nobody@t.test'])->assertOk();
         $this->postJson('/api/v1/auth/forgot-password', ['email' => 'boss@t.test'])->assertOk();
+        $sent = app('mailer')->getSymfonyTransport()->messages();
+        $this->assertCount(1, $sent);
+        preg_match('/(\d{6})/', $sent[0]->getOriginalMessage()->getSubject(), $m);
+        $code = $m[1];
 
-        $token = null;
-        Notification::assertSentTo($this->super, ResetPassword::class, function ($n) use (&$token) {
-            $token = $n->token;
-
-            return true;
-        });
+        $this->postJson('/api/v1/auth/forgot-password/verify', ['email' => 'boss@t.test', 'code' => '000000'])->assertStatus(422);
+        $token = $this->postJson('/api/v1/auth/forgot-password/verify', ['email' => 'boss@t.test', 'code' => $code])->assertOk()->json('token');
+        $this->postJson('/api/v1/auth/forgot-password/verify', ['email' => 'boss@t.test', 'code' => $code])->assertStatus(422); // ek dafa hi
 
         $this->postJson('/api/v1/auth/reset-password', [
             'token' => $token, 'email' => 'boss@t.test', 'password' => 'new-password-123', 'password_confirmation' => 'new-password-123',

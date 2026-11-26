@@ -24,9 +24,10 @@ Route::prefix('v1')->group(function () {
         Route::post('two-factor', [AuthController::class, 'twoFactor'])->middleware('throttle:10,1');
         Route::post('two-factor/resend', [AuthController::class, 'resend'])->middleware('throttle:10,1');
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-        Route::post('forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:5,1');
-        Route::post('reset-password', [PasswordController::class, 'reset'])->middleware('throttle:5,1');
-        Route::post('recover-email', [PasswordController::class, 'recoverEmail'])->middleware('throttle:5,1');
+        Route::post('forgot-password', [PasswordController::class, 'forgot'])->middleware('throttle:auth-step');
+        Route::post('forgot-password/verify', [PasswordController::class, 'verifyCode'])->middleware('throttle:auth-step');
+        Route::post('reset-password', [PasswordController::class, 'reset'])->middleware('throttle:auth-step');
+        Route::post('recover-email', [PasswordController::class, 'recoverEmail'])->middleware('throttle:auth-step');
     });
 
     Route::get('me', MeController::class)->middleware('auth:sanctum');
